@@ -1,0 +1,233 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/casa/image/logo.png">
+    <title>Casa Emelita</title>
+    @Styles.Render("~/Content/casa")
+    @*@Scripts.Render("~/bundles/modernizr")*@
+    @Scripts.Render("~/scipt/casa")
+</head>
+<body>
+    <div id="header">
+        <header>
+            <div class="header-area ">
+                <div id="sticky-header" class="main-header-area">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-xl-10 col-lg-10">
+                                <div class="main-menu d-none d-lg-block">
+                                    <nav>
+                                        <ul class="mein_menu_list" id="navigation">
+                                            <li><a href="#"></a></li>
+                                            <li><a href="menu">Menu</a></li>
+                                            <li><a href="packages">Packages</a></li>
+                                            <li>
+                                                <a href="#">Report <i class="ti-angle-down"></i></a>
+                                                <ul class="submenu">
+                                                    <li><a href="calendar">Calendar</a></li>
+                                                    <li><a href="reservations">Reservations</a></li>
+                                                </ul>
+
+                                            </li>
+                                            <div class="logo-img d-none d-lg-block">
+                                                <a href="#">
+                                                    <img src="~/Content/casa/image/logo.png" alt="">
+                                                </a>
+                                            </div>
+
+                                            <li>
+                                                <a href="#">Account <i class="ti-angle-down"></i></a>
+                                                <ul class="submenu">
+                                                    <li><a href="settings">Settings</a></li>
+                                                </ul>
+                                            <li><a href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                                            </li>
+
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <div class="col-xl-2 col-lg-2 d-none d-lg-block">
+                                <div class="custom_order">
+                                    <a href="appointments" class="boxed_btn_white">Appointments</a>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mobile_menu d-block d-lg-none"></div>
+                            </div>
+                            <div class="logo-img-small d-sm-block d-md-block d-lg-none">
+                                <a href="index">
+                                    <img src="~/Content/casa/image/logo.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 1100 !important;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Login to Administrator page.</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <center style="margin-bottom:20px;">
+                            <img src="~/Content/casa/image/logo.png" alt="">
+                        </center>
+                        <input style="margin-bottom:20px;" type="email" name="EMAIL" id="email" placeholder="Email address"
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required=""
+                               class="single-input">
+                        <input type="password" name="password" placeholder="Password" id="password"
+                               onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'" required=""
+                               class="single-input">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-primary" type="button" data-dismiss="modal" id="btn_login">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="../logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script type="text/javascript">
+
+            $(document).on("click", "#btn_login", function () {
+
+                var email = document.getElementById("email").value.trim();
+                var password = document.getElementById("password").value.trim();
+
+
+                if (email == '' || password == '') {
+                    $("#btn_login").addClass("btn-danger").removeClass("btn-primary");
+                    swal({
+                        title: "Warning!",
+                        text: "Please complete your login credentials!",
+                        type: "error"
+                    });
+                    return;
+                }
+                $("#btn_login").addClass("btn-primary").removeClass("btn-danger");
+
+
+                var other_data = 'email=' + email +
+                    '&password=' + password;
+
+                $.ajax({
+
+                    url: "functions/login?" + other_data,
+                    type: "POST",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+
+                    beforeSend: function () {
+
+                    },
+                    error: function (data) {
+
+                    },
+                    success: function (data) {
+
+                        if (data.includes('Administrator')) {
+
+                            swal({
+                                title: "Hello!",
+                                text: "Welcome " + data,
+                                type: "success"
+                            }).then(okay => {
+                                if (okay) {
+                                    window.location = "app/index";
+                                }
+                            });
+                        } else {
+                            $("#btn_login").addClass("btn-danger").removeClass("btn-primary");
+                            swal({
+                                title: "Warning!",
+                                text: data,
+                                type: "error"
+                            });
+                        }
+                    }
+
+                });
+
+            });
+        </script>
+    </div>
+
+    @* Body *@
+
+    @RenderBody()
+
+
+    <footer id="footer" class="footer_area footer-bg zigzag_bg_1">
+
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-xl-7 col-md-12 col-lg-8">
+                        <div class="copyright">
+                            <p class="footer-text">
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                &copy; @DateTime.Now.Year - All rights reserved  to <a href="https://casaemelita.com"
+                                                                                       target="_blank">Casa Emelita</a> <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-md-12 col-lg-4">
+                        <div class="social_links">
+                            <ul>
+                                <li><a href="#"> <i class="fa fa-facebook"></i> </a></li>
+                                <li><a href="#"> <i class="fa fa-twitter"></i> </a></li>
+                                <li><a href="#"> <i class="fa fa-dribbble"></i> </a></li>
+                                <li><a href="#"> <i class="fa fa-behance"></i> </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @*@Scripts.Render("~/script/casa-footer")*@
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#header").load("components/header");
+    });
+</script>

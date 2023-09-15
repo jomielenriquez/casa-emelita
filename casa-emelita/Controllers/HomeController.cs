@@ -32,5 +32,11 @@ namespace casa_emelita.Controllers
 
             return View();
         }
+        public ActionResult HomeAdmin()
+        {
+            ViewBag.Message = "Home";
+
+            return View();
+        }
     }
 }
