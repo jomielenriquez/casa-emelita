@@ -38,5 +38,9 @@ namespace casa_emelita.Controllers
 
             return View();
         }
+        public ActionResult AboutCasa()
+        {
+            return View();
+        }
     }
 }
