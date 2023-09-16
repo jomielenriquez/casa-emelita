@@ -370,6 +370,9 @@
     <Content Include="Views\Shared\_Admin.cshtml" />
     <Content Include="Views\Home\HomeAdmin.cshtml" />
     <Content Include="Views\Home\AboutCasa.cshtml" />
+    <Content Include="Views\Home\ServicesofCasa.cshtml" />
+    <Content Include="Views\Home\GalleryofCasa.cshtml" />
+    <Content Include="Views\Home\ContactCasa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
