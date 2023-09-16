@@ -1,4 +1,5 @@
-﻿using System;
+﻿using casa_emelita.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,6 +9,10 @@ namespace casa_emelita.Controllers
 {
     public class HomeController : Controller
     {
+        AppModel model;
+        public HomeController() { 
+            this.model = new AppModel();
+        }
         public ActionResult Index()
         {
             return View();
@@ -28,12 +33,17 @@ namespace casa_emelita.Controllers
         }
         public ActionResult Home()
         {
+            Session["AdminID"] = Guid.NewGuid();
             ViewBag.Message = "Home";
 
             return View();
         }
         public ActionResult HomeAdmin()
         {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                return RedirectToAction("../Home/Home");
+            }
             ViewBag.Message = "Home";
 
             return View();
