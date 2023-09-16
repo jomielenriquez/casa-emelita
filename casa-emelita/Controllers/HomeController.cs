@@ -52,7 +52,22 @@ namespace casa_emelita.Controllers
         {
             return View();
         }
+
         public ActionResult Menu()
+        {
+            return View();
+        }
+        
+        public ActionResult ServicesofCasa()
+        {
+            return View();
+        }
+       
+        public ActionResult GalleryofCasa()
+        {
+            return View();
+        }
+        public ActionResult ContactCasa()
         {
             return View();
         }
