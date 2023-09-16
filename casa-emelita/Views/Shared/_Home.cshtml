@@ -23,21 +23,17 @@
                                 <div class="main-menu d-none d-lg-block">
                                     <nav>
                                         <ul class="mein_menu_list" id="navigation">
-                                            <li>@Html.ActionLink("About", "AboutCasa", "Home")</li>
-                                            @*<li><a href="about">About</a></li>*@
-                                            <li>@Html.ActionLink("Services", "ServicesofCasa", "Home")</li>
-                                            @*<li><a href="service">Services</a></li>*@
-                                            <li>@Html.ActionLink("Packages", "PackagesofCasa", "Home")</li>
-                                            @*<li><a href="menu">packages</a></li>*@
+                                            <li>@Html.ActionLink("Home", "Home", "Home", new { @style = "color: " + (ViewBag.Title == "Home" ? "#78b454 !important" : "") })</li>
+                                            <li>@Html.ActionLink("About", "AboutCasa", "Home", new { @style = "color: " + (ViewBag.Title == "AboutCasa" ? "#78b454 !important" : "") })</li>
+                                            <li>@Html.ActionLink("Services", "ServicesofCasa", "Home", new { @style = "color: " + (ViewBag.Title == "ServicesofCasa" ? "#78b454 !important" : "") })</li>
+                                            <li>@Html.ActionLink("Packages", "PackagesofCasa", "Home", new { @style = "color: " + (ViewBag.Title == "PackagesofCasa" ? "#78b454 !important" : "") })</li>
                                             <div class="logo-img d-none d-lg-block">
                                                 <a data-toggle="modal" data-target="#loginModal">
                                                     <img src="~/Content/casa/image/logo.png" alt="">
                                                 </a>
                                             </div>
-                                            <li>@Html.ActionLink("Gallery", "GalleryofCasa", "Home")</li>
-                                            @*<li><a href="gallery">gallery</a></li>*@
-                                            <li>@Html.ActionLink("Contact", "ContactCasa", "Home")</li>
-                                            @*<li><a href="contact">Contact</a></li>*@
+                                            <li>@Html.ActionLink("Gallery", "GalleryofCasa", "Home", new { @style = "color: " + (ViewBag.Title == "GalleryofCasa" ? "#78b454 !important" : "") })</li>
+                                            <li>@Html.ActionLink("Contact", "ContactCasa", "Home", new { @style = "color: " + (ViewBag.Title == "ContactCasa" ? "#78b454 !important" : "") })</li>
                                         </ul>
                                     </nav>
                                 </div>
