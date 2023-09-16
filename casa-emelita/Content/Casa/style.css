@@ -1675,6 +1675,7 @@ h3 {
   background-image: url(../casa/image/zigzag.svg);
   content: "";
   position: absolute;
+  margin-top:1px;
 }
 
 @media (max-width: 767px) {

@@ -132,12 +132,12 @@
                 $("#btn_login").addClass("btn-primary").removeClass("btn-danger");
 
 
-                var other_data = 'email=' + email +
-                    '&password=' + password;
+                var other_data = 'USERNAME=' + email +
+                    '&PASSWORD=' + password;
 
                 $.ajax({
 
-                    url: "functions/login?" + other_data,
+                    url: "../login/CheckCredentials?" + other_data,
                     type: "POST",
                     contentType: false,
                     cache: false,
@@ -151,7 +151,10 @@
                     },
                     success: function (data) {
 
-                        if (data.includes('Administrator')) {
+                        console.log(data);
+                        var jsonData = data;
+
+                        if (jsonData.status == 'success') {
 
                             swal({
                                 title: "Hello!",
@@ -159,7 +162,7 @@
                                 type: "success"
                             }).then(okay => {
                                 if (okay) {
-                                    window.location = "app/index";
+                                    window.location = "../Home/HomeAdmin";
                                 }
                             });
                         } else {

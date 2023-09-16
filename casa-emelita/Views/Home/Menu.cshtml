@@ -1,0 +1,351 @@
+﻿
+@{
+    ViewBag.Title = "Menu";
+    Layout = "~/Views/Shared/_Home.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Our Menu and Packages</h3>
+            <p></p>
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>Our Menu</h3>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-sm-6">
+                <select id="category" class="form-control">
+                    <option value="" selected hidden>Category</option>
+                    <option value="">View all</option>
+                    <option value="Appetizer">Appetizer</option>
+                    <option value="Soup">Soup</option>
+                    <option value="Ala Carte">Ala Carte</option>
+                    <option value="Pork">Pork</option>
+                    <option value="Chicken">Chicken</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Noodles and Pasta,">Noodles and Pasta,</option>
+                    <option value="Rice">Rice</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Shakes">Shakes</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Wine">Wine</option>
+                    <option value="Fries">Fries</option>
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <a style="color:white;cursor:pointer;" id="btn_search" class="btn btn-success">
+                    <center>Search</center>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+
+            <?php
+
+            $sql = "SELECT `_id`, `_menu_code`, `_menu_name`, `_category`, `_description`, `_price`, `_img` FROM `tbl_menu` WHERE `_category` LIKE '$category'";
+            $result = $con_str->query($sql);
+
+            if ($result->num_rows > 0) {
+            while ($row = mysqli_fetch_array($result)) {
+            $menuCode = $row['_menu_code'];
+            $imgPath = 'img/logo.png';
+
+            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode'";
+            $result2 = $con_str->query($sql2);
+
+            if ($result2->num_rows > 0) {
+            while ($row2 = mysqli_fetch_array($result2)) {
+            if ($row2['_img'] != '') {
+            $imgPath = 'img/menu/' . $row2['_img'];
+            }
+            }
+            }
+            $output = '';
+            $output = ' <div class="col-xl-4 col-md-6">
+                <div class="single_order">
+                    <div class="order_thumb">
+                        <img src="' . $imgPath . '" alt="">
+                        <div class="order_prise">
+                            <span>' . number_format($row["_price"], 2) . '</span>
+                        </div>
+                    </div>
+                    <div class="order_info">
+                        <h3><a href="#">' . $row["_menu_code"] . '</a></h3>
+                        <p>' . $row["_description"] . '
+                        <p>
+                            ' . $row["_category"] . '
+                        </p>
+
+                    </div>
+                </div>
+            </div>';
+            echo $output;
+            }
+            }
+
+            ?>
+
+
+
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>Our Packages</h3>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:20px;">
+            <div class="col-sm-6">
+                <select id="event_type" class="form-control">
+                    <option value="" selected hidden>Event type</option>
+                    <option value="">View all</option>
+                    <option value="All events">All events</option>
+                    <option value="Birthday catering">Birthday catering</option>
+                    <option value="Wedding service">Wedding service</option>
+                    <option value="Party catering">Party catering</option>
+                    <option value="Corporate service">Corporate service</option>
+                    <option value="Other services">Other services</option>
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <a style="color:white;cursor:pointer;" id="btn_search_package" class="btn btn-success">
+                    <center>Search</center>
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <?php
+
+            $sql = "SELECT `_id`, `_package_code`, `_package_name`, `_event_type`, `_inclusions`, `_pax`, `_price` FROM `tbl_package` WHERE `_event_type` LIKE '$eventType'";
+            $result = $con_str->query($sql);
+
+            if ($result->num_rows > 0) {
+            while ($row = mysqli_fetch_array($result)) {
+            $packageCode = $row['_package_code'];
+            $menuCode = '';
+            $imgPath = 'img/logo.png';
+
+
+
+            $sql2 = "SELECT `_id`, `_package_code`, `_menu_code`, `_menu_name`, `_description` FROM `tbl_package_menu` WHERE `_package_code` LIKE '$packageCode'";
+            $result2 = $con_str->query($sql2);
+
+            if ($result2->num_rows > 0) {
+            while ($row2 = mysqli_fetch_array($result2)) {
+            $menuCode = $row2['_menu_code'];
+            }
+            }
+
+            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode' ORDER BY RAND()";
+            $result2 = $con_str->query($sql2);
+
+            if ($result2->num_rows > 0) {
+            while ($row2 = mysqli_fetch_array($result2)) {
+            if ($row2['_img'] != '') {
+            $imgPath = 'img/menu/' . $row2['_img'];
+            }
+            }
+            }
+            $output = '';
+            $output = ' <div class="col-xl-4 col-md-6">
+                <div class="single_order">
+                    <div class="order_thumb">
+                        <img src="' . $imgPath . '" alt="">
+                        <div class="order_prise">
+                            <span>' . number_format($row["_price"], 2) . '</span>
+                        </div>
+                    </div>
+                    <div class="order_info">
+                        <h3><a href="#">' . $row["_package_code"] . '</a></h3>
+                        <h4>' . $row["_event_type"] . '</h4>
+                        <h5>Inclusions:</h5>
+                        <p>' . $row["_inclusions"] . '</p>
+                        <p>
+                            Good for ' . $row["_pax"] . ' pax
+                        </p>
+                        <a id="btn_book" style="cursor:pointer;" data-toggle="modal" data-target="#bookingModal" class="boxed_btn"
+                           data-package_code="' . $row[" _package_code"] . '"
+                                data-event_type="' . $row["_event_type"] . '"
+                                data-inclusions="' . $row["_inclusions"] . '"
+                                data-pax="' . $row["_pax"] . '"
+                                data-price="₱ ' . number_format($row["_price"], 2) . '"
+                                data-price_value="' . $row["_price"] . '">Book Now!</a>
+                    </div>
+                </div>
+            </div>';
+            echo $output;
+            }
+            }
+
+            ?>
+
+
+
+        </div>
+    </div>
+</div>
+<!-- order_area_end -->
+
+<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Booking details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <div class="single_order">
+                            <div class="order_info">
+                                <h3 id="package_code">Package code</h3>
+                                <h4 id="event_type">Event type</h4>
+                                <h5>Inclusions:</h5>
+                                <p id="inclusions"></p>
+                                <p id="pax">
+                                    Good for 100 pax
+                                </p>
+                                <p id="price">
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="img/logo.png" style="float:right;width:200px;margin-right:60px;">
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Menu included in the package</label>
+                        <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
+                            <thead class="table-header">
+                                <tr>
+                                    <th width="1%" class="text-center">
+                                        Image
+                                    </th>
+                                    <th class="text-center">
+                                        Menu code
+                                    </th>
+                                    <th class="text-center">
+                                        Name
+                                    </th>
+                                    <th class="text-center">
+                                        Category
+                                    </th>
+                                    <th class="text-center">
+                                        Description
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Event Date: </label>
+                        <input id="reservation_date" type="date" class="form-control" onkeydown="return false"
+                               onchange="checkDate(this.value);">
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group" id="grp_slot" style="display:none;">
+                            <label> Available Slots:</label><br>
+                            <input type="radio" name="slot" value="09:00 am to 01:00 pm" id="morning">
+                            <label id="lbl_morning" for="morning">09:00 am to 02:00 pm</label><br>
+                            <input type="radio" name="slot" value="03:00 pm to 08:00 pm" id="afternoon">
+                            <label id="lbl_afternoon" for="afternoon">03:00 pm to 08:00 pm</label><br>
+                            <input type="radio" name="slot" value="Whole day" id="whole_day">
+                            <label id="lbl_wl" for="whole_day">Whole day</label>
+                        </div>
+                        <div class="form-group" id="wrng" style="display:none;">
+                            <label class="genric-btn danger circle arrow" disabled>
+                                No available slot for your
+                                selected date!
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <iframe class="form-control" src="calendar.php" style="height:730px;"></iframe> -->
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Personal Information: </label>
+                    </div>
+                </div>
+
+
+                <div class="row m-3">
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <input class="form-control valid" name="name" id="c_name" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
+                                   placeholder="Enter your name">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="email" id="c_email" type="email"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'"
+                                   placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_contact" id="c_contact" type="contact"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter contact number'"
+                                   placeholder="Enter contact number">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_address" id="c_address" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter address'"
+                                   placeholder="Enter address">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label> Appointment Date: </label>
+                            <input id="appointment_date" type="date" class="form-control valid"
+                                   onkeydown="return false">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="button" id="btn_submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
