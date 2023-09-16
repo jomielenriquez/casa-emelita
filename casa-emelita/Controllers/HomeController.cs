@@ -42,5 +42,9 @@ namespace casa_emelita.Controllers
         {
             return View();
         }
+        public ActionResult Menu()
+        {
+            return View();
+        }
     }
 }
