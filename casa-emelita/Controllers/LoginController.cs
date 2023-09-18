@@ -8,6 +8,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using casa_emelita.Models;
 using casa_emelita.Repository;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace casa_emelita.Controllers
 {
@@ -19,7 +21,7 @@ namespace casa_emelita.Controllers
             this.loginRepository = new LoginRepository();
         }
         [System.Web.Http.HttpPost]
-        public JsonResult CheckCredentials([FromBody] LoginModel data)
+        public JsonResult CheckCredentials([System.Web.Http.FromBody] LoginModel data)
         {
             string result = this.loginRepository.IsRegistered(data);
             LoginReturnModel loginReturnModel = new LoginReturnModel();
@@ -32,6 +34,31 @@ namespace casa_emelita.Controllers
                 Session["AdminID"] = result;
             }
             return Json(loginReturnModel, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult UploadFile(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                try
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Content/Casa/image/"), fileName);
+                    file.SaveAs(path);
+
+                    ViewBag.Message = "File uploaded successfully!";
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "Error: " + ex.Message;
+                }
+            }
+            else
+            {
+                ViewBag.Message = "Please select a file to upload.";
+            }
+
+            return Json("{'status':'Success'}", JsonRequestBehavior.AllowGet);
         }
     }
 }

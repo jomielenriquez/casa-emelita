@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -14,5 +15,9 @@ namespace casa_emelita.Models
     {
         public string status { get; set; }
         public string GUID { get; set; }
+    }
+    public class ImageUpload
+    {
+        public IFormFile File { get; set; }
     }
 }
