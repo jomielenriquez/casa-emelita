@@ -14,10 +14,12 @@ namespace casa_emelita.Controllers
         AppModel model;
         MenuRepository menuRepository;
         CategoryRepository categoryRepository;
+        Data data;
         public HomeController() { 
             this.model = new AppModel();
             this.menuRepository = new MenuRepository();
             this.categoryRepository = new CategoryRepository();
+            this.data = new Data();
         }
         public ActionResult Index()
         {
@@ -81,6 +83,16 @@ namespace casa_emelita.Controllers
                     uploadForm.menuNewRecord.file.SaveAs(path);
 
                     ViewBag.Message = "File uploaded successfully!";
+
+                    TBL_MENU menu = new TBL_MENU();
+                    menu.MENUIMAGE = path;
+                    menu.PRICE = uploadForm.menuNewRecord.Price;
+                    menu.MENUCODE = uploadForm.menuNewRecord.Code;
+                    menu.MENUNAME = uploadForm.menuNewRecord.Name;
+                    menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
+                    menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
+
+                    this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
                 }
                 catch (Exception ex)
                 {
