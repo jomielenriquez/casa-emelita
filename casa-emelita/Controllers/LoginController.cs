@@ -35,30 +35,5 @@ namespace casa_emelita.Controllers
             }
             return Json(loginReturnModel, JsonRequestBehavior.AllowGet);
         }
-        [System.Web.Http.HttpPost]
-        public JsonResult UploadFile(HttpPostedFileBase file)
-        {
-            if (file != null && file.ContentLength > 0)
-            {
-                try
-                {
-                    string fileName = Path.GetFileName(file.FileName);
-                    string path = Path.Combine(Server.MapPath("~/Content/Casa/image/"), fileName);
-                    file.SaveAs(path);
-
-                    ViewBag.Message = "File uploaded successfully!";
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Message = "Error: " + ex.Message;
-                }
-            }
-            else
-            {
-                ViewBag.Message = "Please select a file to upload.";
-            }
-
-            return Json("{'status':'Success'}", JsonRequestBehavior.AllowGet);
-        }
     }
 }

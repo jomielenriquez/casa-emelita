@@ -6,6 +6,12 @@
     <edmx:Diagrams>
       <Diagram DiagramId="10cd974343904837ade1046bc9928018" Name="Diagram1">
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ADMIN" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_CATEGORY" Width="1.5" PointX="0.75" PointY="6.375" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_EVENTTYPE" Width="1.5" PointX="3.75" PointY="1.375" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_MENU" Width="1.5" PointX="3" PointY="6" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_PACKAGE" Width="1.5" PointX="6" PointY="1" />
+        <AssociationConnector Association="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY" />
+        <AssociationConnector Association="CASAEMELITAModel.FK_TBL_PACKAGE" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

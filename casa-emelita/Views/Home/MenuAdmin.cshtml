@@ -1,0 +1,220 @@
+﻿@model casa_emelita.Models.AppModel
+@{
+    ViewBag.Title = "MenuAdmin";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Our Menu</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Menu <a onclick="clearFields();" style="color:white;cursor:pointer;" class="btn btn-success"
+                                data-toggle="modal" data-target="#menuModal">Add new menu</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered table-striped" id="tbl_menu">
+                    <thead class="table-header">
+                        <tr>
+                            <th width="1%" class="text-center">
+                                Action
+                            </th>
+                            <th width="1%" class="text-center">
+                                Image
+                            </th>
+                            <th class="text-center">
+                                Menu code
+                            </th>
+                            <th class="text-center">
+                                Name
+                            </th>
+                            <th class="text-center">
+                                Category
+                            </th>
+                            <th class="text-center">
+                                Description
+                            </th>
+                            <th class="text-center">
+                                Price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
+                        {
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>@menu.MENUCODE</td>
+                                <td>@menu.MENUNAME</td>
+                                <td>@menu.TBL_CATEGORY.CATEGORYNAME</td>
+                                <td>@menu.MENUDESCRIPTION</td>
+                                <td>@menu.PRICE</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-hidden="true"
+     style="z-index: 1100 !important;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Menu details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "uploadForm", @name = "uploadForm" }))
+            {
+                <div class="modal-body">
+                    <center style="margin-bottom:20px;">
+                        <img id="image_add" src="../Content/casa/image/logo.png" alt=""
+                             style="height: 200px; width: 200px;box-shadow: 20px 20px 50px grey;margin-bottom:20px;">
+                        <div class="col-sm-12" style="margin-left: 0px;">
+                            <label class="btn btn-primary " style="color:#fff; border-radius:8px;">
+                                <input class="form-control" type="hidden" name="size" value="10000000">
+                                <center>
+                                    <span></span>&nbsp;Browse
+                                        @*<input type="file" id="file" name="file" style="display: none;">*@
+                                        @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file" })
+                                </center>
+                            </label>
+                        </div>
+                    </center>
+                    <label>Menu code</label>
+                    @*<input style="margin-bottom:20px;" type="text" id="menu_code" placeholder="Menu code" required=""
+                           class="single-input">*@
+                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text" })
+                    <label>Menu name</label>
+                    @*<input style="margin-bottom:20px;" type="text" id="menu_name" placeholder="Menu name" required=""
+                           class="single-input">*@
+                    @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text" })
+
+                    <label>Category</label>
+                    @*<select id="category" class="form-control">
+                        <option value="" selected hidden>Select</option>
+                        <option value="Appetizer">Appetizer</option>
+                        <option value="Soup">Soup</option>
+                        <option value="Ala Carte">Ala Carte</option>
+                        <option value="Pork">Pork</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Fish">Fish</option>
+                        <option value="Noodles and Pasta,">Noodles and Pasta,</option>
+                        <option value="Rice">Rice</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Shakes">Shakes</option>
+                        <option value="Drinks">Drinks</option>
+                        <option value="Wine">Wine</option>
+                        <option value="Fries">Fries</option>
+                    </select>*@
+                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Type"})
+                    <label>Description</label>
+                    @*<input style="margin-bottom:20px;" type="text" id="description" placeholder="Description"
+                           required="" class="single-input">*@
+                    @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text" })
+                    <label>Price</label>
+                    @*<input style="margin-bottom:20px;" type="number" min="0" id="price" placeholder="Price" required=""
+                           class="single-input">*@
+                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number" })
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"
+                            onclick="window.location.reload();">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" type="submit" id="btn_save">Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var dataTable1 = $('#tbl_menu').DataTable({});
+    });
+
+    $(document).on("change", "#file", function () {
+        event.preventDefault();
+
+        //get file details
+        var property = this.files[0];
+        var image_name = property.name;
+        var image_extension = image_name.split('.').pop().toLowerCase();
+        var image_size = property.size;
+
+        //filter extension
+        if (jQuery.inArray(image_extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+
+            swal({
+                title: "Invalid File Type!",
+                text: "Image must be in 'gif','png','jpg','jpeg' format!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: "#5cb85c",
+                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
+                confirmButtonClass: "btn"
+            }).then((result) => {
+                if (result.value) {
+
+                    this.value = "";
+                    document.getElementById("image_add").src = "../img/logo.png";
+                    document.getElementById("image_add").className += " required-fields";
+
+                }
+            });
+
+        }
+
+        //filter size
+        else if (image_size > 2000000) {
+
+            swal({
+                title: "Invalid File Size!",
+                text: "Please select an image with size lower than 2MB!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: "#5cb85c",
+                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
+                confirmButtonClass: "btn"
+            }).then((result) => {
+                if (result.value) {
+
+                    this.value = "";
+                    document.getElementById("image_add").src = "../img/logo.png";
+                    document.getElementById("image_add").className += " required-fields";
+
+                }
+            });
+
+        }
+
+        else if (this.files && this.files[0]) {
+            document.getElementById("image_add").classList.remove("required-fields");
+            var obj = new FileReader();
+            obj.onload = function (data) { document.getElementById("image_add").src = data.target.result; }
+            obj.readAsDataURL(this.files[0]);
+        }
+
+    });
+</script>
