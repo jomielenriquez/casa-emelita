@@ -45,6 +45,7 @@
                             <th class="text-center">
                                 Name
                             </th>
+                            <th style="display:none"></th>
                             <th class="text-center">
                                 Category
                             </th>
@@ -79,6 +80,7 @@
                                 <td class="menuid" style="display:none">@menu.MENUID</td>
                                 <td class="code">@menu.MENUCODE</td>
                                 <td class="name">@menu.MENUNAME</td>
+                                <td class="CATEGORYID" style="display:none">@menu.TBL_CATEGORY.CATEGORYID</td>
                                 <td class="category">@menu.TBL_CATEGORY.CATEGORYNAME</td>
                                 <td class="description">@menu.MENUDESCRIPTION</td>
                                 <td class="price">₱ @menu.PRICE</td>
@@ -125,9 +127,11 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            @using (Html.BeginForm("UploadFile", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "uploadForm", @name = "uploadForm" }))
+            @using (Html.BeginForm("SaveUpdateMenu", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "uploadForm", @name = "uploadForm" }))
             {
                 <div class="modal-body">
+                    @Html.TextBoxFor(model => model.menuNewRecord.MenuID, new { @class = "single-input", @id = "MenuID", @name = "MenuID", @style = "display:none", @type = "text" })
+
                     <center style="margin-bottom:20px;">
                         <img id="image_add" src="../Content/casa/image/logo.png" alt=""
                              style="height: 200px; width: 200px;box-shadow: 20px 20px 50px grey;margin-bottom:20px;">
@@ -143,40 +147,20 @@
                         </div>
                     </center>
                     <label>Menu code</label>
-                    @*<input style="margin-bottom:20px;" type="text" id="menu_code" placeholder="Menu code" required=""
-                           class="single-input">*@
                     @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text" })
+                    
                     <label>Menu name</label>
-                    @*<input style="margin-bottom:20px;" type="text" id="menu_name" placeholder="Menu name" required=""
-                           class="single-input">*@
                     @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text" })
 
                     <label>Category</label>
-                    @*<select id="category" class="form-control">
-                        <option value="" selected hidden>Select</option>
-                        <option value="Appetizer">Appetizer</option>
-                        <option value="Soup">Soup</option>
-                        <option value="Ala Carte">Ala Carte</option>
-                        <option value="Pork">Pork</option>
-                        <option value="Chicken">Chicken</option>
-                        <option value="Fish">Fish</option>
-                        <option value="Noodles and Pasta,">Noodles and Pasta,</option>
-                        <option value="Rice">Rice</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Shakes">Shakes</option>
-                        <option value="Drinks">Drinks</option>
-                        <option value="Wine">Wine</option>
-                        <option value="Fries">Fries</option>
-                    </select>*@
-                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Type"})
+                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Category" })
+
                     <label>Description</label>
-                    @*<input style="margin-bottom:20px;" type="text" id="description" placeholder="Description"
-                           required="" class="single-input">*@
                     @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text" })
+
                     <label>Price</label>
-                    @*<input style="margin-bottom:20px;" type="number" min="0" id="price" placeholder="Price" required=""
-                           class="single-input">*@
                     @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number" })
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"
@@ -261,8 +245,15 @@
     $(document).on("click", "#btn_edit", function () {
         var target_row = $(this).closest('tr');
 
+        document.getElementById("Code").disabled = true;
+
+        document.getElementById("MenuID").value = target_row.find('td.menuid').text();
         document.getElementById("image_add").src = target_row.find('img')[0].src;
         document.getElementById("Code").value = target_row.find('td.code').text();
+        document.getElementById("Name").value = target_row.find('td.name').text();
+        document.getElementById("MenuDescription").value = target_row.find('td.description').text();
+        document.getElementById("MenuPrice").value = target_row.find('td.price').text().split(" ")[1];
+        document.getElementById("Category").value = target_row.find('td.CATEGORYID').text();
         
         //document.getElementById("menu_code").disabled = true;
         //edit_id = $(this).data('id');

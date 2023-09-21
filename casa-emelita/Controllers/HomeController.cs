@@ -72,36 +72,41 @@ namespace casa_emelita.Controllers
         }
 
         [System.Web.Http.HttpPost]
-        public ActionResult UploadFile(AppModel uploadForm)
+        public ActionResult SaveUpdateMenu(AppModel uploadForm)
         {
-            if (uploadForm.menuNewRecord.file != null && uploadForm.menuNewRecord.file.ContentLength > 0)
+            if(uploadForm.menuNewRecord.MenuID == null)
             {
-                try
+                if (uploadForm.menuNewRecord.file != null && uploadForm.menuNewRecord.file.ContentLength > 0)
                 {
-                    string fileName = Path.GetFileName(uploadForm.menuNewRecord.file.FileName);
-                    string path = Path.Combine(Server.MapPath("~/UploadedImage/"), fileName);
-                    uploadForm.menuNewRecord.file.SaveAs(path);
+                    try
+                    {
+                        string fileName = Path.GetFileName(uploadForm.menuNewRecord.file.FileName);
+                        DateTime date = DateTime.Now;
+                        fileName = date.ToString("MMddyyHmmss") + "." + fileName.Split('.')[fileName.Split('.').Count() - 1];
+                        string path = Path.Combine(Server.MapPath("~/UploadedImage/"), fileName);
+                        uploadForm.menuNewRecord.file.SaveAs(path);
 
-                    ViewBag.Message = "File uploaded successfully!";
+                        ViewBag.Message = "File uploaded successfully!";
 
-                    TBL_MENU menu = new TBL_MENU();
-                    menu.MENUIMAGE = fileName;
-                    menu.PRICE = uploadForm.menuNewRecord.Price;
-                    menu.MENUCODE = uploadForm.menuNewRecord.Code;
-                    menu.MENUNAME = uploadForm.menuNewRecord.Name;
-                    menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
-                    menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
+                        TBL_MENU menu = new TBL_MENU();
+                        menu.MENUIMAGE = fileName;
+                        menu.PRICE = uploadForm.menuNewRecord.Price;
+                        menu.MENUCODE = uploadForm.menuNewRecord.Code;
+                        menu.MENUNAME = uploadForm.menuNewRecord.Name;
+                        menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
+                        menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
 
-                    this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
+                        this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
+                    }
+                    catch (Exception ex)
+                    {
+                        ViewBag.Message = "Error: " + ex.Message;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    ViewBag.Message = "Error: " + ex.Message;
+                    ViewBag.Message = "Please select a file to upload.";
                 }
-            }
-            else
-            {
-                ViewBag.Message = "Please select a file to upload.";
             }
 
             return RedirectToAction("../Home/MenuAdmin");

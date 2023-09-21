@@ -32,6 +32,7 @@ namespace casa_emelita.Models
     public class MenuNewRecord
     {
         public HttpPostedFileBase file { get; set; }
+        public string MenuID { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public Guid Category { get; set; }
