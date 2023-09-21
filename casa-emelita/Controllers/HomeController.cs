@@ -106,6 +106,12 @@ namespace casa_emelita.Controllers
 
             return RedirectToAction("../Home/MenuAdmin");
         }
+
+        public ActionResult Delete(string MenuIDToDelete)
+        {
+            this.data.Delete(new TBL_MENU(), new List<string>() { MenuIDToDelete}, "MENUID");
+            return RedirectToAction("../Home/MenuAdmin");
+        }
         public ActionResult AboutCasa()
         {
             return View();

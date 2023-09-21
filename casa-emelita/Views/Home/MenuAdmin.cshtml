@@ -38,6 +38,7 @@
                             <th width="1%" class="text-center">
                                 Image
                             </th>
+                            <th style="display:none"></th>
                             <th class="text-center">
                                 Menu code
                             </th>
@@ -64,7 +65,7 @@
                                         <div class="btn-group">
                                             <a data-toggle="modal" data-target="#menuModal" style="color:white;" class="btn btn-primary" margin-bottom:5px;"="" id="btn_edit" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10" data-img="../img/menu/1695098336724.png">Edit</a>
 
-                                            <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="@(menu.MENUID)"  data-toggle="modal" data-target="#deleteModal">Delete</a>
+                                            <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="@(menu.MENUID)"  data-toggle="modal" data-target="#deleteModal" id="btn_delete">Delete</a>
                                         </div>
                                     </center>
                                 </td>
@@ -75,11 +76,12 @@
                                         </center>
                                     </div>
                                 </td>
+                                <td class="menuid" style="display:none">@menu.MENUID</td>
                                 <td class="code">@menu.MENUCODE</td>
                                 <td class="name">@menu.MENUNAME</td>
                                 <td class="category">@menu.TBL_CATEGORY.CATEGORYNAME</td>
                                 <td class="description">@menu.MENUDESCRIPTION</td>
-                                <td class="price">@menu.PRICE</td>
+                                <td class="price">₱ @menu.PRICE</td>
                             </tr>
                         }
                     </tbody>
@@ -93,19 +95,23 @@
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Ready to Delete?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Select "Delete" below if you want to delete.
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger" href="#">Delete</a>
-            </div>
+            @using (Html.BeginForm("Delete", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "deleteForm", @name = "deleteForm" }))
+            {
+                @Html.TextBoxFor(model => model.MenuIDToDelete, new { @class = "single-input", @id = "MenuIDToDelete", @name = "MenuIDToDelete", @style = "display:none;", @type = "text" })
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Ready to Delete?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Select "Delete" below if you want to delete.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="confirmdelete">Delete</button>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -261,5 +267,14 @@
         //document.getElementById("menu_code").disabled = true;
         //edit_id = $(this).data('id');
         //commandStr = 'update';
+    });
+
+    $(document).on("click", "#btn_delete", function () {
+        var target_row = $(this).closest('tr');
+
+        //document.getElementById("image_add").src = target_row.find('img')[0].src;
+        console.log(target_row.find('td.menuid').text());
+        document.getElementById("MenuIDToDelete").value = target_row.find('td.menuid').text();
+
     });
 </script>
