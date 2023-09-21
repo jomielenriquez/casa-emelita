@@ -85,7 +85,7 @@ namespace casa_emelita.Controllers
                     ViewBag.Message = "File uploaded successfully!";
 
                     TBL_MENU menu = new TBL_MENU();
-                    menu.MENUIMAGE = path;
+                    menu.MENUIMAGE = fileName;
                     menu.PRICE = uploadForm.menuNewRecord.Price;
                     menu.MENUCODE = uploadForm.menuNewRecord.Code;
                     menu.MENUNAME = uploadForm.menuNewRecord.Name;

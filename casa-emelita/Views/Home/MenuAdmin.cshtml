@@ -59,13 +59,27 @@
                         @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
                         {
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td>@menu.MENUCODE</td>
-                                <td>@menu.MENUNAME</td>
-                                <td>@menu.TBL_CATEGORY.CATEGORYNAME</td>
-                                <td>@menu.MENUDESCRIPTION</td>
-                                <td>@menu.PRICE</td>
+                                <td>
+                                    <center>
+                                        <div class="btn-group">
+                                            <a data-toggle="modal" data-target="#menuModal" style="color:white;" class="btn btn-primary" margin-bottom:5px;"="" id="btn_edit" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10" data-img="../img/menu/1695098336724.png">Edit</a>
+
+                                            <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="@(menu.MENUID)"  data-toggle="modal" data-target="#deleteModal">Delete</a>
+                                        </div>
+                                    </center>
+                                </td>
+                                <td>
+                                    <div>
+                                        <center> 
+                                            <img src="@("../UploadedImage/"+menu.MENUIMAGE)" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;">
+                                        </center>
+                                    </div>
+                                </td>
+                                <td class="code">@menu.MENUCODE</td>
+                                <td class="name">@menu.MENUNAME</td>
+                                <td class="category">@menu.TBL_CATEGORY.CATEGORYNAME</td>
+                                <td class="description">@menu.MENUDESCRIPTION</td>
+                                <td class="price">@menu.PRICE</td>
                             </tr>
                         }
                     </tbody>
@@ -75,6 +89,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Ready to Delete?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Select "Delete" below if you want to delete.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger" href="#">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-hidden="true"
      style="z-index: 1100 !important;">
     <div class="modal-dialog" role="document">
@@ -216,5 +250,16 @@
             obj.readAsDataURL(this.files[0]);
         }
 
+    });
+
+    $(document).on("click", "#btn_edit", function () {
+        var target_row = $(this).closest('tr');
+
+        document.getElementById("image_add").src = target_row.find('img')[0].src;
+        document.getElementById("Code").value = target_row.find('td.code').text();
+        
+        //document.getElementById("menu_code").disabled = true;
+        //edit_id = $(this).data('id');
+        //commandStr = 'update';
     });
 </script>
