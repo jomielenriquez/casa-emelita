@@ -37,6 +37,6 @@ namespace casa_emelita.Models
         public string Name { get; set; }
         public Guid Category { get; set; }
         public string Description { get; set; }
-        public int Price { get; set; }
+        public Decimal Price { get; set; }
     }
 }

@@ -73,7 +73,7 @@
                                 <td>
                                     <div>
                                         <center> 
-                                            <img src="@("../UploadedImage/"+menu.MENUIMAGE)" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;">
+                                            <img src="@(menu.MENUIMAGE == "empty" ? "../Content/casa/image/logo.png" : "../UploadedImage/"+menu.MENUIMAGE)" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;">
                                         </center>
                                     </div>
                                 </td>
@@ -117,6 +117,27 @@
         </div>
     </div>
 </div>
+@* Info Modal *@
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Success</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @ViewBag.SaveUploadMessage
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-hidden="true"
      style="z-index: 1100 !important;">
     <div class="modal-dialog" role="document">
@@ -141,25 +162,25 @@
                                 <center>
                                     <span></span>&nbsp;Browse
                                         @*<input type="file" id="file" name="file" style="display: none;">*@
-                                        @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file" })
+                                        @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file"})
                                 </center>
                             </label>
                         </div>
                     </center>
                     <label>Menu code</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text" })
+                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text", @required = ""})
                     
                     <label>Menu name</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text" })
+                    @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text", @required = "" })
 
                     <label>Category</label>
-                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Category" })
+                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Category", @required = "" })
 
                     <label>Description</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text" })
+                    @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text", @required = "" })
 
                     <label>Price</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number" })
+                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01" })
 
                 </div>
                 <div class="modal-footer">
@@ -176,6 +197,11 @@
 <script>
     $(document).ready(function () {
         var dataTable1 = $('#tbl_menu').DataTable({});
+
+        var SaveUploadMessage = "@ViewBag.SaveUploadMessage";
+        if (SaveUploadMessage != "") {
+            $('#infoModal').modal('show');
+        }
     });
 
     $(document).on("change", "#file", function () {
@@ -254,7 +280,7 @@
         document.getElementById("MenuDescription").value = target_row.find('td.description').text();
         document.getElementById("MenuPrice").value = target_row.find('td.price').text().split(" ")[1];
         document.getElementById("Category").value = target_row.find('td.CATEGORYID').text();
-        
+
         //document.getElementById("menu_code").disabled = true;
         //edit_id = $(this).data('id');
         //commandStr = 'update';

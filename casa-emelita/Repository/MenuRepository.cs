@@ -18,5 +18,12 @@ namespace casa_emelita.Repository
             }
             return (List<TBL_MENU>)menu;
         }
+        public TBL_MENU GetMenuByID(Guid MenuID)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            TBL_MENU menu = (TBL_MENU)(from table_menu in entities.TBL_MENU.Where(data => data.MENUID == MenuID) select table_menu).FirstOrDefault();
+
+            return menu;
+        }
     }
 }

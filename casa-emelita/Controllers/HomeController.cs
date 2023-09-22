@@ -15,6 +15,7 @@ namespace casa_emelita.Controllers
         MenuRepository menuRepository;
         CategoryRepository categoryRepository;
         Data data;
+        static PageMessage message = new PageMessage();
         public HomeController() { 
             this.model = new AppModel();
             this.menuRepository = new MenuRepository();
@@ -64,6 +65,11 @@ namespace casa_emelita.Controllers
                 this.model.ErrorMessage = "Session Timeout";
                 return RedirectToAction("../Home/Home");
             }
+            if(message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
             this.model.Menu_List = this.menuRepository.GetMenuList();
             this.model.Category = this.categoryRepository.GetAllCategories();
             ViewBag.Message = "MenuAdmin";
@@ -76,46 +82,119 @@ namespace casa_emelita.Controllers
         {
             if(uploadForm.menuNewRecord.MenuID == null)
             {
-                if (uploadForm.menuNewRecord.file != null && uploadForm.menuNewRecord.file.ContentLength > 0)
+                UploadStatus ImageStatus = SaveImage(uploadForm.menuNewRecord.file);
+
+                if (!ImageStatus.IsSuccess)
                 {
-                    try
-                    {
-                        string fileName = Path.GetFileName(uploadForm.menuNewRecord.file.FileName);
-                        DateTime date = DateTime.Now;
-                        fileName = date.ToString("MMddyyHmmss") + "." + fileName.Split('.')[fileName.Split('.').Count() - 1];
-                        string path = Path.Combine(Server.MapPath("~/UploadedImage/"), fileName);
-                        uploadForm.menuNewRecord.file.SaveAs(path);
+                    ImageStatus.fileName = "empty";
+                }
 
-                        ViewBag.Message = "File uploaded successfully!";
+                TBL_MENU menu = new TBL_MENU();
+                menu.MENUIMAGE = ImageStatus.fileName;
+                menu.PRICE = uploadForm.menuNewRecord.Price;
+                menu.MENUCODE = uploadForm.menuNewRecord.Code;
+                menu.MENUNAME = uploadForm.menuNewRecord.Name;
+                menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
+                menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
 
-                        TBL_MENU menu = new TBL_MENU();
-                        menu.MENUIMAGE = fileName;
-                        menu.PRICE = uploadForm.menuNewRecord.Price;
-                        menu.MENUCODE = uploadForm.menuNewRecord.Code;
-                        menu.MENUNAME = uploadForm.menuNewRecord.Name;
-                        menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
-                        menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
-
-                        this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
-                    }
-                    catch (Exception ex)
-                    {
-                        ViewBag.Message = "Error: " + ex.Message;
-                    }
+                this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
+                message.Message = "Successfully Saved!!!";
+            }
+            else
+            {
+                TBL_MENU tableMenu = menuRepository.GetMenuByID(new Guid(uploadForm.menuNewRecord.MenuID));
+                UploadStatus ImageStatus = new UploadStatus();
+                if (uploadForm.menuNewRecord.file != null)
+                {
+                    ImageStatus = SaveImage(uploadForm.menuNewRecord.file);
                 }
                 else
                 {
-                    ViewBag.Message = "Please select a file to upload.";
+                    ImageStatus.fileName = tableMenu.MENUIMAGE;
                 }
+                TBL_MENU menu = new TBL_MENU() { 
+                    MENUID = new Guid(),
+                    MENUIMAGE = ImageStatus.fileName,
+                    PRICE = uploadForm.menuNewRecord.Price,
+                    MENUCODE = uploadForm.menuNewRecord.Code,
+                    MENUNAME = uploadForm.menuNewRecord.Name,
+                    MENUCATEGORY = uploadForm.menuNewRecord.Category,
+                    MENUDESCRIPTION = uploadForm.menuNewRecord.Description,
+                };
+
+                TBL_MENU menuFilter = new TBL_MENU()
+                {
+                    MENUID = new Guid(uploadForm.menuNewRecord.MenuID)
+                };
+
+                this.data.Update(menu, menuFilter, model.AdminID);
+
+                if (uploadForm.menuNewRecord.file != null)
+                {
+                    bool isDeleted = DeleteFile(tableMenu.MENUIMAGE);
+                }
+                message.Message = "Successfully Updated!!!";
             }
 
             return RedirectToAction("../Home/MenuAdmin");
         }
 
+        public UploadStatus SaveImage(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0)
+            {
+                try
+                {
+                    string fileName = Path.GetFileName(file.FileName);
+                    DateTime date = DateTime.Now;
+                    fileName = date.ToString("MMddyyHmmss") + "." + fileName.Split('.')[fileName.Split('.').Count() - 1];
+                    string path = Path.Combine(Server.MapPath("~/UploadedImage/"), fileName);
+                    file.SaveAs(path);
+
+                    return new UploadStatus() { 
+                        fileName = fileName,
+                        IsSuccess = true,
+                    };
+                }
+                catch (Exception ex)
+                {
+                    return new UploadStatus()
+                    {
+                        fileName = null,
+                        IsSuccess = false,
+                        message = "Error: " + ex.Message
+                    };
+                }
+            }
+            else
+            {
+                return new UploadStatus()
+                {
+                    fileName = null,
+                    IsSuccess = false,
+                    message = "Error: No Image"
+                };
+            }
+        }
+
         public ActionResult Delete(string MenuIDToDelete)
         {
+            TBL_MENU tableMenu = menuRepository.GetMenuByID(new Guid(MenuIDToDelete));
+
+            bool isDeleted = DeleteFile(tableMenu.MENUIMAGE);
+
             this.data.Delete(new TBL_MENU(), new List<string>() { MenuIDToDelete}, "MENUID");
+            message.Message = "Successfully Deleted!!!";
             return RedirectToAction("../Home/MenuAdmin");
+        }
+        public bool DeleteFile(string filename)
+        {
+            if (System.IO.File.Exists(Path.Combine(Server.MapPath("~/UploadedImage/"), filename)))
+            {
+                System.IO.File.Delete(Path.Combine(Server.MapPath("~/UploadedImage/"), filename));
+                return true;
+            }
+            return false;
         }
         public ActionResult AboutCasa()
         {
