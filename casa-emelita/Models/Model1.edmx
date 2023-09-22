@@ -44,6 +44,14 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="TBL_INCLUSION">
+          <Key>
+            <PropertyRef Name="INCLUSIONID" />
+          </Key>
+          <Property Name="INCLUSIONID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PACKAGEINCLUSION" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MENUID" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
         <EntityType Name="TBL_MENU">
           <Key>
             <PropertyRef Name="MENUID" />
@@ -68,7 +76,7 @@
           <Property Name="PACKAGECODE" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PACKAGENAME" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EVENTTYPE" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="INCLUSIONS" Type="nvarchar(max)" />
+          <Property Name="INCLUSIONS" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ACCOMODATION" Type="int" />
           <Property Name="PRICE" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
@@ -104,6 +112,7 @@
           <EntitySet Name="TBL_ADMIN" EntityType="Self.TBL_ADMIN" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_CATEGORY" EntityType="Self.TBL_CATEGORY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_EVENTTYPE" EntityType="Self.TBL_EVENTTYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_INCLUSION" EntityType="Self.TBL_INCLUSION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_MENU" EntityType="Self.TBL_MENU" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_PACKAGE" EntityType="Self.TBL_PACKAGE" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_TBL_MENU_MENUCATEGORY" Association="Self.FK_TBL_MENU_MENUCATEGORY">
@@ -139,11 +148,12 @@
           <EntitySet Name="TBL_CATEGORY" EntityType="CASAEMELITAModel.TBL_CATEGORY" />
           <EntitySet Name="TBL_EVENTTYPE" EntityType="CASAEMELITAModel.TBL_EVENTTYPE" />
           <EntitySet Name="TBL_MENU" EntityType="CASAEMELITAModel.TBL_MENU" />
-          <EntitySet Name="TBL_PACKAGE" EntityType="CASAEMELITAModel.TBL_PACKAGE" />
           <AssociationSet Name="FK_TBL_MENU_MENUCATEGORY" Association="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY">
             <End Role="TBL_CATEGORY" EntitySet="TBL_CATEGORY" />
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
           </AssociationSet>
+          <EntitySet Name="TBL_INCLUSION" EntityType="CASAEMELITAModel.TBL_INCLUSION" />
+          <EntitySet Name="TBL_PACKAGE" EntityType="CASAEMELITAModel.TBL_PACKAGE" />
           <AssociationSet Name="FK_TBL_PACKAGE" Association="CASAEMELITAModel.FK_TBL_PACKAGE">
             <End Role="TBL_EVENTTYPE" EntitySet="TBL_EVENTTYPE" />
             <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
@@ -192,23 +202,6 @@
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_CATEGORY" Relationship="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY" FromRole="TBL_MENU" ToRole="TBL_CATEGORY" />
         </EntityType>
-        <EntityType Name="TBL_PACKAGE">
-          <Key>
-            <PropertyRef Name="PACKAGEID" />
-          </Key>
-          <Property Name="PACKAGEID" Type="Guid" Nullable="false" />
-          <Property Name="PACKAGECODE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="PACKAGENAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="EVENTTYPE" Type="Guid" Nullable="false" />
-          <Property Name="INCLUSIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ACCOMODATION" Type="Int32" />
-          <Property Name="PRICE" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
-          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
-          <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="TBL_EVENTTYPE" Relationship="CASAEMELITAModel.FK_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_EVENTTYPE" />
-        </EntityType>
         <Association Name="FK_TBL_MENU_MENUCATEGORY">
           <End Type="CASAEMELITAModel.TBL_CATEGORY" Role="TBL_CATEGORY" Multiplicity="1" />
           <End Type="CASAEMELITAModel.TBL_MENU" Role="TBL_MENU" Multiplicity="*" />
@@ -221,6 +214,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="TBL_INCLUSION">
+          <Key>
+            <PropertyRef Name="INCLUSIONID" />
+          </Key>
+          <Property Name="INCLUSIONID" Type="Guid" Nullable="false" />
+          <Property Name="PACKAGEINCLUSION" Type="Guid" Nullable="false" />
+          <Property Name="MENUID" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TBL_PACKAGE">
+          <Key>
+            <PropertyRef Name="PACKAGEID" />
+          </Key>
+          <Property Name="PACKAGEID" Type="Guid" Nullable="false" />
+          <Property Name="PACKAGECODE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PACKAGENAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EVENTTYPE" Type="Guid" Nullable="false" />
+          <Property Name="INCLUSIONS" Type="Guid" Nullable="false" />
+          <Property Name="ACCOMODATION" Type="Int32" />
+          <Property Name="PRICE" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_EVENTTYPE" Relationship="CASAEMELITAModel.FK_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_EVENTTYPE" />
+        </EntityType>
         <Association Name="FK_TBL_PACKAGE">
           <End Type="CASAEMELITAModel.TBL_EVENTTYPE" Role="TBL_EVENTTYPE" Multiplicity="1" />
           <End Type="CASAEMELITAModel.TBL_PACKAGE" Role="TBL_PACKAGE" Multiplicity="*" />
@@ -295,6 +313,15 @@
                 <ScalarProperty Name="MENUCODE" ColumnName="MENUCODE" />
                 <ScalarProperty Name="MENUNAME" ColumnName="MENUNAME" />
                 <ScalarProperty Name="MENUID" ColumnName="MENUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_INCLUSION">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_INCLUSION">
+              <MappingFragment StoreEntitySet="TBL_INCLUSION">
+                <ScalarProperty Name="MENUID" ColumnName="MENUID" />
+                <ScalarProperty Name="PACKAGEINCLUSION" ColumnName="PACKAGEINCLUSION" />
+                <ScalarProperty Name="INCLUSIONID" ColumnName="INCLUSIONID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

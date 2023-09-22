@@ -29,6 +29,7 @@ namespace casa_emelita.Models
         public DbSet<TBL_CATEGORY> TBL_CATEGORY { get; set; }
         public DbSet<TBL_EVENTTYPE> TBL_EVENTTYPE { get; set; }
         public DbSet<TBL_MENU> TBL_MENU { get; set; }
+        public DbSet<TBL_INCLUSION> TBL_INCLUSION { get; set; }
         public DbSet<TBL_PACKAGE> TBL_PACKAGE { get; set; }
     }
 }

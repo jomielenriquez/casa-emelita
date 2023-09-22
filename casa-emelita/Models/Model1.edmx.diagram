@@ -9,8 +9,9 @@
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_CATEGORY" Width="1.5" PointX="0.75" PointY="6.375" />
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_EVENTTYPE" Width="1.5" PointX="3.75" PointY="1.375" />
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_MENU" Width="1.5" PointX="3" PointY="6" />
-        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_PACKAGE" Width="1.5" PointX="6" PointY="1" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_INCLUSION" Width="1.5" PointX="5.375" PointY="5.75" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_PACKAGE" Width="1.5" PointX="6" PointY="1" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_PACKAGE" />
       </Diagram>
     </edmx:Diagrams>

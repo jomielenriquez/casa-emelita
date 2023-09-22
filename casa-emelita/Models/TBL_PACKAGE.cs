@@ -18,7 +18,7 @@ namespace casa_emelita.Models
         public string PACKAGECODE { get; set; }
         public string PACKAGENAME { get; set; }
         public System.Guid EVENTTYPE { get; set; }
-        public string INCLUSIONS { get; set; }
+        public System.Guid INCLUSIONS { get; set; }
         public Nullable<int> ACCOMODATION { get; set; }
         public decimal PRICE { get; set; }
         public System.DateTime CREATEDDATE { get; set; }

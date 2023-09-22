@@ -77,6 +77,25 @@ namespace casa_emelita.Controllers
             return View(this.model);
         }
 
+        public ActionResult PackageAdmin()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            ViewBag.Message = "MenuAdmin";
+
+            return View(this.model);
+        }
+
         [System.Web.Http.HttpPost]
         public ActionResult SaveUpdateMenu(AppModel uploadForm)
         {
