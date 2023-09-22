@@ -14,6 +14,11 @@ namespace casa_emelita.Models
     
     public partial class TBL_MENU
     {
+        public TBL_MENU()
+        {
+            this.TBL_INCLUSION = new HashSet<TBL_INCLUSION>();
+        }
+    
         public System.Guid MENUID { get; set; }
         public string MENUNAME { get; set; }
         public string MENUCODE { get; set; }
@@ -27,5 +32,6 @@ namespace casa_emelita.Models
         public string UPDATEDBY { get; set; }
     
         public virtual TBL_CATEGORY TBL_CATEGORY { get; set; }
+        public virtual ICollection<TBL_INCLUSION> TBL_INCLUSION { get; set; }
     }
 }

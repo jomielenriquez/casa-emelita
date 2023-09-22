@@ -14,6 +14,8 @@ namespace casa_emelita.Controllers
         AppModel model;
         MenuRepository menuRepository;
         CategoryRepository categoryRepository;
+        PackageRepository packageRepository;
+        EventTypeRepository eventTypeRepository;
         Data data;
         static PageMessage message = new PageMessage();
         public HomeController() { 
@@ -21,6 +23,8 @@ namespace casa_emelita.Controllers
             this.menuRepository = new MenuRepository();
             this.categoryRepository = new CategoryRepository();
             this.data = new Data();
+            this.packageRepository = new PackageRepository();
+            this.eventTypeRepository = new EventTypeRepository();
         }
         public ActionResult Index()
         {
@@ -89,19 +93,21 @@ namespace casa_emelita.Controllers
                 ViewBag.SaveUploadMessage = message.Message;
                 message.Message = "";
             }
-            this.model.Menu_List = this.menuRepository.GetMenuList();
+            //this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
             this.model.Category = this.categoryRepository.GetAllCategories();
-            ViewBag.Message = "MenuAdmin";
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            ViewBag.Message = "PackageAdmin";
 
             return View(this.model);
         }
 
         [System.Web.Http.HttpPost]
-        public ActionResult SaveUpdateMenu(AppModel uploadForm)
+        public ActionResult SaveUpdateMenu(MenuNewRecord menuNewRecord)
         {
-            if(uploadForm.menuNewRecord.MenuID == null)
+            if(menuNewRecord.MenuID == null)
             {
-                UploadStatus ImageStatus = SaveImage(uploadForm.menuNewRecord.file);
+                UploadStatus ImageStatus = SaveImage(menuNewRecord.file);
 
                 if (!ImageStatus.IsSuccess)
                 {
@@ -110,22 +116,22 @@ namespace casa_emelita.Controllers
 
                 TBL_MENU menu = new TBL_MENU();
                 menu.MENUIMAGE = ImageStatus.fileName;
-                menu.PRICE = uploadForm.menuNewRecord.Price;
-                menu.MENUCODE = uploadForm.menuNewRecord.Code;
-                menu.MENUNAME = uploadForm.menuNewRecord.Name;
-                menu.MENUCATEGORY = uploadForm.menuNewRecord.Category;
-                menu.MENUDESCRIPTION = uploadForm.menuNewRecord.Description;
+                menu.PRICE = menuNewRecord.Price;
+                menu.MENUCODE = menuNewRecord.Code;
+                menu.MENUNAME = menuNewRecord.Name;
+                menu.MENUCATEGORY = menuNewRecord.Category;
+                menu.MENUDESCRIPTION = menuNewRecord.Description;
 
                 this.data.Save(menu, new List<string> { "MENUID" }, "MENUID");
                 message.Message = "Successfully Saved!!!";
             }
             else
             {
-                TBL_MENU tableMenu = menuRepository.GetMenuByID(new Guid(uploadForm.menuNewRecord.MenuID));
+                TBL_MENU tableMenu = menuRepository.GetMenuByID(new Guid(menuNewRecord.MenuID));
                 UploadStatus ImageStatus = new UploadStatus();
-                if (uploadForm.menuNewRecord.file != null)
+                if (menuNewRecord.file != null)
                 {
-                    ImageStatus = SaveImage(uploadForm.menuNewRecord.file);
+                    ImageStatus = SaveImage(menuNewRecord.file);
                 }
                 else
                 {
@@ -134,21 +140,21 @@ namespace casa_emelita.Controllers
                 TBL_MENU menu = new TBL_MENU() { 
                     MENUID = new Guid(),
                     MENUIMAGE = ImageStatus.fileName,
-                    PRICE = uploadForm.menuNewRecord.Price,
-                    MENUCODE = uploadForm.menuNewRecord.Code,
-                    MENUNAME = uploadForm.menuNewRecord.Name,
-                    MENUCATEGORY = uploadForm.menuNewRecord.Category,
-                    MENUDESCRIPTION = uploadForm.menuNewRecord.Description,
+                    PRICE = menuNewRecord.Price,
+                    MENUCODE = menuNewRecord.Code,
+                    MENUNAME = menuNewRecord.Name,
+                    MENUCATEGORY = menuNewRecord.Category,
+                    MENUDESCRIPTION = menuNewRecord.Description,
                 };
 
                 TBL_MENU menuFilter = new TBL_MENU()
                 {
-                    MENUID = new Guid(uploadForm.menuNewRecord.MenuID)
+                    MENUID = new Guid(menuNewRecord.MenuID)
                 };
 
                 this.data.Update(menu, menuFilter, model.AdminID);
 
-                if (uploadForm.menuNewRecord.file != null)
+                if (menuNewRecord.file != null)
                 {
                     bool isDeleted = DeleteFile(tableMenu.MENUIMAGE);
                 }
@@ -157,7 +163,12 @@ namespace casa_emelita.Controllers
 
             return RedirectToAction("../Home/MenuAdmin");
         }
+        [System.Web.Http.HttpPost]
+        public ActionResult SaveUpdatePackage(TBL_PACKAGE packageNewRecord)
+        {
 
+            return RedirectToAction("../Home/MenuAdmin");
+        }
         public UploadStatus SaveImage(HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)

@@ -29,6 +29,8 @@ namespace casa_emelita.Models
         public MenuNewRecord menuNewRecord { get; set; }
         public List<TBL_CATEGORY> Category { get; set; }
         public List<TBL_PACKAGE> Package_List { get; set; }
+        public TBL_PACKAGE packageNewRecord { get; set; }
+        public List<TBL_EVENTTYPE> EventType_List { get; set; }
     }
     public class MenuNewRecord
     {

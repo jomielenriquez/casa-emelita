@@ -84,6 +84,18 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK_TBL_INCLUSION_TBL_MENU">
+          <End Role="TBL_MENU" Type="Self.TBL_MENU" Multiplicity="1" />
+          <End Role="TBL_INCLUSION" Type="Self.TBL_INCLUSION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_MENU">
+              <PropertyRef Name="MENUID" />
+            </Principal>
+            <Dependent Role="TBL_INCLUSION">
+              <PropertyRef Name="MENUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TBL_MENU_MENUCATEGORY">
           <End Role="TBL_CATEGORY" Type="Self.TBL_CATEGORY" Multiplicity="1" />
           <End Role="TBL_MENU" Type="Self.TBL_MENU" Multiplicity="*" />
@@ -115,6 +127,10 @@
           <EntitySet Name="TBL_INCLUSION" EntityType="Self.TBL_INCLUSION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_MENU" EntityType="Self.TBL_MENU" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_PACKAGE" EntityType="Self.TBL_PACKAGE" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_TBL_INCLUSION_TBL_MENU" Association="Self.FK_TBL_INCLUSION_TBL_MENU">
+            <End Role="TBL_MENU" EntitySet="TBL_MENU" />
+            <End Role="TBL_INCLUSION" EntitySet="TBL_INCLUSION" />
+          </AssociationSet>
           <AssociationSet Name="FK_TBL_MENU_MENUCATEGORY" Association="Self.FK_TBL_MENU_MENUCATEGORY">
             <End Role="TBL_CATEGORY" EntitySet="TBL_CATEGORY" />
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
@@ -157,6 +173,10 @@
           <AssociationSet Name="FK_TBL_PACKAGE" Association="CASAEMELITAModel.FK_TBL_PACKAGE">
             <End Role="TBL_EVENTTYPE" EntitySet="TBL_EVENTTYPE" />
             <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_INCLUSION_TBL_MENU" Association="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU">
+            <End Role="TBL_MENU" EntitySet="TBL_MENU" />
+            <End Role="TBL_INCLUSION" EntitySet="TBL_INCLUSION" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="TBL_CATEGORY">
@@ -201,6 +221,7 @@
           <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_CATEGORY" Relationship="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY" FromRole="TBL_MENU" ToRole="TBL_CATEGORY" />
+          <NavigationProperty Name="TBL_INCLUSION" Relationship="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU" FromRole="TBL_MENU" ToRole="TBL_INCLUSION" />
         </EntityType>
         <Association Name="FK_TBL_MENU_MENUCATEGORY">
           <End Type="CASAEMELITAModel.TBL_CATEGORY" Role="TBL_CATEGORY" Multiplicity="1" />
@@ -221,6 +242,7 @@
           <Property Name="INCLUSIONID" Type="Guid" Nullable="false" />
           <Property Name="PACKAGEINCLUSION" Type="Guid" Nullable="false" />
           <Property Name="MENUID" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="TBL_MENU" Relationship="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU" FromRole="TBL_INCLUSION" ToRole="TBL_MENU" />
         </EntityType>
         <EntityType Name="TBL_PACKAGE">
           <Key>
@@ -248,6 +270,18 @@
             </Principal>
             <Dependent Role="TBL_PACKAGE">
               <PropertyRef Name="EVENTTYPE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_INCLUSION_TBL_MENU">
+          <End Type="CASAEMELITAModel.TBL_MENU" Role="TBL_MENU" Multiplicity="1" />
+          <End Type="CASAEMELITAModel.TBL_INCLUSION" Role="TBL_INCLUSION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_MENU">
+              <PropertyRef Name="MENUID" />
+            </Principal>
+            <Dependent Role="TBL_INCLUSION">
+              <PropertyRef Name="MENUID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

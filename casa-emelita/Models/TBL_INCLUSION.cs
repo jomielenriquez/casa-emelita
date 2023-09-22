@@ -17,5 +17,7 @@ namespace casa_emelita.Models
         public System.Guid INCLUSIONID { get; set; }
         public System.Guid PACKAGEINCLUSION { get; set; }
         public System.Guid MENUID { get; set; }
+    
+        public virtual TBL_MENU TBL_MENU { get; set; }
     }
 }

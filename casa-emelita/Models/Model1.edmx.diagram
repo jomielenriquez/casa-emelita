@@ -13,6 +13,7 @@
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_INCLUSION" Width="1.5" PointX="5.375" PointY="5.75" />
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_PACKAGE" Width="1.5" PointX="6" PointY="1" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_PACKAGE" />
+        <AssociationConnector Association="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

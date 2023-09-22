@@ -23,14 +23,15 @@ namespace casa_emelita.Repository
             string[] except = { "createddate", "updateddate", "updatedby", "edid" };
 
             except = except.Concat(filter.ToArray()).ToArray();
-
+            
             var Properties = Class
                 .GetType()
                 .GetProperties()
                 .Where(
                     x => !except.Contains(x.Name.ToLower()) &&
                     getValue(x.Name, Class) != null &&
-                    getValue(x.Name, Class).ToString() != "00000000-0000-0000-0000-000000000000"
+                    getValue(x.Name, Class).ToString() != "00000000-0000-0000-0000-000000000000" &&
+                    !x.Name.Contains("TBL_")
                     //&&
                     //(x.PropertyType == typeof(System.Guid) || x.PropertyType == typeof(System.String) || x.PropertyType == typeof(System.Int16) || x.PropertyType == typeof(System.Int32) || x.PropertyType == typeof(System.Int64) || x.PropertyType == typeof(System.Decimal) || x.PropertyType == typeof(System.DateTime) || x.PropertyType == typeof(System.Boolean) || x.PropertyType == typeof(Nullable<Guid>) || x.PropertyType == typeof(Nullable<Int16>) || x.PropertyType == typeof(Nullable<Int32>) || x.PropertyType == typeof(Nullable<Int64>) || x.PropertyType == typeof(Nullable<Decimal>) || x.PropertyType == typeof(Nullable<Boolean>) || x.PropertyType == typeof(Nullable<System.DateTime>))
                     )
@@ -120,7 +121,8 @@ namespace casa_emelita.Repository
                     x => !except.Contains(x.Name.ToLower()) &&
                     getValue(x.Name, Class) != null &&
                     getValue(x.Name, Class).ToString() != "00000000-0000-0000-0000-000000000000" &&
-                    (x.PropertyType == typeof(System.Guid) || x.PropertyType == typeof(System.String) || x.PropertyType == typeof(System.Int16) || x.PropertyType == typeof(System.Int32) || x.PropertyType == typeof(System.Int64) || x.PropertyType == typeof(System.Decimal) || x.PropertyType == typeof(System.DateTime) || x.PropertyType == typeof(System.Boolean) || x.PropertyType == typeof(Nullable<Guid>) || x.PropertyType == typeof(Nullable<Int16>) || x.PropertyType == typeof(Nullable<Int32>) || x.PropertyType == typeof(Nullable<Int64>) || x.PropertyType == typeof(Nullable<Decimal>) || x.PropertyType == typeof(Nullable<Boolean>) || x.PropertyType == typeof(Nullable<System.DateTime>))
+                    !x.Name.Contains("TBL_")
+                    //(x.PropertyType == typeof(System.Guid) || x.PropertyType == typeof(System.String) || x.PropertyType == typeof(System.Int16) || x.PropertyType == typeof(System.Int32) || x.PropertyType == typeof(System.Int64) || x.PropertyType == typeof(System.Decimal) || x.PropertyType == typeof(System.DateTime) || x.PropertyType == typeof(System.Boolean) || x.PropertyType == typeof(Nullable<Guid>) || x.PropertyType == typeof(Nullable<Int16>) || x.PropertyType == typeof(Nullable<Int32>) || x.PropertyType == typeof(Nullable<Int64>) || x.PropertyType == typeof(Nullable<Decimal>) || x.PropertyType == typeof(Nullable<Boolean>) || x.PropertyType == typeof(Nullable<System.DateTime>))
                     )
                 .Select(x => x.Name);
 
@@ -200,7 +202,8 @@ namespace casa_emelita.Repository
                     x => !except.Contains(x.Name.ToLower()) &&
                     getValue(x.Name, Class) != null &&
                     getValue(x.Name, Class).ToString() != "00000000-0000-0000-0000-000000000000" &&
-                    (x.PropertyType == typeof(System.Guid) || x.PropertyType == typeof(System.String) || x.PropertyType == typeof(System.Int16) || x.PropertyType == typeof(System.Int32) || x.PropertyType == typeof(System.Int64) || x.PropertyType == typeof(System.Decimal) || x.PropertyType == typeof(System.DateTime) || x.PropertyType == typeof(System.Boolean) || x.PropertyType == typeof(Nullable<Guid>) || x.PropertyType == typeof(Nullable<Int16>) || x.PropertyType == typeof(Nullable<Int32>) || x.PropertyType == typeof(Nullable<Int64>) || x.PropertyType == typeof(Nullable<Decimal>) || x.PropertyType == typeof(Nullable<Boolean>) || x.PropertyType == typeof(Nullable<System.DateTime>))
+                    !x.Name.Contains("TBL_")
+                    //(x.PropertyType == typeof(System.Guid) || x.PropertyType == typeof(System.String) || x.PropertyType == typeof(System.Int16) || x.PropertyType == typeof(System.Int32) || x.PropertyType == typeof(System.Int64) || x.PropertyType == typeof(System.Decimal) || x.PropertyType == typeof(System.DateTime) || x.PropertyType == typeof(System.Boolean) || x.PropertyType == typeof(Nullable<Guid>) || x.PropertyType == typeof(Nullable<Int16>) || x.PropertyType == typeof(Nullable<Int32>) || x.PropertyType == typeof(Nullable<Int64>) || x.PropertyType == typeof(Nullable<Decimal>) || x.PropertyType == typeof(Nullable<Boolean>) || x.PropertyType == typeof(Nullable<System.DateTime>))
                     )
                 .Select(x => x.Name);
 
