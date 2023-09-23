@@ -42,12 +42,12 @@
                                             </div>
 
                                             <li>
-                                                <a href="#">Account <i class="ti-angle-down"></i></a>
+                                                <a href="#" style="color:@(ViewBag.Title == "Settings" ? "#78b454 !important" : "")">Account <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
-                                                    <li><a href="settings">Settings</a></li>
+                                                    <li>@Html.ActionLink("Settings", "Settings", "Home", new { @style = "color: " + (ViewBag.Title == "Settings" ? "#78b454 !important" : "") })</li>
                                                 </ul>
-                                            <li><a href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
                                             </li>
+                                            <li><a href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
 
                                         </ul>
                                     </nav>
@@ -116,7 +116,7 @@
                     <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="../logout">Logout</a>
+                        @Html.ActionLink("Logout", "Logout", "Home", new { @class = "btn btn-danger" })
                     </div>
                 </div>
             </div>
