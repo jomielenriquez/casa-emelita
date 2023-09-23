@@ -32,6 +32,7 @@ namespace casa_emelita.Models
         public List<TBL_PACKAGE> Package_List { get; set; }
         public TBL_PACKAGE packageNewRecord { get; set; }
         public List<TBL_EVENTTYPE> EventType_List { get; set; }
+        public ChangePassModel changePassModel { get; set; }
     }
     public class MenuNewRecord
     {
@@ -42,5 +43,11 @@ namespace casa_emelita.Models
         public Guid Category { get; set; }
         public string Description { get; set; }
         public Decimal Price { get; set; }
+    }
+    public class ChangePassModel
+    {
+        public string CurrentPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

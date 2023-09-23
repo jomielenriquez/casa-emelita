@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 using System.Xml.Linq;
 
@@ -18,6 +19,7 @@ namespace casa_emelita.Controllers
         CategoryRepository categoryRepository;
         PackageRepository packageRepository;
         EventTypeRepository eventTypeRepository;
+        AdminRepository adminRepository;
         Data data;
         static PageMessage message = new PageMessage();
         public HomeController() { 
@@ -27,6 +29,7 @@ namespace casa_emelita.Controllers
             this.data = new Data();
             this.packageRepository = new PackageRepository();
             this.eventTypeRepository = new EventTypeRepository();
+            this.adminRepository = new AdminRepository(this.model.AdminID);
         }
         public ActionResult Index()
         {
@@ -100,6 +103,22 @@ namespace casa_emelita.Controllers
             this.model.Category = this.categoryRepository.GetAllCategories();
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
             ViewBag.Message = "PackageAdmin";
+
+            return View(this.model);
+        }
+        public ActionResult Settings()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            ViewBag.Message = "Settings";
 
             return View(this.model);
         }
@@ -217,6 +236,43 @@ namespace casa_emelita.Controllers
         {
 
             return Json("test", JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public ActionResult ChangePassword(ChangePassModel changePassModel)
+        {
+            TBL_ADMIN currentUser = adminRepository.currentUser;
+
+            if(currentUser == null)
+            {
+                return RedirectToAction("../Home/Home");
+            }
+            if(currentUser.PASSWORD != changePassModel.CurrentPassword)
+            {
+                message.Message = "Invalid Password";
+                return RedirectToAction("../Home/Settings");
+            }
+            if(changePassModel.NewPassword != changePassModel.ConfirmPassword)
+            {
+                message.Message = "Not Matched Password";
+                return RedirectToAction("../Home/Settings");
+            }
+
+            TBL_ADMIN admin = new TBL_ADMIN() { 
+                PASSWORD = changePassModel.NewPassword,
+            };
+
+            TBL_ADMIN filterAdmin = new TBL_ADMIN() {
+                ADMINID = currentUser.ADMINID
+            };
+
+            this.data.Update(admin, filterAdmin, model.AdminID);
+            message.Message = "Password successfully changed.";
+            return RedirectToAction("../Home/Settings");
+        }
+        public ActionResult Logout()
+        {
+            Session["AdminID"] = "";
+            return RedirectToAction("../Home/Home");
         }
         [System.Web.Http.HttpGet]
         public JsonResult GetMenu(string PackageID, string MenuID)

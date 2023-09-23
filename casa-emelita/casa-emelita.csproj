@@ -286,6 +286,7 @@
     </Compile>
     <Compile Include="Models\UploadStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\AdminRepository.cs" />
     <Compile Include="Repository\CategoryRepository.cs" />
     <Compile Include="Repository\Data.cs" />
     <Compile Include="Repository\EventTypeRepository.cs" />
@@ -563,6 +564,7 @@
     <Content Include="Views\Home\ContactCasa.cshtml" />
     <Content Include="Views\Home\MenuAdmin.cshtml" />
     <Content Include="Views\Home\PackageAdmin.cshtml" />
+    <Content Include="Views\Home\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

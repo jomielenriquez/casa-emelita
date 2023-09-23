@@ -1,0 +1,81 @@
+﻿@model casa_emelita.Models.AppModel
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Account</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Change password
+                    </h3>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card" style="padding: 20px 20px 20px 20px;">
+                        @using (Html.BeginForm("ChangePassword", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "ChangePasswordForm", @name = "ChangePasswordForm" }))
+                        {
+                            <h4>Password</h4>
+                            <span>Current password:</span>
+                            @Html.TextBoxFor(model => model.changePassModel.CurrentPassword, new { @class = "form-control", @id = "CurrentPassword", @name = "CurrentPassword", @type = "password" })
+                            <span>New password:</span>
+                            @Html.TextBoxFor(model => model.changePassModel.NewPassword, new { @class = "form-control", @id = "NewPassword", @name = "NewPassword", @type = "password" })
+                            <span>Re-type password:</span>
+                            @Html.TextBoxFor(model => model.changePassModel.ConfirmPassword, new { @class = "form-control", @id = "ConfirmPassword", @name = "ConfirmPassword", @type = "password" })
+                            <button type="submit" class="btn btn-success" id="btn_save_password"
+                                    style="color:white;float: right;margin-top: 20px;">
+                                Update
+                            </button>
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@* Info Modal *@
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Success</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @ViewBag.SaveUploadMessage
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var SaveUploadMessage = "@ViewBag.SaveUploadMessage";
+        if (SaveUploadMessage != "") {
+            $('#infoModal').modal('show');
+        }
+    });
+</script>
