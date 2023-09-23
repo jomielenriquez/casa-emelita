@@ -228,7 +228,7 @@
                     <label>Accomodation (PAX)</label>
                     @Html.TextBoxFor(model => model.packageNewRecord.ACCOMODATION, new { @class = "single-input", @id = "ACCOMODATION", @name = "ACCOMODATION", @style = "margin-bottom:20px;", @type = "number", @required = "" })
                     <label>Price:</label>
-                    @Html.TextBoxFor(model => model.packageNewRecord.PRICE, new { @class = "single-input", @id = "PackagePrice", @name = "PackagePrice", @style = "margin-bottom:20px;", @type = "number", @required = "" })
+                    @Html.TextBoxFor(model => model.packageNewRecord.PRICE, new { @class = "single-input", @id = "PackagePrice", @name = "PackagePrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01" })
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"
@@ -284,6 +284,18 @@
                 {
                     "targets": 1,
                     "visible": false
+                },
+                {
+                    "targets": 7,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
                 },
             ],
         });
