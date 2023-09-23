@@ -219,7 +219,7 @@ namespace casa_emelita.Controllers
             return Json("test", JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
-        public JsonResult sampleData(string PackageID, string MenuID)
+        public JsonResult GetMenu(string PackageID, string MenuID)
         {
             List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONList();
             return Json(data, JsonRequestBehavior.AllowGet);

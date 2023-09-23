@@ -42,7 +42,8 @@ namespace casa_emelita.Repository
                     CREATEDBY = row.CREATEDBY,
                     CREATEDDATE = row.CREATEDDATE,
                     UPDATEDBY = row.UPDATEDBY,
-                    UPDATEDDATE = row.UPDATEDDATE
+                    UPDATEDDATE = row.UPDATEDDATE,
+                    MENUCATEGORYGUID = row.TBL_CATEGORY.CATEGORYID
                 });
             }
             return (List<TBL_MENUJSON>)json;
@@ -62,6 +63,7 @@ namespace casa_emelita.Repository
         public string MENUCODE { get; set; }
         public string MENUIMAGE { get; set; }
         public string MENUCATEGORY { get; set; }
+        public Guid MENUCATEGORYGUID { get; set; }
         public string MENUDESCRIPTION { get; set; }
         public decimal PRICE { get; set; }
         public System.DateTime CREATEDDATE { get; set; }
