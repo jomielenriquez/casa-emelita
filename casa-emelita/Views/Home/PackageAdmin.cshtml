@@ -9,7 +9,7 @@
 <div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
     <div class="breadcam_inner">
         <div class="breadcam_text">
-            <h3>Our Menu</h3>
+            <h3>Our Packages</h3>
 
         </div>
     </div>
@@ -22,52 +22,27 @@
             <div class="col-xl-12">
                 <div class="section_title mb-70">
                     <h3>
-                        Menu <a onclick="clearFields();" style="color:white;cursor:pointer;" class="btn btn-success"
-                                data-toggle="modal" data-target="#packageModal">Add new menu</a>
+                        Packages <a onclick="clearFields();" style="color:white;cursor:pointer;" class="btn btn-success"
+                                    data-toggle="modal" data-target="#packageModal">Add new package</a>
                     </h3>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-hover table-bordered table-striped" id="tbl_menu">
+                <table class="table table-hover table-bordered table-striped" id="tbl_package">
                     <thead class="table-header">
                         <tr>
-                            <th width="1%" class="text-center">Action</th>
-                            <th width="1%" class="text-center">Code</th>
-                            <th style="display:none"></th>
+                            <th class="text-center">Action</th>
+                            <th class="text-center">Code</th>
+                            <th class="text-center">Code</th>
                             <th class="text-center">Name</th>
                             <th class="text-center">Event Type</th>
-                            <th style="display:none"></th>
-                            <th class="text-center">Inclusions</th>
                             <th class="text-center">Accomodation</th>
+                            <th class="text-center">Inclusion</th>
                             <th class="text-center">Price</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach (casa_emelita.Models.TBL_PACKAGE package in Model.Package_List)
-                        {
-                            <tr>
-                                <td>
-                                    <center>
-                                        <div class="btn-group">
-                                            <a data-toggle="modal" data-target="#packageModal" style="color:white;" class="btn btn-primary" margin-bottom:5px;"="" id="btn_edit" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10" data-img="../img/menu/1695098336724.png">Edit</a>
-
-                                            <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="@(package.PACKAGEID)" data-toggle="modal" data-target="#deleteModal" id="btn_delete">Delete</a>
-                                        </div>
-                                    </center>
-                                </td>
-                                <td class="code">@package.PACKAGECODE</td>
-                                <td class="packageid" style="display:none">@package.PACKAGEID</td>
-                                <td class="name">@package.PACKAGENAME</td>
-                                <td class="eventtype">@package.TBL_EVENTTYPE.EVENTNAME</td>
-                                <td class="eventtypeid" style="display:none">@package.TBL_EVENTTYPE.EVENTTYPEID</td>
-                                <td class="inclusions"></td>
-                                <td class="accomodation">@package.ACCOMODATION pax</td>
-                                <td class="price">₱ @package.PRICE</td>
-                            </tr>
-                        }
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -78,9 +53,9 @@
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("Delete", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "deleteForm", @name = "deleteForm" }))
+            @using (Html.BeginForm("DeletePackage", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "deleteForm", @name = "deleteForm" }))
             {
-                @Html.TextBoxFor(model => model.MenuIDToDelete, new { @class = "single-input", @id = "MenuIDToDelete", @name = "MenuIDToDelete", @style = "display:none;", @type = "text" })
+                @Html.TextBoxFor(model => model.PackageIDToDelete, new { @class = "single-input", @id = "PackageIDToDelete", @name = "PackageIDToDelete", @style = "display:none;", @type = "text" })
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">Ready to Delete?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -121,7 +96,7 @@
 
 <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-hidden="true"
      style="z-index: 1100 !important;">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Menu details</h5>
@@ -129,49 +104,102 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            @using (Html.BeginForm("SaveUpdateMenu", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "uploadForm", @name = "uploadForm" }))
-            {
-                <div class="modal-body">
-                    @Html.TextBoxFor(model => model.menuNewRecord.MenuID, new { @class = "single-input", @id = "MenuID", @name = "MenuID", @style = "display:none", @type = "text" })
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Our menu</label>
+                        <table class="table table-hover table-bordered table-striped" id="tbl_menu">
+                            <thead class="table-header">
+                                <tr>
+                                    <th width="1%" class="text-center">Action</th>
+                                    <th width="1%" class="text-center">Image</th>
+                                    <th style="display:none"></th>
+                                    <th class="text-center">Menu code</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Category</th>
+                                    <th class="text-center">Description</th>
+                                    <th class="text-center">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
+                                {
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <a style="color:white;" class="btn btn-success" margin-bottom:5px;"="" id="btn_add_menu" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10">+</a>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <center>
+                                                    <img src="@(menu.MENUIMAGE == "empty" ? "../Content/casa/image/logo.png" : "../UploadedImage/"+menu.MENUIMAGE)" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;">
+                                                </center>
+                                            </div>
+                                        </td>
+                                        <td class="menuid" style="display:none">@menu.MENUID</td>
+                                        <td class="code">@menu.MENUCODE</td>
+                                        <td class="name">@menu.MENUNAME</td>
+                                        @*<td class="CATEGORYID" style="display:none">@menu.TBL_CATEGORY.CATEGORYID</td>*@
+                                        <td class="category">@menu.TBL_CATEGORY.CATEGORYNAME</td>
+                                        <td class="description">@menu.MENUDESCRIPTION</td>
+                                        <td class="price">₱@menu.PRICE</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
 
-                    <center style="margin-bottom:20px;">
-                        <img id="image_add" src="../Content/casa/image/logo.png" alt=""
-                             style="height: 200px; width: 200px;box-shadow: 20px 20px 50px grey;margin-bottom:20px;">
-                        <div class="col-sm-12" style="margin-left: 0px;">
-                            <label class="btn btn-primary " style="color:#fff; border-radius:8px;">
-                                <input class="form-control" type="hidden" name="size" value="10000000">
-                                <center>
-                                    <span></span>&nbsp;Browse
-                                    @*<input type="file" id="file" name="file" style="display: none;">*@
-                                    @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file" })
-                                </center>
-                            </label>
-                        </div>
-                    </center>
-                    <label>Menu code</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text", @required = "" })
-
-                    <label>Menu name</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text", @required = "" })
-
-                    <label>Category</label>
-                    @Html.DropDownListFor(model => model.menuNewRecord.Category, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Category", @required = "" })
-
-                    <label>Description</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text", @required = "" })
-
-                    <label>Price</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01" })
 
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal"
-                            onclick="window.location.reload();">
-                        Cancel
-                    </button>
-                    <button class="btn btn-primary" type="submit" id="btn_save">Save</button>
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-12">
+                    <label>Menu included in the package</label>
+                    <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
+                        <thead class="table-header">
+                            <tr>
+                                <th width="1%" class="text-center">
+                                    Action
+                                </th>
+                                <th width="1%" class="text-center">
+                                    Menu ID
+                                </th>
+                                <th width="1%" class="text-center">
+                                    Image
+                                </th>
+                                <th class="text-center">
+                                    Menu code
+                                </th>
+                                <th class="text-center">
+                                    Name
+                                </th>
+                                <th class="text-center">
+                                    Category
+                                </th>
+                                <th class="text-center">
+                                    Description
+                                </th>
+                                <th width="1%" class="text-center">
+                                    Price
+                                </th>
+                                <th class="text-center">
+                                    Created Date
+                                </th>
+                                <th class="text-center">
+                                    Created By
+                                </th>
+                                <th class="text-center">
+                                    Updated Date
+                                </th>
+                                <th class="text-center">
+                                    Updated By
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
-            }
+            </div>
         </div>
     </div>
 </div>
@@ -196,7 +224,7 @@
                     <label>Event type:</label>
                     @Html.DropDownListFor(model => model.packageNewRecord.EVENTTYPE, new SelectList(Model.EventType_List, "EVENTTYPEID", "EVENTNAME"), "Select Event Type..", new { @class = "form-control", @id = "EVENTTYPE", @required = "" })
                     <label>Inclusions</label>
-                    <textarea id="inclusions" class="form-control"></textarea>
+                    @Html.TextAreaFor(model => model.packageNewRecord.INCLUSIONSDESCRIPTION, new { @class = "form-control", @id = "INCLUSIONSDESCRIPTION", @name = "INCLUSIONSDESCRIPTION", @style = "margin-bottom:20px;", @type = "text", @required = "" })
                     <label>Accomodation (PAX)</label>
                     @Html.TextBoxFor(model => model.packageNewRecord.ACCOMODATION, new { @class = "single-input", @id = "ACCOMODATION", @name = "ACCOMODATION", @style = "margin-bottom:20px;", @type = "number", @required = "" })
                     <label>Price:</label>
@@ -215,104 +243,179 @@
 </div>
 
 <script>
+    var tbl_menu_included;
+    var tbl_menu;
+    var tbl_package;
     $(document).ready(function () {
-        var dataTable1 = $('#tbl_menu').DataTable({});
+        tbl_menu = $('#tbl_menu').DataTable({});
+        tbl_package = $('#tbl_package').DataTable({
+            //"sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true,
+            "responsive": true,
+            "order": [],
+            "ajax": {
+                url: "@Url.Action("GetPackages", "Home")",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "PACKAGEID", "orderable": false },
+                { "data": "PACKAGECODE", "orderable": false },
+                { "data": "PACKAGECODE" },
+                { "data": "PACKAGENAME" },
+                { "data": "EVENTTYPE" },
+                { "data": "ACCOMODATION" },
+                { "data": "INCLUSIONSDESCRIPTION" },
+                { "data": "PRICE" },
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return `<center>
+                                <div class="btn-group">
+                                    <a data-toggle="modal" data-target="#packageModal" style="color:white;" class="btn btn-primary" margin-bottom:5px;"="" id="btn_edit" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10" data-img="../img/menu/1695098336724.png">Edit</a>
+                                    <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="`+ data +`" data-toggle="modal" data-target="#deleteModal" id="btn_delete">Delete</a>
+                                    <a style="color:white;" class="btn btn-success" margin-bottom:5px;"="" data-toggle="modal" data-target="#menuModal" id="btn_menu">Menu</a>
+                                </div>
+                            </center>`;
+                    }
+                },
+                {
+                    "targets": 1,
+                    "visible": false
+                },
+            ],
+        });
 
         var SaveUploadMessage = "@ViewBag.SaveUploadMessage";
         if (SaveUploadMessage != "") {
             $('#infoModal').modal('show');
         }
-    });
-
-    $(document).on("change", "#file", function () {
-        event.preventDefault();
-
-        //get file details
-        var property = this.files[0];
-        var image_name = property.name;
-        var image_extension = image_name.split('.').pop().toLowerCase();
-        var image_size = property.size;
-
-        //filter extension
-        if (jQuery.inArray(image_extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
-
-            swal({
-                title: "Invalid File Type!",
-                text: "Image must be in 'gif','png','jpg','jpeg' format!",
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: "#5cb85c",
-                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
-                confirmButtonClass: "btn"
-            }).then((result) => {
-                if (result.value) {
-
-                    this.value = "";
-                    document.getElementById("image_add").src = "../img/logo.png";
-                    document.getElementById("image_add").className += " required-fields";
-
-                }
-            });
-
-        }
-
-        //filter size
-        else if (image_size > 2000000) {
-
-            swal({
-                title: "Invalid File Size!",
-                text: "Please select an image with size lower than 2MB!",
-                type: "error",
-                showCancelButton: false,
-                confirmButtonColor: "#5cb85c",
-                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
-                confirmButtonClass: "btn"
-            }).then((result) => {
-                if (result.value) {
-
-                    this.value = "";
-                    document.getElementById("image_add").src = "../img/logo.png";
-                    document.getElementById("image_add").className += " required-fields";
-
-                }
-            });
-
-        }
-
-        else if (this.files && this.files[0]) {
-            document.getElementById("image_add").classList.remove("required-fields");
-            var obj = new FileReader();
-            obj.onload = function (data) { document.getElementById("image_add").src = data.target.result; }
-            obj.readAsDataURL(this.files[0]);
-        }
-
+        RenderMenu();
     });
 
     $(document).on("click", "#btn_edit", function () {
-        var target_row = $(this).closest('tr');
+        var rowdata = tbl_package.row($(this).closest('tr')).data();
 
-        document.getElementById("Code").disabled = true;
+        document.getElementById("PACKAGECODE").disabled = true;
 
-        document.getElementById("MenuID").value = target_row.find('td.menuid').text();
-        document.getElementById("image_add").src = target_row.find('img')[0].src;
-        document.getElementById("Code").value = target_row.find('td.code').text();
-        document.getElementById("Name").value = target_row.find('td.name').text();
-        document.getElementById("MenuDescription").value = target_row.find('td.description').text();
-        document.getElementById("MenuPrice").value = target_row.find('td.price').text().split(" ")[1];
-        document.getElementById("Category").value = target_row.find('td.CATEGORYID').text();
-
-        //document.getElementById("menu_code").disabled = true;
-        //edit_id = $(this).data('id');
-        //commandStr = 'update';
+        document.getElementById("PACKAGEID").value = rowdata.PACKAGEID;
+        document.getElementById("PACKAGECODE").value = rowdata.PACKAGECODE;
+        document.getElementById("PACKAGENAME").value = rowdata.PACKAGENAME;
+        document.getElementById("EVENTTYPE").value = rowdata.EVENTTYPEGUID;
+        document.getElementById("INCLUSIONSDESCRIPTION").value = rowdata.INCLUSIONSDESCRIPTION;
+        document.getElementById("ACCOMODATION").value = rowdata.ACCOMODATION;
+        document.getElementById("PackagePrice").value = rowdata.PRICE;
     });
 
     $(document).on("click", "#btn_delete", function () {
-        var target_row = $(this).closest('tr');
-
-        //document.getElementById("image_add").src = target_row.find('img')[0].src;
-        console.log(target_row.find('td.menuid').text());
-        document.getElementById("MenuIDToDelete").value = target_row.find('td.menuid').text();
+        var rowdata = tbl_package.row($(this).closest('tr')).data();
+        document.getElementById("PackageIDToDelete").value = rowdata.PACKAGEID;;
 
     });
+
+    var selectedPackageId = "";
+    $(document).on("click", "#btn_menu", function () {
+        console.log("test")
+        var target_row = $(this).closest('tr');
+
+        selectedPackageId = target_row.find('td.packageid').text();
+        setTimeout(function () {
+            RenderMenu();
+        }, 500);
+    });
+    function RenderMenu() {
+        $('#tbl_menu_included').DataTable().destroy();
+
+        tbl_menu_included = $('#tbl_menu_included').DataTable({
+            "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true,
+            "responsive": true,
+            "order": [],
+            "ajax": {
+                url: "@Url.Action("sampleData", "Home")",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "MENUID", "orderable": false },
+                { "data": "MENUID", "orderable": false },
+                { "data": "MENUIMAGE", "orderable": false },
+                { "data": "MENUCODE" },
+                { "data": "MENUNAME" },
+                { "data": "MENUCATEGORY" },
+                { "data": "MENUDESCRIPTION" },
+                { "data": "PRICE" },
+                { "data": "CREATEDDATE", "orderable": false },
+                { "data": "CREATEDBY", "orderable": false },
+                { "data": "UPDATEDDATE", "orderable": false },
+                { "data": "UPDATEDBY", "orderable": false }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return '<center><button class="btn btn-danger" id="btn_remove_menu">-</button></center>';
+                    }
+                },
+                {
+                    "targets": 1,
+                    "visible": false
+                },
+                {
+                    "targets": 2,
+                    "render": function (data, type, row, meta) {
+                        return '<img src="../UploadedImage/' + data + '" alt="Image" width="50" height="50">';
+                    }
+                },
+                {
+                    "targets": 8,
+                    "visible": false
+                },
+                {
+                    "targets": 9,
+                    "visible": false
+                },
+                {
+                    "targets": 10,
+                    "visible": false
+                },
+                {
+                    "targets": 11,
+                    "visible": false
+                },
+            ],
+        });
+    }
+    $(document).on("click", "#btn_remove_menu", function () {
+        var id = tbl_menu_included.row($(this).closest('tr')).data();
+        console.log(id)
+    });
+    $(document).on("click", "#btn_add_menu", function () {
+        var target_row = $(this).closest('tr');
+
+        var menuid = target_row.find('td.menuid').text();
+        console.log(menuid);
+
+        $.ajax({
+            url: "@Url.Action("AddMenuInCategory", "Home")",
+            type: "POST",
+            data: { PackageID: selectedPackageId, MenuID: menuid },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+
+        RenderMenu();
+    });
 </script>
+<style>
+    table{
+        width: unset !important;
+    }
+</style>
 

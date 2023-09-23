@@ -25,6 +25,7 @@ namespace casa_emelita.Models
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
         public string UPDATEDBY { get; set; }
+        public string INCLUSIONSDESCRIPTION { get; set; }
     
         public virtual TBL_EVENTTYPE TBL_EVENTTYPE { get; set; }
     }

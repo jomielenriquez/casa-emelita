@@ -280,16 +280,11 @@
         document.getElementById("MenuDescription").value = target_row.find('td.description').text();
         document.getElementById("MenuPrice").value = target_row.find('td.price').text().split(" ")[1];
         document.getElementById("Category").value = target_row.find('td.CATEGORYID').text();
-
-        //document.getElementById("menu_code").disabled = true;
-        //edit_id = $(this).data('id');
-        //commandStr = 'update';
     });
 
     $(document).on("click", "#btn_delete", function () {
         var target_row = $(this).closest('tr');
 
-        //document.getElementById("image_add").src = target_row.find('img')[0].src;
         console.log(target_row.find('td.menuid').text());
         document.getElementById("MenuIDToDelete").value = target_row.find('td.menuid').text();
 

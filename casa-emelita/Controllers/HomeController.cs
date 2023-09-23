@@ -1,11 +1,13 @@
 ﻿using casa_emelita.Models;
 using casa_emelita.Repository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml.Linq;
 
 namespace casa_emelita.Controllers
 {
@@ -93,7 +95,7 @@ namespace casa_emelita.Controllers
                 ViewBag.SaveUploadMessage = message.Message;
                 message.Message = "";
             }
-            //this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Menu_List = this.menuRepository.GetMenuList();
             this.model.Package_List = this.packageRepository.GetAllPackage();
             this.model.Category = this.categoryRepository.GetAllCategories();
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
@@ -166,8 +168,67 @@ namespace casa_emelita.Controllers
         [System.Web.Http.HttpPost]
         public ActionResult SaveUpdatePackage(TBL_PACKAGE packageNewRecord)
         {
+            if (packageNewRecord.PACKAGEID == new Guid())
+            {
+                TBL_PACKAGE package = new TBL_PACKAGE() { 
+                    PACKAGECODE = packageNewRecord.PACKAGECODE,
+                    PACKAGENAME = packageNewRecord.PACKAGENAME,
+                    EVENTTYPE = packageNewRecord.EVENTTYPE,
+                    INCLUSIONSDESCRIPTION = packageNewRecord.INCLUSIONSDESCRIPTION,
+                    ACCOMODATION = packageNewRecord.ACCOMODATION,
+                    PRICE = packageNewRecord.PRICE
+                };
 
-            return RedirectToAction("../Home/MenuAdmin");
+                this.data.Save(package, new List<string> { "PACKAGEID" }, "PACKAGEID");
+                message.Message = "Successfully Saved!!!";
+            }
+            else
+            {
+                TBL_PACKAGE package = new TBL_PACKAGE()
+                {
+                    PACKAGECODE = packageNewRecord.PACKAGECODE,
+                    PACKAGENAME = packageNewRecord.PACKAGENAME,
+                    EVENTTYPE = packageNewRecord.EVENTTYPE,
+                    INCLUSIONSDESCRIPTION = packageNewRecord.INCLUSIONSDESCRIPTION,
+                    ACCOMODATION = packageNewRecord.ACCOMODATION,
+                    PRICE = packageNewRecord.PRICE
+                };
+
+                TBL_PACKAGE packagefilter = new TBL_PACKAGE()
+                {
+                    PACKAGEID = packageNewRecord.PACKAGEID
+                };
+
+                this.data.Update(package, packagefilter, model.AdminID);
+
+                message.Message = "Successfully Updated!!!";
+            }
+            return RedirectToAction("../Home/PackageAdmin");
+        }
+        [System.Web.Http.HttpPost]
+        public ActionResult DeletePackage(string PackageIDToDelete)
+        {
+            this.data.Delete(new TBL_PACKAGE(), new List<string>() { PackageIDToDelete }, "PACKAGEID");
+            message.Message = "Successfully Deleted!!!";
+            return RedirectToAction("../Home/PackageAdmin");
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult AddMenuInCategory(string PackageID, string MenuID)
+        {
+
+            return Json("test", JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult sampleData(string PackageID, string MenuID)
+        {
+            List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetPackages()
+        {
+            List<TBL_PACKAGE_JSON> data = this.packageRepository.GetAllPackageJSON();
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
         public UploadStatus SaveImage(HttpPostedFileBase file)
         {

@@ -76,6 +76,7 @@
           <Property Name="PACKAGECODE" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PACKAGENAME" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EVENTTYPE" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="INCLUSIONSDESCRIPTION" Type="nvarchar(max)" />
           <Property Name="INCLUSIONS" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ACCOMODATION" Type="int" />
           <Property Name="PRICE" Type="decimal" Precision="10" Scale="2" Nullable="false" />
@@ -260,6 +261,7 @@
           <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_EVENTTYPE" Relationship="CASAEMELITAModel.FK_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_EVENTTYPE" />
+          <Property Name="INCLUSIONSDESCRIPTION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_TBL_PACKAGE">
           <End Type="CASAEMELITAModel.TBL_EVENTTYPE" Role="TBL_EVENTTYPE" Multiplicity="1" />
@@ -362,6 +364,7 @@
           <EntitySetMapping Name="TBL_PACKAGE">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_PACKAGE">
               <MappingFragment StoreEntitySet="TBL_PACKAGE">
+                <ScalarProperty Name="INCLUSIONSDESCRIPTION" ColumnName="INCLUSIONSDESCRIPTION" />
                 <ScalarProperty Name="UPDATEDBY" ColumnName="UPDATEDBY" />
                 <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
                 <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />

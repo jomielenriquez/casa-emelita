@@ -26,6 +26,7 @@ namespace casa_emelita.Models
         public string ErrorMessage { get; set; }
         public List<TBL_MENU> Menu_List { get; set; }
         public string MenuIDToDelete { get; set; }
+        public string PackageIDToDelete { get; set; }
         public MenuNewRecord menuNewRecord { get; set; }
         public List<TBL_CATEGORY> Category { get; set; }
         public List<TBL_PACKAGE> Package_List { get; set; }
