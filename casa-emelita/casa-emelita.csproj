@@ -290,6 +290,7 @@
     <Compile Include="Repository\CategoryRepository.cs" />
     <Compile Include="Repository\Data.cs" />
     <Compile Include="Repository\EventTypeRepository.cs" />
+    <Compile Include="Repository\InclusionRepository.cs" />
     <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\MenuRepository.cs" />
     <Compile Include="Repository\PackageRepository.cs" />

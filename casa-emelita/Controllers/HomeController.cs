@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
+using System.Web.UI;
 using System.Xml.Linq;
 
 namespace casa_emelita.Controllers
@@ -20,6 +22,7 @@ namespace casa_emelita.Controllers
         PackageRepository packageRepository;
         EventTypeRepository eventTypeRepository;
         AdminRepository adminRepository;
+        InclusionRepository inclusionRepository;
         Data data;
         static PageMessage message = new PageMessage();
         public HomeController() { 
@@ -30,6 +33,7 @@ namespace casa_emelita.Controllers
             this.packageRepository = new PackageRepository();
             this.eventTypeRepository = new EventTypeRepository();
             this.adminRepository = new AdminRepository(this.model.AdminID);
+            this.inclusionRepository = new InclusionRepository();
         }
         public ActionResult Index()
         {
@@ -234,6 +238,23 @@ namespace casa_emelita.Controllers
         [System.Web.Http.HttpPost]
         public JsonResult AddMenuInCategory(string PackageID, string MenuID)
         {
+            TBL_INCLUSION inclusion = new TBL_INCLUSION()
+            {
+                PACKAGEINCLUSION = new Guid(PackageID),
+                MENUID = new Guid(MenuID)
+            };
+            this.data.Save(inclusion, new List<string> { "INCLUSIONID" }, "INCLUSIONID");
+
+            return Json("test", JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult RemoveMenuInCategory(string PackageID, string MenuID)
+        {
+            Guid guid = this.inclusionRepository.GetInclusionID(new Guid(PackageID), new Guid(MenuID));
+            List<string> toDelete = new List<string>() {
+                guid.ToString(),
+            };
+            string message = data.Delete(new TBL_INCLUSION(), toDelete, "INCLUSIONID");
 
             return Json("test", JsonRequestBehavior.AllowGet);
         }
@@ -278,6 +299,20 @@ namespace casa_emelita.Controllers
         public JsonResult GetMenu(string PackageID, string MenuID)
         {
             List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetInludedMenu(string PackageID)
+        {
+            Guid id = PackageID == "" ? new Guid():new Guid(PackageID);
+            List<TBL_MENUJSON> data = this.menuRepository.GetIncludedPackages(id);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetMenuWithoutIncluded(string PackageID)
+        {
+            Guid id = PackageID == "" ? new Guid() : new Guid(PackageID);
+            List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONListWithoutIncludedPackage(id);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]

@@ -113,40 +113,13 @@
                                 <tr>
                                     <th width="1%" class="text-center">Action</th>
                                     <th width="1%" class="text-center">Image</th>
-                                    <th style="display:none"></th>
-                                    <th class="text-center">Menu code</th>
+                                    <th class="text-center">Code</th>
                                     <th class="text-center">Name</th>
                                     <th class="text-center">Category</th>
-                                    <th class="text-center">Description</th>
+                                    <th width="1%" class="text-center">Description</th>
                                     <th class="text-center">Price</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
-                                {
-                                    <tr>
-                                        <td>
-                                            <center>
-                                                <a style="color:white;" class="btn btn-success" margin-bottom:5px;"="" id="btn_add_menu" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10">+</a>
-                                            </center>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <center>
-                                                    <img src="@(menu.MENUIMAGE == "empty" ? "../Content/casa/image/logo.png" : "../UploadedImage/"+menu.MENUIMAGE)" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;">
-                                                </center>
-                                            </div>
-                                        </td>
-                                        <td class="menuid" style="display:none">@menu.MENUID</td>
-                                        <td class="code">@menu.MENUCODE</td>
-                                        <td class="name">@menu.MENUNAME</td>
-                                        @*<td class="CATEGORYID" style="display:none">@menu.TBL_CATEGORY.CATEGORYID</td>*@
-                                        <td class="category">@menu.TBL_CATEGORY.CATEGORYNAME</td>
-                                        <td class="description">@menu.MENUDESCRIPTION</td>
-                                        <td class="price">₱@menu.PRICE</td>
-                                    </tr>
-                                }
-                            </tbody>
                         </table>
                     </div>
 
@@ -247,7 +220,7 @@
     var tbl_menu;
     var tbl_package;
     $(document).ready(function () {
-        tbl_menu = $('#tbl_menu').DataTable({});
+        //tbl_menu = $('#tbl_menu').DataTable({});
         tbl_package = $('#tbl_package').DataTable({
             //"sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
             "processing": true,
@@ -305,6 +278,7 @@
             $('#infoModal').modal('show');
         }
         RenderMenu();
+        RenderMenuSelection();
     });
 
     $(document).on("click", "#btn_edit", function () {
@@ -323,20 +297,79 @@
 
     $(document).on("click", "#btn_delete", function () {
         var rowdata = tbl_package.row($(this).closest('tr')).data();
-        document.getElementById("PackageIDToDelete").value = rowdata.PACKAGEID;;
+        document.getElementById("PackageIDToDelete").value = rowdata.PACKAGEID;
 
     });
 
     var selectedPackageId = "";
     $(document).on("click", "#btn_menu", function () {
-        console.log("test")
-        var target_row = $(this).closest('tr');
+        var rowdata = tbl_package.row($(this).closest('tr')).data();
 
-        selectedPackageId = target_row.find('td.packageid').text();
+        selectedPackageId = rowdata.PACKAGEID;
         setTimeout(function () {
             RenderMenu();
+            RenderMenuSelection();
         }, 500);
     });
+    function RenderMenuSelection() {
+        $('#tbl_menu').DataTable().destroy();
+        tbl_menu = $('#tbl_menu').DataTable({
+            //"sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true,
+            "responsive": true,
+            "order": [],
+            "ajax": {
+                url: "@Url.Action("GetMenuWithoutIncluded", "Home")",
+                type: "GET",
+                data: { PackageID: selectedPackageId },
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "MENUID", "orderable": false },
+                { "data": "MENUIMAGE", "orderable": false },
+                { "data": "MENUCODE" },
+                { "data": "MENUNAME" },
+                { "data": "MENUCATEGORY" },
+                { "data": "MENUDESCRIPTION" },
+                { "data": "PRICE" },
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return `<center>
+                                    <a style="color:white;" class="btn btn-success" margin-bottom:5px;"="" id="btn_add_menu" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10">+</a>
+                                </center>`;
+                    }
+                },
+                {
+                    "targets": 1,
+                    "render": function (data, type, row, meta) {
+                        var hold = "../Content/casa/image/logo.png"
+                        if (data != "empty") {
+                            hold = `../UploadedImage/` + data;
+                        }
+                        return `<center>
+                                        <img src="` + hold + `" alt="" style="height: 50px; width: 50px;box-shadow: 20px 20px 50px grey;"/>
+                                    </center>`;
+                    }
+                },
+                {
+                    "targets": 6,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
+                },
+            ],
+        });
+    }
     function RenderMenu() {
         $('#tbl_menu_included').DataTable().destroy();
 
@@ -347,7 +380,9 @@
             "responsive": true,
             "order": [],
             "ajax": {
-                url: "@Url.Action("GetMenu", "Home")",
+                url: "@Url.Action("GetInludedMenu", "Home")",
+                type: "GET",
+                data: { PackageID: selectedPackageId},
                 "dataSrc": ""
             },
             "columns": [
@@ -382,6 +417,18 @@
                     }
                 },
                 {
+                    "targets": 7,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
+                },
+                {
                     "targets": 8,
                     "visible": false
                 },
@@ -401,13 +448,28 @@
         });
     }
     $(document).on("click", "#btn_remove_menu", function () {
-        var id = tbl_menu_included.row($(this).closest('tr')).data();
-        console.log(id)
+        var rowdata = tbl_menu_included.row($(this).closest('tr')).data();
+        var menuid = rowdata.MENUID;
+        console.log(rowdata);
+
+        $.ajax({
+            url: "@Url.Action("RemoveMenuInCategory", "Home")",
+            type: "POST",
+            data: { PackageID: selectedPackageId, MenuID: menuid },
+            success: function (data) {
+                console.log(data);
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+
+        RenderMenu();
+        RenderMenuSelection();
     });
     $(document).on("click", "#btn_add_menu", function () {
-        var target_row = $(this).closest('tr');
-
-        var menuid = target_row.find('td.menuid').text();
+        var rowdata = tbl_menu.row($(this).closest('tr')).data();
+        var menuid = rowdata.MENUID;
         console.log(menuid);
 
         $.ajax({
@@ -423,6 +485,7 @@
         });
 
         RenderMenu();
+        RenderMenuSelection();
     });
 </script>
 <style>
