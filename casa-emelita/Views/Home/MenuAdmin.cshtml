@@ -21,7 +21,7 @@
             <div class="col-xl-12">
                 <div class="section_title mb-70">
                     <h3>
-                        Menu <a onclick="clearFields();" style="color:white;cursor:pointer;" class="btn btn-success"
+                        Menu <a style="color:white;cursor:pointer;" class="btn btn-success"
                                 data-toggle="modal" data-target="#menuModal">Add new menu</a>
                     </h3>
                 </div>
@@ -112,11 +112,11 @@
                              style="height: 200px; width: 200px;box-shadow: 20px 20px 50px grey;margin-bottom:20px;">
                         <div class="col-sm-12" style="margin-left: 0px;">
                             <label class="btn btn-primary " style="color:#fff; border-radius:8px;">
+                                &nbsp;Browse
                                 <input class="form-control" type="hidden" name="size" value="10000000">
+                                @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file" })
                                 <center>
-                                    <span></span>&nbsp;Browse
-                                        @*<input type="file" id="file" name="file" style="display: none;">*@
-                                        @Html.TextBoxFor(model => model.menuNewRecord.file, new { @class = "single-input", @id = "file", @name = "file", @style = "display: none;", @type = "file"})
+                                    <span></span>
                                 </center>
                             </label>
                         </div>
@@ -300,6 +300,25 @@
         document.getElementById("MenuPrice").value = rowdata.PRICE;
         document.getElementById("Category").value = rowdata.MENUCATEGORYGUID;
     });
+
+    function clearFields() {
+        //document.getElementById("menu_code").value = '';
+        //document.getElementById("menu_name").value = '';
+        //document.getElementById("category").value = '';
+        //document.getElementById("description").value = '';
+        //document.getElementById("price").value = 0;
+        //document.getElementById("image_add").src = "../img/logo.png";
+        //commandStr = 'add';
+        //document.getElementById("menu_code").disabled = false;
+
+        document.getElementById("MenuID").value = '';
+        document.getElementById("image_add").src = "../Content/casa/image/logo.png";
+        document.getElementById("Code").value = '';
+        document.getElementById("Name").value = '';
+        document.getElementById("MenuDescription").value = '';
+        document.getElementById("MenuPrice").value = '';
+        document.getElementById("Category").value = '';
+    }
 
     $(document).on("click", "#btn_delete", function () {
         var rowdata = tbl_menu.row($(this).closest('tr')).data();

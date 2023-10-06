@@ -385,7 +385,10 @@ namespace casa_emelita.Controllers
 
         public ActionResult Menu()
         {
-            return View();
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            return View(this.model);
         }
         
         public ActionResult ServicesofCasa()

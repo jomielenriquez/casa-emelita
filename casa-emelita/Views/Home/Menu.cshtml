@@ -1,4 +1,4 @@
-﻿
+﻿@model casa_emelita.Models.AppModel
 @{
     ViewBag.Title = "Menu";
     Layout = "~/Views/Shared/_Home.cshtml";
@@ -54,51 +54,27 @@
         </div>
         <div class="row">
 
-            <?php
+            @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
+            {
+                <div class="col-xl-4 col-md-6">
+                    <div class="single_order">
+                        <div class="order_thumb">
+                            <img src="~/UploadedImage/@(menu.MENUIMAGE)" alt="">
+                            <div class="order_prise">
+                                <span> @(menu.PRICE.ToString("#,###.##"))</span>
+                            </div>
+                        </div>
+                        <div class="order_info">
+                            <h3><a href="#">@(menu.MENUCODE)</a></h3>
+                            <p>@(menu.MENUDESCRIPTION)
+                            <p>
+                                @(menu.TBL_CATEGORY.CATEGORYNAME)
+                            </p>
 
-            $sql = "SELECT `_id`, `_menu_code`, `_menu_name`, `_category`, `_description`, `_price`, `_img` FROM `tbl_menu` WHERE `_category` LIKE '$category'";
-            $result = $con_str->query($sql);
-
-            if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-            $menuCode = $row['_menu_code'];
-            $imgPath = 'img/logo.png';
-
-            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode'";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            if ($row2['_img'] != '') {
-            $imgPath = 'img/menu/' . $row2['_img'];
-            }
-            }
-            }
-            $output = '';
-            $output = ' <div class="col-xl-4 col-md-6">
-                <div class="single_order">
-                    <div class="order_thumb">
-                        <img src="' . $imgPath . '" alt="">
-                        <div class="order_prise">
-                            <span>' . number_format($row["_price"], 2) . '</span>
                         </div>
                     </div>
-                    <div class="order_info">
-                        <h3><a href="#">' . $row["_menu_code"] . '</a></h3>
-                        <p>' . $row["_description"] . '
-                        <p>
-                            ' . $row["_category"] . '
-                        </p>
-
-                    </div>
                 </div>
-            </div>';
-            echo $output;
             }
-            }
-
-            ?>
-
 
 
         </div>
@@ -133,75 +109,37 @@
         </div>
 
         <div class="row">
-
-            <?php
-
-            $sql = "SELECT `_id`, `_package_code`, `_package_name`, `_event_type`, `_inclusions`, `_pax`, `_price` FROM `tbl_package` WHERE `_event_type` LIKE '$eventType'";
-            $result = $con_str->query($sql);
-
-            if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-            $packageCode = $row['_package_code'];
-            $menuCode = '';
-            $imgPath = 'img/logo.png';
-
-
-
-            $sql2 = "SELECT `_id`, `_package_code`, `_menu_code`, `_menu_name`, `_description` FROM `tbl_package_menu` WHERE `_package_code` LIKE '$packageCode'";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            $menuCode = $row2['_menu_code'];
-            }
-            }
-
-            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode' ORDER BY RAND()";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            if ($row2['_img'] != '') {
-            $imgPath = 'img/menu/' . $row2['_img'];
-            }
-            }
-            }
-            $output = '';
-            $output = ' <div class="col-xl-4 col-md-6">
-                <div class="single_order">
-                    <div class="order_thumb">
-                        <img src="' . $imgPath . '" alt="">
-                        <div class="order_prise">
-                            <span>' . number_format($row["_price"], 2) . '</span>
+            @foreach (casa_emelita.Models.TBL_PACKAGE package in Model.Package_List)
+            {
+                <div class="col-xl-4 col-md-6">
+                    <div class="single_order">
+                        <div class="order_thumb">
+                            <img src="~/Content/Casa/image/logo.png" alt="">
+                            <div class="order_prise">
+                                <span>@(package.PRICE.ToString("#,###.##"))</span>
+                            </div>
+                        </div>
+                        <div class="order_info">
+                            <h3><a href="#">@(package.PACKAGECODE)</a></h3>
+                            <h4>@package.TBL_EVENTTYPE.EVENTNAME</h4>
+                            <h5>Inclusions:</h5>
+                            <p>@package.INCLUSIONSDESCRIPTION</p>
+                            <p>
+                                Good for @package.ACCOMODATION pax
+                            </p>
+                            <a id="btn_book" style="cursor:pointer;" data-toggle="modal" data-target="#bookingModal" class="boxed_btn"
+                               data-package_code="@package.PACKAGECODE"
+                                data-event_type="@package.EVENTTYPE"
+                                data-inclusions="@package.INCLUSIONS"
+                                data-pax="@package.ACCOMODATION"
+                                data-price="₱ @package.PRICE.ToString("#,###.##")"
+                                data-price_value="@package.PRICE">Book Now!</a>
                         </div>
                     </div>
-                    <div class="order_info">
-                        <h3><a href="#">' . $row["_package_code"] . '</a></h3>
-                        <h4>' . $row["_event_type"] . '</h4>
-                        <h5>Inclusions:</h5>
-                        <p>' . $row["_inclusions"] . '</p>
-                        <p>
-                            Good for ' . $row["_pax"] . ' pax
-                        </p>
-                        <a id="btn_book" style="cursor:pointer;" data-toggle="modal" data-target="#bookingModal" class="boxed_btn"
-                           data-package_code="' . $row[" _package_code"] . '"
-                                data-event_type="' . $row["_event_type"] . '"
-                                data-inclusions="' . $row["_inclusions"] . '"
-                                data-pax="' . $row["_pax"] . '"
-                                data-price="₱ ' . number_format($row["_price"], 2) . '"
-                                data-price_value="' . $row["_price"] . '">Book Now!</a>
-                    </div>
                 </div>
-            </div>';
-            echo $output;
-            }
             }
 
-            ?>
-
-
-
-        </div>
+            </div>
     </div>
 </div>
 <!-- order_area_end -->
