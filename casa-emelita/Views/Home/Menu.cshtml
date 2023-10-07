@@ -1,4 +1,4 @@
-﻿
+﻿@model casa_emelita.Models.AppModel
 @{
     ViewBag.Title = "Menu";
     Layout = "~/Views/Shared/_Home.cshtml";
@@ -26,79 +26,38 @@
 
             </div>
         </div>
-        <div class="row" style="margin-bottom:20px;">
-            <div class="col-sm-6">
-                <select id="category" class="form-control">
-                    <option value="" selected hidden>Category</option>
-                    <option value="">View all</option>
-                    <option value="Appetizer">Appetizer</option>
-                    <option value="Soup">Soup</option>
-                    <option value="Ala Carte">Ala Carte</option>
-                    <option value="Pork">Pork</option>
-                    <option value="Chicken">Chicken</option>
-                    <option value="Fish">Fish</option>
-                    <option value="Noodles and Pasta,">Noodles and Pasta,</option>
-                    <option value="Rice">Rice</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Shakes">Shakes</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Wine">Wine</option>
-                    <option value="Fries">Fries</option>
-                </select>
+        @using (Html.BeginForm("Menu", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "categoryForm", @name = "categoryForm", @class = "row", style = "margin-bottom:20px;" }))
+        {
+            <div class="col-sm-6" style="display:inline-block">
+                @Html.DropDownListFor(model => model.SelectedCategory, new SelectList(Model.Category, "CATEGORYID", "CATEGORYNAME"), "Select Category..", new { @class = "form-control", @id = "Category", @required = "" })
             </div>
-            <div class="col-sm-6">
-                <a style="color:white;cursor:pointer;" id="btn_search" class="btn btn-success">
-                    <center>Search</center>
-                </a>
+            <div class="col-sm-6" style="display:inline-block">
+                <button class="btn btn-success" type="submit" style="color:white;cursor:pointer;">Search</button>
             </div>
-        </div>
+        }
         <div class="row">
 
-            <?php
+            @foreach (casa_emelita.Models.TBL_MENU menu in Model.Menu_List)
+            {
+                <div class="col-xl-4 col-md-6">
+                    <div class="single_order">
+                        <div class="order_thumb">
+                            <img src="~/UploadedImage/@(menu.MENUIMAGE)" alt="">
+                            <div class="order_prise">
+                                <span> @(menu.PRICE.ToString("#,###.##"))</span>
+                            </div>
+                        </div>
+                        <div class="order_info">
+                            <h3><a href="#">@(menu.MENUCODE)</a></h3>
+                            <p>@(menu.MENUDESCRIPTION)
+                            <p>
+                                @(menu.TBL_CATEGORY.CATEGORYNAME)
+                            </p>
 
-            $sql = "SELECT `_id`, `_menu_code`, `_menu_name`, `_category`, `_description`, `_price`, `_img` FROM `tbl_menu` WHERE `_category` LIKE '$category'";
-            $result = $con_str->query($sql);
-
-            if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-            $menuCode = $row['_menu_code'];
-            $imgPath = 'img/logo.png';
-
-            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode'";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            if ($row2['_img'] != '') {
-            $imgPath = 'img/menu/' . $row2['_img'];
-            }
-            }
-            }
-            $output = '';
-            $output = ' <div class="col-xl-4 col-md-6">
-                <div class="single_order">
-                    <div class="order_thumb">
-                        <img src="' . $imgPath . '" alt="">
-                        <div class="order_prise">
-                            <span>' . number_format($row["_price"], 2) . '</span>
                         </div>
                     </div>
-                    <div class="order_info">
-                        <h3><a href="#">' . $row["_menu_code"] . '</a></h3>
-                        <p>' . $row["_description"] . '
-                        <p>
-                            ' . $row["_category"] . '
-                        </p>
-
-                    </div>
                 </div>
-            </div>';
-            echo $output;
             }
-            }
-
-            ?>
-
 
 
         </div>
@@ -111,241 +70,377 @@
                 </div>
             </div>
         </div>
-
-        <div class="row" style="margin-bottom:20px;">
-            <div class="col-sm-6">
-                <select id="event_type" class="form-control">
-                    <option value="" selected hidden>Event type</option>
-                    <option value="">View all</option>
-                    <option value="All events">All events</option>
-                    <option value="Birthday catering">Birthday catering</option>
-                    <option value="Wedding service">Wedding service</option>
-                    <option value="Party catering">Party catering</option>
-                    <option value="Corporate service">Corporate service</option>
-                    <option value="Other services">Other services</option>
-                </select>
+        @using (Html.BeginForm("Menu", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "eventForm", @name = "eventForm", @class = "row", style = "margin-bottom:20px;" }))
+        {
+            <div class="col-sm-6" style="display:inline-block">
+                @Html.DropDownListFor(model => model.SelectedEvent, new SelectList(Model.EventType_List, "EVENTTYPEID", "EVENTNAME"), "Select Event Type..", new { @class = "form-control", @id = "EventType", @required = "" })
             </div>
-            <div class="col-sm-6">
-                <a style="color:white;cursor:pointer;" id="btn_search_package" class="btn btn-success">
-                    <center>Search</center>
-                </a>
+            <div class="col-sm-6" style="display:inline-block">
+                <button class="btn btn-success" type="submit" style="color:white;cursor:pointer;">Search</button>
             </div>
-        </div>
+        }
 
         <div class="row">
-
-            <?php
-
-            $sql = "SELECT `_id`, `_package_code`, `_package_name`, `_event_type`, `_inclusions`, `_pax`, `_price` FROM `tbl_package` WHERE `_event_type` LIKE '$eventType'";
-            $result = $con_str->query($sql);
-
-            if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-            $packageCode = $row['_package_code'];
-            $menuCode = '';
-            $imgPath = 'img/logo.png';
-
-
-
-            $sql2 = "SELECT `_id`, `_package_code`, `_menu_code`, `_menu_name`, `_description` FROM `tbl_package_menu` WHERE `_package_code` LIKE '$packageCode'";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            $menuCode = $row2['_menu_code'];
-            }
-            }
-
-            $sql2 = "SELECT `_img` FROM `tbl_menu` WHERE `_menu_code` LIKE '$menuCode' ORDER BY RAND()";
-            $result2 = $con_str->query($sql2);
-
-            if ($result2->num_rows > 0) {
-            while ($row2 = mysqli_fetch_array($result2)) {
-            if ($row2['_img'] != '') {
-            $imgPath = 'img/menu/' . $row2['_img'];
-            }
-            }
-            }
-            $output = '';
-            $output = ' <div class="col-xl-4 col-md-6">
-                <div class="single_order">
-                    <div class="order_thumb">
-                        <img src="' . $imgPath . '" alt="">
-                        <div class="order_prise">
-                            <span>' . number_format($row["_price"], 2) . '</span>
+            @foreach (casa_emelita.Models.TBL_PACKAGE package in Model.Package_List)
+            {
+                <div class="col-xl-4 col-md-6">
+                    <div class="single_order">
+                        <div class="order_thumb">
+                            <img src="~/Content/Casa/image/logo.png" alt="">
+                            <div class="order_prise">
+                                <span>@(package.PRICE.ToString("#,###.##"))</span>
+                            </div>
+                        </div>
+                        <div class="order_info">
+                            <h3><a href="#">@(package.PACKAGECODE)</a></h3>
+                            <h4>@package.TBL_EVENTTYPE.EVENTNAME</h4>
+                            <h5>Inclusions:</h5>
+                            <p>@package.INCLUSIONSDESCRIPTION</p>
+                            <p>
+                                Good for @package.ACCOMODATION pax
+                            </p>
+                            <a id="btn_book" style="cursor:pointer;" data-toggle="modal" data-target="#bookingModal" class="boxed_btn"
+                               data-package_code="@package.PACKAGECODE"
+                               data-package_id="@package.PACKAGEID"
+                               data-event_type="@package.TBL_EVENTTYPE.EVENTNAME"
+                               data-inclusions="@package.INCLUSIONSDESCRIPTION"
+                               data-pax="@package.ACCOMODATION"
+                               data-price="₱ @package.PRICE.ToString("#,###.##")"
+                               data-price_value="@package.PRICE">Book Now!</a>
                         </div>
                     </div>
-                    <div class="order_info">
-                        <h3><a href="#">' . $row["_package_code"] . '</a></h3>
-                        <h4>' . $row["_event_type"] . '</h4>
-                        <h5>Inclusions:</h5>
-                        <p>' . $row["_inclusions"] . '</p>
-                        <p>
-                            Good for ' . $row["_pax"] . ' pax
-                        </p>
-                        <a id="btn_book" style="cursor:pointer;" data-toggle="modal" data-target="#bookingModal" class="boxed_btn"
-                           data-package_code="' . $row[" _package_code"] . '"
-                                data-event_type="' . $row["_event_type"] . '"
-                                data-inclusions="' . $row["_inclusions"] . '"
-                                data-pax="' . $row["_pax"] . '"
-                                data-price="₱ ' . number_format($row["_price"], 2) . '"
-                                data-price_value="' . $row["_price"] . '">Book Now!</a>
-                    </div>
                 </div>
-            </div>';
-            echo $output;
             }
-            }
-
-            ?>
-
-
 
         </div>
     </div>
 </div>
+<script>
+    $(document).on("click", "#btn_book", function () {
+        selectedPackageCode = $(this).data('package_id');
+        document.getElementById("Modal_PACKAGEID").value = selectedPackageCode;
+        document.getElementById("package_code").innerText = $(this).data('package_code');
+        document.getElementById("event_type").innerText = $(this).data('event_type');
+        document.getElementById("inclusions").innerText = $(this).data('inclusions');
+        document.getElementById("price").innerText = $(this).data('price');
+        document.getElementById("pax").innerText = "Good for  " + $(this).data('pax') + "pax";
+
+        //packageCode = selectedPackageCode;
+        //eventType = $(this).data('event_type');
+        //inclusions = $(this).data('inclusions');
+        //pax = $(this).data('pax');
+        //price = $(this).data('price_value');
+
+        fetchPackageMenu(selectedPackageCode);
+    });
+    function fetchPackageMenu(packageCode) {
+        $('#tbl_menu_included').DataTable().destroy();
+
+        var dataTable1 = $('#tbl_menu_included').DataTable({
+
+            "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true, //stay on this page
+            "responsive": true,
+            "order": [],
+            "drawCallback": function (settings) {
+                //console.log(settings.json);
+            },
+            "ajax": {
+                url: "@Url.Action("GetInludedMenu", "Home")",
+                type: "GET",
+                data: { PackageID: packageCode },
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "MENUIMAGE", "orderable": false },
+                { "data": "MENUCODE"},
+                { "data": "MENUNAME"},
+                { "data": "MENUCATEGORY" },
+                { "data": "MENUDESCRIPTION" }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return '<center><img src="../UploadedImage/' + data + '" alt="Image" width="50" height="50"></center>';
+                    }
+                },
+            ],
+            "autoWidth": false
+        });
+    }
+</script>
 <!-- order_area_end -->
 
 <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Booking details</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
+            @using (Html.BeginForm("NewAppointment", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "NewAppointmentForm", @name = "NewAppointmentForm" }))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Booking details</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-                <div class="row m-3">
-                    <div class="col-sm-6">
-                        <div class="single_order">
-                            <div class="order_info">
-                                <h3 id="package_code">Package code</h3>
-                                <h4 id="event_type">Event type</h4>
-                                <h5>Inclusions:</h5>
-                                <p id="inclusions"></p>
-                                <p id="pax">
-                                    Good for 100 pax
-                                </p>
-                                <p id="price">
-                                </p>
+                    <div class="row m-3">
+                        <div class="col-sm-6">
+                            <div class="single_order">
+                                <div class="order_info">
+                                    <h3 id="package_code">Package code</h3>
+                                    <h4 id="event_type">Event type</h4>
+                                    <h5>Inclusions:</h5>
+                                    <p id="inclusions"></p>
+                                    <p id="pax">
+                                        Good for 100 pax
+                                    </p>
+                                    <p id="price">
+                                    </p>
 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <img src="~/Content/Casa/image/logo.png" style="float:right;width:200px;margin-right:60px;">
+                        </div>
+                    </div>
+
+                    <div class="row m-3">
+                        <div class="col-sm-12">
+                            <label>Menu included in the package</label>
+                            <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th width="1%" class="text-center">
+                                            Image
+                                        </th>
+                                        <th class="text-center">
+                                            Menu code
+                                        </th>
+                                        <th class="text-center">
+                                            Name
+                                        </th>
+                                        <th class="text-center">
+                                            Category
+                                        </th>
+                                        <th class="text-center">
+                                            Description
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row m-3">
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(model => model.Reservation.PACKAGEID, new { @class = "single-input", @id = "Modal_PACKAGEID", @name = "PACKAGEID", @style = "display:none", @type = "text" })
+                            <label> Event Date: </label>
+                            @Html.TextBoxFor(model => model.Reservation.EVENTDATE, new { @class = "form-control", @id = "reservation_date", @name = "EVENTDATE", @onkeydown = "return false", @type = "date", @onchange = "checkDate(this.value);", @required = "" })
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group" id="grp_slot" style="display:none;">
+                                <label> Available Slots:</label><br>
+                                @Html.RadioButtonFor(m => m.Reservation.SLOT, "09:00 am to 02:00 pm", new { @style = "display:none;", @id = "morning" })
+                                <label style="display:none;" id="lbl_morning" for="morning">09:00 am to 02:00 pm</label><br>
+                                @Html.RadioButtonFor(m => m.Reservation.SLOT, "03:00 pm to 08:00 pm", new { @style = "display:none;", @id = "afternoon" })
+                                <label style="display:none;" id="lbl_afternoon" for="afternoon">03:00 pm to 08:00 pm</label><br>
+                                @Html.RadioButtonFor(m => m.Reservation.SLOT, "Whole day", new { @style = "display:none;", @id = "whole_day" })
+                                <label style="display:none;" id="lbl_wl" for="whole_day">Whole day</label>
+                            </div>
+                            <div class="form-group" id="wrng" style="display:none;">
+                                <label class="genric-btn danger circle arrow" disabled>
+                                    No available slot for your
+                                    selected date!
+                                </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <img src="img/logo.png" style="float:right;width:200px;margin-right:60px;">
+                    <script>
+                        $(document).ready(function () {
+                            setMinDate();
+                        });
+                        function setMinDate() {
+                            var dtToday = new Date();
+
+                            var month = dtToday.getMonth() + 1;
+                            var day = dtToday.getDate() + 1;
+                            var year = dtToday.getFullYear();
+                            if (month < 10)
+                                month = '0' + month.toString();
+                            if (day < 10)
+                                day = '0' + day.toString();
+
+                            var maxDate = year + '-' + month + '-' + day;
+
+
+                            $('#reservation_date').attr('min', maxDate);
+                            $('#appointment_date').attr('min', maxDate);
+                        }
+                        function checkDate(reservationDate) {
+                            $.ajax({
+
+                                url: "@Url.Action("GetAvailableSlots", "Home")",
+                                type: "POST",
+                                data: { reservationDate: reservationDate },
+                                "dataSrc": "",
+
+                                beforeSend: function () {
+
+                                },
+                                error: function (data) {
+
+                                },
+                                success: function (data) {
+                                    document.getElementById("morning").checked = false;
+                                    document.getElementById("afternoon").checked = false;
+                                    document.getElementById("whole_day").checked = false;
+                                    if (data.length == 0) {
+                                        document.getElementById("wrng").style.display = '';
+                                        document.getElementById("grp_slot").style.display = 'none';
+                                        return;
+                                    }
+                                    document.getElementById("wrng").style.display = 'none';
+                                    document.getElementById("grp_slot").style.display = '';
+
+                                    document.getElementById("morning").style.display = 'none';
+                                    document.getElementById("lbl_morning").style.display = 'none';
+
+                                    document.getElementById("afternoon").style.display = 'none';
+                                    document.getElementById("lbl_afternoon").style.display = 'none';
+
+                                    document.getElementById("whole_day").style.display = 'none';
+                                    document.getElementById("lbl_wl").style.display = 'none';
+
+                                    data.forEach(function (currentValue, index, array) {
+                                        if (currentValue == "09:00 am to 02:00 pm") {
+                                            document.getElementById("morning").style.display = '';
+                                            document.getElementById("lbl_morning").style.display = '';
+                                        }
+                                        else if (currentValue == "03:00 pm to 08:00 pm") {
+                                            document.getElementById("afternoon").style.display = '';
+                                            document.getElementById("lbl_afternoon").style.display = '';
+                                        }
+                                        else if (currentValue == "Whole day") {
+                                            document.getElementById("whole_day").style.display = '';
+                                            document.getElementById("lbl_wl").style.display = '';
+                                        }
+                                    })
+
+                                    document.getElementById("appointment_date").value = '';
+                                    $('#appointment_date').attr('max', document.getElementById("reservation_date").value);
+
+                                }
+
+                            });
+                        }
+                    </script>
+
+                    <div class="row m-3">
+                        <div class="col-sm-6">
+                            <label> Personal Information: </label>
+                        </div>
+                    </div>
+
+
+                    <div class="row m-3">
+
+                        <div class="col-sm-6">
+
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Reservation.CUSTOMERNAME, new { @class = "form-control", @name = "name", @id = "c_name", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter your name'", @placeholder = "Enter your name", @required = "" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Reservation.CUSTOMEREMAIL, new { @class = "form-control", @name = "email", @id = "c_email", @type = "email", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter your email address'", @placeholder = "Email", @required = "" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Reservation.CUSTOMERCONTACTNUMVER, new { @class = "form-control", @name = "c_contact", @id = "c_contact", @type = "contact", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter contact numberd'", @placeholder = "Enter contact number", @required = "" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.Reservation.CUSTOMERADDRESS, new { @class = "form-control", @name = "c_address", @id = "c_address", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter address'", @placeholder = "Enter address", @required = "" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label> Appointment Date: </label>
+                                @Html.TextBoxFor(model => model.Reservation.APPOINTMENTDATE, new { @class = "form-control valid", @id = "appointment_date", @name = "EVENTDATE", @onkeydown = "return false", @type = "date", @required = "" })
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row m-3">
-                    <div class="col-sm-12">
-                        <label>Menu included in the package</label>
-                        <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
-                            <thead class="table-header">
-                                <tr>
-                                    <th width="1%" class="text-center">
-                                        Image
-                                    </th>
-                                    <th class="text-center">
-                                        Menu code
-                                    </th>
-                                    <th class="text-center">
-                                        Name
-                                    </th>
-                                    <th class="text-center">
-                                        Category
-                                    </th>
-                                    <th class="text-center">
-                                        Description
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="button" id="btn_submit">Submit</button>
                 </div>
+            }
+            <script>
+                $(document).on("click", "#btn_submit", function () {
+                    var slot = $("input[type=radio]:checked").val();
+                    var reservationDate = document.getElementById("reservation_date").value.trim();
+                    var appointmentDate = document.getElementById("appointment_date").value.trim();
+                    var customerEmail = document.getElementById("c_email").value.trim();
+                    var customerName = document.getElementById("c_name").value.trim();
+                    var customerContact = document.getElementById("c_contact").value.trim();
+                    var customerAddress = document.getElementById("c_address").value.trim();
 
-                <div class="row m-3">
-                    <div class="col-sm-6">
-                        <label> Event Date: </label>
-                        <input id="reservation_date" type="date" class="form-control" onkeydown="return false"
-                               onchange="checkDate(this.value);">
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group" id="grp_slot" style="display:none;">
-                            <label> Available Slots:</label><br>
-                            <input type="radio" name="slot" value="09:00 am to 01:00 pm" id="morning">
-                            <label id="lbl_morning" for="morning">09:00 am to 02:00 pm</label><br>
-                            <input type="radio" name="slot" value="03:00 pm to 08:00 pm" id="afternoon">
-                            <label id="lbl_afternoon" for="afternoon">03:00 pm to 08:00 pm</label><br>
-                            <input type="radio" name="slot" value="Whole day" id="whole_day">
-                            <label id="lbl_wl" for="whole_day">Whole day</label>
-                        </div>
-                        <div class="form-group" id="wrng" style="display:none;">
-                            <label class="genric-btn danger circle arrow" disabled>
-                                No available slot for your
-                                selected date!
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                    if (reservationDate == '' || appointmentDate == '' || slot == undefined || customerEmail == '' || customerName == '' || customerContact == '' || customerAddress == '') {
+                        swal({
+                            title: "Warning!",
+                            text: "Please complete the required fields!",
+                            type: "error"
+                        });
+                        return;
+                    }
 
-                <!-- <iframe class="form-control" src="calendar.php" style="height:730px;"></iframe> -->
-                <div class="row m-3">
-                    <div class="col-sm-6">
-                        <label> Personal Information: </label>
-                    </div>
-                </div>
+                    swal({
+                        title: "Continue?",
+                        text: "Do you want to continue your appointment?",
+                        type: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#5cb85c",
+                        cancelButtonColor: "#d9534f",
+                        confirmButtonText: 'Confirm',
+                        confirmButtonClass: "btn"
+                    }).then((result) => {
+                        if (result.value) {
+                            // Get the form element by its ID
+                            var form = document.getElementById("NewAppointmentForm");
 
-
-                <div class="row m-3">
-
-                    <div class="col-sm-6">
-
-                        <div class="form-group">
-                            <input class="form-control valid" name="name" id="c_name" type="text"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
-                                   placeholder="Enter your name">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <input class="form-control valid" name="email" id="c_email" type="email"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'"
-                                   placeholder="Email">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <input class="form-control valid" name="c_contact" id="c_contact" type="contact"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter contact number'"
-                                   placeholder="Enter contact number">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <input class="form-control valid" name="c_address" id="c_address" type="text"
-                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter address'"
-                                   placeholder="Enter address">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label> Appointment Date: </label>
-                            <input id="appointment_date" type="date" class="form-control valid"
-                                   onkeydown="return false">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <button class="btn btn-primary" type="button" id="btn_submit">Submit</button>
-            </div>
+                            // Submit the form
+                            form.submit();
+                        }
+                    }); // end swal
+                });
+            </script>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        var AppointmentMessage = "@ViewBag.AppointmentMessage";
+        if (AppointmentMessage != "") {
+            swal({
+                title: "Success!",
+                text: "Your appointment has been set! Please wait for Casa-Emelita to contact you.",
+                type: "success"
+            }).then(okay => {
+                if (okay) {
+                    
+                }
+            });
+        }
+    });
+</script>

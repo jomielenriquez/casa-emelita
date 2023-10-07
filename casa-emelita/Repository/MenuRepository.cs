@@ -13,7 +13,19 @@ namespace casa_emelita.Repository
         public List<TBL_MENU> GetMenuList()
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
-            List<TBL_MENU> menu = (List<TBL_MENU>)(from table_menu in entities.TBL_MENU select table_menu).ToList();
+            List<TBL_MENU> menu = (List<TBL_MENU>)(from table_menu in entities.TBL_MENU.OrderBy(m => m.MENUNAME) select table_menu).ToList();
+            if (menu.Count() == 0)
+            {
+                menu = new List<TBL_MENU>() { };
+            }
+            return (List<TBL_MENU>)menu;
+        }
+        public List<TBL_MENU> GetMenuList(Guid? SelectedCategory)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            List<TBL_MENU> menu = (List<TBL_MENU>)(from table_menu in entities.TBL_MENU
+                                                   .OrderBy(m => m.MENUNAME)
+                                                   .Where(m => m.MENUCATEGORY == SelectedCategory) select table_menu).ToList();
             if (menu.Count() == 0)
             {
                 menu = new List<TBL_MENU>() { };

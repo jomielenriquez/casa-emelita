@@ -12,27 +12,22 @@ namespace casa_emelita.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TBL_PACKAGE
+    public partial class TBL_ORDER_TYPE
     {
-        public TBL_PACKAGE()
+        public TBL_ORDER_TYPE()
         {
-            this.TBL_ORDERS = new HashSet<TBL_ORDERS>();
+            this.TBL_ORDER = new HashSet<TBL_ORDER>();
         }
     
-        public System.Guid PACKAGEID { get; set; }
-        public string PACKAGECODE { get; set; }
-        public string PACKAGENAME { get; set; }
-        public System.Guid EVENTTYPE { get; set; }
-        public System.Guid INCLUSIONS { get; set; }
-        public Nullable<int> ACCOMODATION { get; set; }
-        public decimal PRICE { get; set; }
+        public System.Guid ORDERTYPEID { get; set; }
+        public string ORDERNAME { get; set; }
+        public string ORDERCODE { get; set; }
+        public string ORDERDESCRIPTION { get; set; }
         public System.DateTime CREATEDDATE { get; set; }
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
-        public string UPDATEDBY { get; set; }
-        public string INCLUSIONSDESCRIPTION { get; set; }
+        public string UDATEDBY { get; set; }
     
-        public virtual TBL_EVENTTYPE TBL_EVENTTYPE { get; set; }
-        public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
+        public virtual ICollection<TBL_ORDER> TBL_ORDER { get; set; }
     }
 }

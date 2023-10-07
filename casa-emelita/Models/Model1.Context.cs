@@ -31,5 +31,9 @@ namespace casa_emelita.Models
         public DbSet<TBL_MENU> TBL_MENU { get; set; }
         public DbSet<TBL_INCLUSION> TBL_INCLUSION { get; set; }
         public DbSet<TBL_PACKAGE> TBL_PACKAGE { get; set; }
+        public DbSet<TBL_ORDER_STATUS> TBL_ORDER_STATUS { get; set; }
+        public DbSet<TBL_ORDER_TYPE> TBL_ORDER_TYPE { get; set; }
+        public DbSet<TBL_ORDERS> TBL_ORDERS { get; set; }
+        public DbSet<TBL_ORDER> TBL_ORDER { get; set; }
     }
 }

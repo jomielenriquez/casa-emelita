@@ -33,6 +33,9 @@ namespace casa_emelita.Models
         public TBL_PACKAGE packageNewRecord { get; set; }
         public List<TBL_EVENTTYPE> EventType_List { get; set; }
         public ChangePassModel changePassModel { get; set; }
+        public Guid? SelectedCategory { get; set; }
+        public Guid? SelectedEvent { get; set; }
+        public TBL_ORDER Reservation { get; set; }
     }
     public class MenuNewRecord
     {

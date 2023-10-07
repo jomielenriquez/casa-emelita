@@ -12,28 +12,31 @@ namespace casa_emelita.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TBL_MENU
+    public partial class TBL_ORDER
     {
-        public TBL_MENU()
+        public TBL_ORDER()
         {
-            this.TBL_INCLUSION = new HashSet<TBL_INCLUSION>();
             this.TBL_ORDERS = new HashSet<TBL_ORDERS>();
         }
     
-        public System.Guid MENUID { get; set; }
-        public string MENUNAME { get; set; }
-        public string MENUCODE { get; set; }
-        public string MENUIMAGE { get; set; }
-        public System.Guid MENUCATEGORY { get; set; }
-        public string MENUDESCRIPTION { get; set; }
-        public decimal PRICE { get; set; }
+        public System.Guid ORDERID { get; set; }
+        public System.Guid ORDERTYPEID { get; set; }
+        public string CUSTOMERNAME { get; set; }
+        public string CUSTOMEREMAIL { get; set; }
+        public string CUSTOMERCONTACTNUMVER { get; set; }
+        public Nullable<System.Guid> PACKAGEID { get; set; }
+        public string CUSTOMERADDRESS { get; set; }
+        public System.DateTime EVENTDATE { get; set; }
+        public System.Guid ORDERSTATUSID { get; set; }
+        public System.DateTime APPOINTMENTDATE { get; set; }
         public System.DateTime CREATEDDATE { get; set; }
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
-        public string UPDATEDBY { get; set; }
+        public string UDATEDBY { get; set; }
+        public string SLOT { get; set; }
     
-        public virtual TBL_CATEGORY TBL_CATEGORY { get; set; }
-        public virtual ICollection<TBL_INCLUSION> TBL_INCLUSION { get; set; }
         public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
+        public virtual TBL_ORDER_TYPE TBL_ORDER_TYPE { get; set; }
+        public virtual TBL_ORDER_STATUS TBL_ORDER_STATUS { get; set; }
     }
 }

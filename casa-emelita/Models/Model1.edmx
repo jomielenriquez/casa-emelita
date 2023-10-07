@@ -68,6 +68,65 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="TBL_ORDER">
+          <Key>
+            <PropertyRef Name="ORDERID" />
+          </Key>
+          <Property Name="ORDERID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORDERTYPEID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CUSTOMERNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CUSTOMEREMAIL" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CUSTOMERCONTACTNUMVER" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PACKAGEID" Type="uniqueidentifier" />
+          <Property Name="CUSTOMERADDRESS" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EVENTDATE" Type="datetime" Nullable="false" />
+          <Property Name="ORDERSTATUSID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="APPOINTMENTDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+          <Property Name="UDATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="SLOT" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TBL_ORDER_STATUS">
+          <Key>
+            <PropertyRef Name="ORDERSTATUSID" />
+          </Key>
+          <Property Name="ORDERSTATUSID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORDERSTATUSNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORDERSTATUSCODE" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORDERSTATUSDESCRIPTION" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+          <Property Name="UDATEDBY" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TBL_ORDER_TYPE">
+          <Key>
+            <PropertyRef Name="ORDERTYPEID" />
+          </Key>
+          <Property Name="ORDERTYPEID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORDERNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORDERCODE" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORDERDESCRIPTION" Type="nvarchar" MaxLength="50" />
+          <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+          <Property Name="UDATEDBY" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TBL_ORDERS">
+          <Key>
+            <PropertyRef Name="ORDERSID" />
+          </Key>
+          <Property Name="ORDERSID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORDERID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PACKAGEID" Type="uniqueidentifier" />
+          <Property Name="MENUID" Type="uniqueidentifier" />
+          <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+          <Property Name="UDATEDBY" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="TBL_PACKAGE">
           <Key>
             <PropertyRef Name="PACKAGEID" />
@@ -85,6 +144,54 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK__TBL_ORDER__MENUI__339FAB6E">
+          <End Role="TBL_MENU" Type="Self.TBL_MENU" Multiplicity="0..1" />
+          <End Role="TBL_ORDERS" Type="Self.TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_MENU">
+              <PropertyRef Name="MENUID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="MENUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
+          <End Role="TBL_ORDER" Type="Self.TBL_ORDER" Multiplicity="1" />
+          <End Role="TBL_ORDERS" Type="Self.TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="ORDERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_ORDER__ORDER__ORDERTYPE">
+          <End Role="TBL_ORDER_TYPE" Type="Self.TBL_ORDER_TYPE" Multiplicity="1" />
+          <End Role="TBL_ORDER" Type="Self.TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER_TYPE">
+              <PropertyRef Name="ORDERTYPEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="ORDERTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_ORDER__PACKA__32AB8735">
+          <End Role="TBL_PACKAGE" Type="Self.TBL_PACKAGE" Multiplicity="0..1" />
+          <End Role="TBL_ORDERS" Type="Self.TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_PACKAGE">
+              <PropertyRef Name="PACKAGEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TBL_INCLUSION_TBL_MENU">
           <End Role="TBL_MENU" Type="Self.TBL_MENU" Multiplicity="1" />
           <End Role="TBL_INCLUSION" Type="Self.TBL_INCLUSION" Multiplicity="*" />
@@ -121,13 +228,45 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
+          <End Role="TBL_ORDER_STATUS" Type="Self.TBL_ORDER_STATUS" Multiplicity="1" />
+          <End Role="TBL_ORDER" Type="Self.TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER_STATUS">
+              <PropertyRef Name="ORDERSTATUSID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="ORDERSTATUSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="CASAEMELITAModelStoreContainer">
           <EntitySet Name="TBL_ADMIN" EntityType="Self.TBL_ADMIN" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_CATEGORY" EntityType="Self.TBL_CATEGORY" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_EVENTTYPE" EntityType="Self.TBL_EVENTTYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_INCLUSION" EntityType="Self.TBL_INCLUSION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_MENU" EntityType="Self.TBL_MENU" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_ORDER" EntityType="Self.TBL_ORDER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_ORDER_STATUS" EntityType="Self.TBL_ORDER_STATUS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_ORDER_TYPE" EntityType="Self.TBL_ORDER_TYPE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_ORDERS" EntityType="Self.TBL_ORDERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_PACKAGE" EntityType="Self.TBL_PACKAGE" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__TBL_ORDER__MENUI__339FAB6E" Association="Self.FK__TBL_ORDER__MENUI__339FAB6E">
+            <End Role="TBL_MENU" EntitySet="TBL_MENU" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_ORDER__ORDER__31B762FC" Association="Self.FK__TBL_ORDER__ORDER__31B762FC">
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_ORDER__ORDER__ORDERTYPE" Association="Self.FK__TBL_ORDER__ORDER__ORDERTYPE">
+            <End Role="TBL_ORDER_TYPE" EntitySet="TBL_ORDER_TYPE" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_ORDER__PACKA__32AB8735" Association="Self.FK__TBL_ORDER__PACKA__32AB8735">
+            <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
           <AssociationSet Name="FK_TBL_INCLUSION_TBL_MENU" Association="Self.FK_TBL_INCLUSION_TBL_MENU">
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
             <End Role="TBL_INCLUSION" EntitySet="TBL_INCLUSION" />
@@ -139,6 +278,10 @@
           <AssociationSet Name="FK_TBL_PACKAGE" Association="Self.FK_TBL_PACKAGE">
             <End Role="TBL_EVENTTYPE" EntitySet="TBL_EVENTTYPE" />
             <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
+          </AssociationSet>
+          <AssociationSet Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" Association="Self.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
+            <End Role="TBL_ORDER_STATUS" EntitySet="TBL_ORDER_STATUS" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -179,7 +322,31 @@
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
             <End Role="TBL_INCLUSION" EntitySet="TBL_INCLUSION" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="TBL_ORDER_STATUS" EntityType="CASAEMELITAModel.TBL_ORDER_STATUS" />
+          <EntitySet Name="TBL_ORDER_TYPE" EntityType="CASAEMELITAModel.TBL_ORDER_TYPE" />
+          <EntitySet Name="TBL_ORDERS" EntityType="CASAEMELITAModel.TBL_ORDERS" />
+          <AssociationSet Name="FK__TBL_ORDER__MENUI__339FAB6E" Association="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E">
+            <End Role="TBL_MENU" EntitySet="TBL_MENU" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_ORDER__PACKA__32AB8735" Association="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735">
+            <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <EntitySet Name="TBL_ORDER" EntityType="CASAEMELITAModel.TBL_ORDER" />
+          <AssociationSet Name="FK__TBL_ORDER__ORDER__31B762FC" Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC">
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+            <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_ORDER__ORDER__ORDERTYPE" Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE">
+            <End Role="TBL_ORDER_TYPE" EntitySet="TBL_ORDER_TYPE" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+          </AssociationSet>
+          <AssociationSet Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
+            <End Role="TBL_ORDER_STATUS" EntitySet="TBL_ORDER_STATUS" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="TBL_CATEGORY">
           <Key>
             <PropertyRef Name="CATEGORYID" />
@@ -223,6 +390,7 @@
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_CATEGORY" Relationship="CASAEMELITAModel.FK_TBL_MENU_MENUCATEGORY" FromRole="TBL_MENU" ToRole="TBL_CATEGORY" />
           <NavigationProperty Name="TBL_INCLUSION" Relationship="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU" FromRole="TBL_MENU" ToRole="TBL_INCLUSION" />
+          <NavigationProperty Name="TBL_ORDERS" Relationship="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E" FromRole="TBL_MENU" ToRole="TBL_ORDERS" />
         </EntityType>
         <Association Name="FK_TBL_MENU_MENUCATEGORY">
           <End Type="CASAEMELITAModel.TBL_CATEGORY" Role="TBL_CATEGORY" Multiplicity="1" />
@@ -262,6 +430,7 @@
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_EVENTTYPE" Relationship="CASAEMELITAModel.FK_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_EVENTTYPE" />
           <Property Name="INCLUSIONSDESCRIPTION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_ORDERS" Relationship="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" FromRole="TBL_PACKAGE" ToRole="TBL_ORDERS" />
         </EntityType>
         <Association Name="FK_TBL_PACKAGE">
           <End Type="CASAEMELITAModel.TBL_EVENTTYPE" Role="TBL_EVENTTYPE" Multiplicity="1" />
@@ -287,7 +456,134 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="TBL_ORDER_STATUS">
+          <Key>
+            <PropertyRef Name="ORDERSTATUSID" />
+          </Key>
+          <Property Name="ORDERSTATUSID" Type="Guid" Nullable="false" />
+          <Property Name="ORDERSTATUSNAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERSTATUSCODE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERSTATUSDESCRIPTION" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" FromRole="TBL_ORDER_STATUS" ToRole="TBL_ORDER" />
+        </EntityType>
+        <EntityType Name="TBL_ORDER_TYPE">
+          <Key>
+            <PropertyRef Name="ORDERTYPEID" />
+          </Key>
+          <Property Name="ORDERTYPEID" Type="Guid" Nullable="false" />
+          <Property Name="ORDERNAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERCODE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ORDERDESCRIPTION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" FromRole="TBL_ORDER_TYPE" ToRole="TBL_ORDER" />
+        </EntityType>
+        <EntityType Name="TBL_ORDERS">
+          <Key>
+            <PropertyRef Name="ORDERSID" />
+          </Key>
+          <Property Name="ORDERSID" Type="Guid" Nullable="false" />
+          <Property Name="ORDERID" Type="Guid" Nullable="false" />
+          <Property Name="PACKAGEID" Type="Guid" />
+          <Property Name="MENUID" Type="Guid" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_MENU" Relationship="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E" FromRole="TBL_ORDERS" ToRole="TBL_MENU" />
+          <NavigationProperty Name="TBL_PACKAGE" Relationship="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" FromRole="TBL_ORDERS" ToRole="TBL_PACKAGE" />
+          <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" FromRole="TBL_ORDERS" ToRole="TBL_ORDER" />
+        </EntityType>
+        <Association Name="FK__TBL_ORDER__MENUI__339FAB6E">
+          <End Type="CASAEMELITAModel.TBL_MENU" Role="TBL_MENU" Multiplicity="0..1" />
+          <End Type="CASAEMELITAModel.TBL_ORDERS" Role="TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_MENU">
+              <PropertyRef Name="MENUID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="MENUID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_ORDER__PACKA__32AB8735">
+          <End Type="CASAEMELITAModel.TBL_PACKAGE" Role="TBL_PACKAGE" Multiplicity="0..1" />
+          <End Type="CASAEMELITAModel.TBL_ORDERS" Role="TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_PACKAGE">
+              <PropertyRef Name="PACKAGEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TBL_ORDER">
+          <Key>
+            <PropertyRef Name="ORDERID" />
+          </Key>
+          <Property Name="ORDERID" Type="Guid" Nullable="false" />
+          <Property Name="ORDERTYPEID" Type="Guid" Nullable="false" />
+          <Property Name="CUSTOMERNAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMEREMAIL" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMERCONTACTNUMVER" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PACKAGEID" Type="Guid" />
+          <Property Name="CUSTOMERADDRESS" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EVENTDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ORDERSTATUSID" Type="Guid" Nullable="false" />
+          <Property Name="APPOINTMENTDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SLOT" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_ORDERS" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" FromRole="TBL_ORDER" ToRole="TBL_ORDERS" />
+          <NavigationProperty Name="TBL_ORDER_TYPE" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" FromRole="TBL_ORDER" ToRole="TBL_ORDER_TYPE" />
+          <NavigationProperty Name="TBL_ORDER_STATUS" Relationship="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" FromRole="TBL_ORDER" ToRole="TBL_ORDER_STATUS" />
+        </EntityType>
+        <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
+          <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="1" />
+          <End Type="CASAEMELITAModel.TBL_ORDERS" Role="TBL_ORDERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="TBL_ORDERS">
+              <PropertyRef Name="ORDERID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_ORDER__ORDER__ORDERTYPE">
+          <End Type="CASAEMELITAModel.TBL_ORDER_TYPE" Role="TBL_ORDER_TYPE" Multiplicity="1" />
+          <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER_TYPE">
+              <PropertyRef Name="ORDERTYPEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="ORDERTYPEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
+          <End Type="CASAEMELITAModel.TBL_ORDER_STATUS" Role="TBL_ORDER_STATUS" Multiplicity="1" />
+          <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER_STATUS">
+              <PropertyRef Name="ORDERSTATUSID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="ORDERSTATUSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -376,6 +672,69 @@
                 <ScalarProperty Name="PACKAGENAME" ColumnName="PACKAGENAME" />
                 <ScalarProperty Name="PACKAGECODE" ColumnName="PACKAGECODE" />
                 <ScalarProperty Name="PACKAGEID" ColumnName="PACKAGEID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_ORDER_STATUS">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER_STATUS">
+              <MappingFragment StoreEntitySet="TBL_ORDER_STATUS">
+                <ScalarProperty Name="UDATEDBY" ColumnName="UDATEDBY" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+                <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="ORDERSTATUSDESCRIPTION" ColumnName="ORDERSTATUSDESCRIPTION" />
+                <ScalarProperty Name="ORDERSTATUSCODE" ColumnName="ORDERSTATUSCODE" />
+                <ScalarProperty Name="ORDERSTATUSNAME" ColumnName="ORDERSTATUSNAME" />
+                <ScalarProperty Name="ORDERSTATUSID" ColumnName="ORDERSTATUSID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_ORDER_TYPE">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER_TYPE">
+              <MappingFragment StoreEntitySet="TBL_ORDER_TYPE">
+                <ScalarProperty Name="UDATEDBY" ColumnName="UDATEDBY" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+                <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="ORDERDESCRIPTION" ColumnName="ORDERDESCRIPTION" />
+                <ScalarProperty Name="ORDERCODE" ColumnName="ORDERCODE" />
+                <ScalarProperty Name="ORDERNAME" ColumnName="ORDERNAME" />
+                <ScalarProperty Name="ORDERTYPEID" ColumnName="ORDERTYPEID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_ORDERS">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDERS">
+              <MappingFragment StoreEntitySet="TBL_ORDERS">
+                <ScalarProperty Name="UDATEDBY" ColumnName="UDATEDBY" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+                <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="MENUID" ColumnName="MENUID" />
+                <ScalarProperty Name="PACKAGEID" ColumnName="PACKAGEID" />
+                <ScalarProperty Name="ORDERID" ColumnName="ORDERID" />
+                <ScalarProperty Name="ORDERSID" ColumnName="ORDERSID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_ORDER">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER">
+              <MappingFragment StoreEntitySet="TBL_ORDER">
+                <ScalarProperty Name="SLOT" ColumnName="SLOT" />
+                <ScalarProperty Name="UDATEDBY" ColumnName="UDATEDBY" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+                <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="APPOINTMENTDATE" ColumnName="APPOINTMENTDATE" />
+                <ScalarProperty Name="ORDERSTATUSID" ColumnName="ORDERSTATUSID" />
+                <ScalarProperty Name="EVENTDATE" ColumnName="EVENTDATE" />
+                <ScalarProperty Name="CUSTOMERADDRESS" ColumnName="CUSTOMERADDRESS" />
+                <ScalarProperty Name="PACKAGEID" ColumnName="PACKAGEID" />
+                <ScalarProperty Name="CUSTOMERCONTACTNUMVER" ColumnName="CUSTOMERCONTACTNUMVER" />
+                <ScalarProperty Name="CUSTOMEREMAIL" ColumnName="CUSTOMEREMAIL" />
+                <ScalarProperty Name="CUSTOMERNAME" ColumnName="CUSTOMERNAME" />
+                <ScalarProperty Name="ORDERTYPEID" ColumnName="ORDERTYPEID" />
+                <ScalarProperty Name="ORDERID" ColumnName="ORDERID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

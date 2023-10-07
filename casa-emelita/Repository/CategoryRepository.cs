@@ -11,7 +11,7 @@ namespace casa_emelita.Repository
         public List<TBL_CATEGORY> GetAllCategories()
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
-            return (List<TBL_CATEGORY>)(from cat in entities.TBL_CATEGORY select cat).ToList();
+            return (List<TBL_CATEGORY>)(from cat in entities.TBL_CATEGORY.OrderBy(cat => cat.CATEGORYNAME) select cat).ToList();
         }
     }
 }
