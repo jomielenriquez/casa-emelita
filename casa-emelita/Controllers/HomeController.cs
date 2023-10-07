@@ -333,6 +333,12 @@ namespace casa_emelita.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
+        public JsonResult GetReservations()
+        {
+            List<Reservations> reservations = this.dataApointmentRepository.GetReservation();
+            return Json(reservations, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
         public JsonResult GetMenuWithoutIncluded(string PackageID)
         {
             Guid id = PackageID == "" ? new Guid() : new Guid(PackageID);

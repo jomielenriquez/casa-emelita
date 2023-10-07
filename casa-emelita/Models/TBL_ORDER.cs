@@ -38,5 +38,6 @@ namespace casa_emelita.Models
         public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
         public virtual TBL_ORDER_TYPE TBL_ORDER_TYPE { get; set; }
         public virtual TBL_ORDER_STATUS TBL_ORDER_STATUS { get; set; }
+        public virtual TBL_PACKAGE TBL_PACKAGE { get; set; }
     }
 }

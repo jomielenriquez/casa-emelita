@@ -31,7 +31,7 @@
                                                 <a href="#">Report <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
                                                     <li><a href="calendar">Calendar</a></li>
-                                                    <li><a href="reservations">Reservations</a></li>
+                                                    <li>@Html.ActionLink("Reservations", "ReportAdmin", "Home", new { @style = "color: " + (ViewBag.Title == "ReportAdmin" ? "#78b454 !important" : "") })</li>
                                                 </ul>
 
                                             </li>

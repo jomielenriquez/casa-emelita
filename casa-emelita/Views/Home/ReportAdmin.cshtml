@@ -71,7 +71,66 @@
     </div>
 </div>
 <!-- order_area_end -->
+<script>
+    $(document).ready(function () {
+        fetchPackageMenu();
+    });
+    function fetchPackageMenu() {
+        $('#tbl_reservations').DataTable().destroy();
 
+        var dataTable1 = $('#tbl_reservations').DataTable({
+
+        "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+        "processing": true,
+        "bStateSave": true, //stay on this page
+        "responsive": true,
+        "order": [],
+        "drawCallback": function (settings) {
+            //console.log(settings.json);
+        },
+        "ajax": {
+            url: "@Url.Action("GetReservations", "Home")",
+            type: "GET",
+            //data: { PackageID: packageCode },
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "Packageid", "orderable": false },
+            { "data": "Package"},
+            { "data": "Customer"},
+            { "data": "EventDate" },
+            { "data": "Status" }
+        ],
+        "columnDefs": [
+            {
+                "targets": 0,
+                "render": function (data, type, row, meta) {
+                    return '<a data-toggle="modal" data-target="#bookingModal" style="color:white;" class="btn btn-success" margin-bottom:5px;"="" id="btn_view" data-id="10" data-package_code="test 2" data-event_type="All events" data-inclusions="asd" data-pax="10" data-price="₱ 5,000.00" data-price_value="5000" data-event_date="2023-05-03 | 09:00 am to 01:00 pm" data-customer_name="Josua Buenavista" data-customer_email="josuabuenavista" data-customer_contact="09319603196" data-customer_address="filinvest sta.maria sto tomas batangas" data-deal_price="0" data-note="............." data-date_value="2023-05-03">View</a>';
+                }
+            },
+            {
+                "targets": 1,
+                "render": function (data, type, row, meta) {
+                    return '<center>' + data + '</center>';
+                }
+            },
+            {
+                "targets": 2,
+                "render": function (data, type, row, meta) {
+                    return '<center>' + data + '</center>';
+                }
+            },
+            {
+                "targets": 3,
+                "render": function (data, type, row, meta) {
+                    return '<center>' + data + '</center>';
+                }
+            },
+        ],
+        "autoWidth": false
+    });
+}
+</script>
 
 <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -103,7 +162,7 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <img src="../img/logo.png" style="float:right;width:200px;margin-right:60px;">
+                        <img src="~/Content/Casa/image/logo.png" style="float:right;width:200px;margin-right:60px;">
                     </div>
                 </div>
 

@@ -17,6 +17,7 @@ namespace casa_emelita.Models
         public TBL_PACKAGE()
         {
             this.TBL_ORDERS = new HashSet<TBL_ORDERS>();
+            this.TBL_ORDER = new HashSet<TBL_ORDER>();
         }
     
         public System.Guid PACKAGEID { get; set; }
@@ -34,5 +35,6 @@ namespace casa_emelita.Models
     
         public virtual TBL_EVENTTYPE TBL_EVENTTYPE { get; set; }
         public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
+        public virtual ICollection<TBL_ORDER> TBL_ORDER { get; set; }
     }
 }

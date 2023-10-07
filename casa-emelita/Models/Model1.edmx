@@ -216,6 +216,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE">
+          <End Role="TBL_PACKAGE" Type="Self.TBL_PACKAGE" Multiplicity="0..1" />
+          <End Role="TBL_ORDER" Type="Self.TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_PACKAGE">
+              <PropertyRef Name="PACKAGEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TBL_PACKAGE">
           <End Role="TBL_EVENTTYPE" Type="Self.TBL_EVENTTYPE" Multiplicity="1" />
           <End Role="TBL_PACKAGE" Type="Self.TBL_PACKAGE" Multiplicity="*" />
@@ -274,6 +286,10 @@
           <AssociationSet Name="FK_TBL_MENU_MENUCATEGORY" Association="Self.FK_TBL_MENU_MENUCATEGORY">
             <End Role="TBL_CATEGORY" EntitySet="TBL_CATEGORY" />
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" Association="Self.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE">
+            <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
           </AssociationSet>
           <AssociationSet Name="FK_TBL_PACKAGE" Association="Self.FK_TBL_PACKAGE">
             <End Role="TBL_EVENTTYPE" EntitySet="TBL_EVENTTYPE" />
@@ -344,6 +360,10 @@
           </AssociationSet>
           <AssociationSet Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
             <End Role="TBL_ORDER_STATUS" EntitySet="TBL_ORDER_STATUS" />
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" Association="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE">
+            <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
             <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
           </AssociationSet>
           </EntityContainer>
@@ -431,6 +451,7 @@
           <NavigationProperty Name="TBL_EVENTTYPE" Relationship="CASAEMELITAModel.FK_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_EVENTTYPE" />
           <Property Name="INCLUSIONSDESCRIPTION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_ORDERS" Relationship="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" FromRole="TBL_PACKAGE" ToRole="TBL_ORDERS" />
+          <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" FromRole="TBL_PACKAGE" ToRole="TBL_ORDER" />
         </EntityType>
         <Association Name="FK_TBL_PACKAGE">
           <End Type="CASAEMELITAModel.TBL_EVENTTYPE" Role="TBL_EVENTTYPE" Multiplicity="1" />
@@ -546,6 +567,7 @@
           <NavigationProperty Name="TBL_ORDERS" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" FromRole="TBL_ORDER" ToRole="TBL_ORDERS" />
           <NavigationProperty Name="TBL_ORDER_TYPE" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" FromRole="TBL_ORDER" ToRole="TBL_ORDER_TYPE" />
           <NavigationProperty Name="TBL_ORDER_STATUS" Relationship="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" FromRole="TBL_ORDER" ToRole="TBL_ORDER_STATUS" />
+          <NavigationProperty Name="TBL_PACKAGE" Relationship="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" FromRole="TBL_ORDER" ToRole="TBL_PACKAGE" />
         </EntityType>
         <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
           <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="1" />
@@ -580,6 +602,18 @@
             </Principal>
             <Dependent Role="TBL_ORDER">
               <PropertyRef Name="ORDERSTATUSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE">
+          <End Type="CASAEMELITAModel.TBL_PACKAGE" Role="TBL_PACKAGE" Multiplicity="0..1" />
+          <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_PACKAGE">
+              <PropertyRef Name="PACKAGEID" />
+            </Principal>
+            <Dependent Role="TBL_ORDER">
+              <PropertyRef Name="PACKAGEID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
