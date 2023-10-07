@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using System.Xml.Linq;
 
 namespace casa_emelita.Controllers
@@ -24,6 +25,7 @@ namespace casa_emelita.Controllers
         AdminRepository adminRepository;
         InclusionRepository inclusionRepository;
         Data data;
+        ApointmentRepository dataApointmentRepository;
         static PageMessage message = new PageMessage();
         public HomeController() { 
             this.model = new AppModel();
@@ -34,6 +36,7 @@ namespace casa_emelita.Controllers
             this.eventTypeRepository = new EventTypeRepository();
             this.adminRepository = new AdminRepository(this.model.AdminID);
             this.inclusionRepository = new InclusionRepository();
+            this.dataApointmentRepository = new ApointmentRepository();
         }
         public ActionResult Index()
         {
@@ -110,6 +113,27 @@ namespace casa_emelita.Controllers
 
             return View(this.model);
         }
+        public ActionResult ReportAdmin()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            ViewBag.Message = "ReportAdmin";
+
+            return View(this.model);
+        }
+
         public ActionResult Settings()
         {
             if (this.model.AdminID == Guid.Empty)
@@ -315,6 +339,27 @@ namespace casa_emelita.Controllers
             List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONListWithoutIncludedPackage(id);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+        [System.Web.Http.HttpPost]
+        public JsonResult GetAvailableSlots(DateTime reservationDate)
+        {
+            List<string> scheduled = this.dataApointmentRepository.GetAppointmentsWithDate(reservationDate);
+
+            List<string> slots = new List<string>() {
+                "09:00 am to 02:00 pm",
+                "03:00 pm to 08:00 pm",
+                "Whole day"
+            };
+            foreach(var schedule in scheduled)
+            {
+                if (scheduled.Contains(schedule))
+                {
+                    slots.Remove(schedule);
+                    slots.Remove("Whole day");
+                }
+            }
+
+            return Json(slots, JsonRequestBehavior.AllowGet);
+        }
         [System.Web.Http.HttpGet]
         public JsonResult GetPackages()
         {
@@ -383,12 +428,42 @@ namespace casa_emelita.Controllers
             return View();
         }
 
-        public ActionResult Menu()
+        public ActionResult Menu(Guid? SelectedCategory, Guid? SelectedEvent)
         {
-            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Menu_List = SelectedCategory == null
+                ? this.menuRepository.GetMenuList()
+                : this.menuRepository.GetMenuList(SelectedCategory);
             this.model.Category = this.categoryRepository.GetAllCategories();
-            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Package_List = SelectedEvent == null
+                ? this.packageRepository.GetAllPackage()
+                : this.packageRepository.GetAllPackage(SelectedEvent);
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            this.model.Reservation = new TBL_ORDER();
+
+            if (message.Message != null)
+            {
+                ViewBag.AppointmentMessage = message.Message;
+                message.Message = "";
+            }
+
             return View(this.model);
+        }
+        [System.Web.Http.HttpPost]
+        public ActionResult NewAppointment(TBL_ORDER Reservation)
+        {
+            Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
+            Reservation.ORDERTYPEID = new Guid("BA735176-6316-442A-8F4B-857B1F809697"); // Type: Reservation
+            try
+            {
+                this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
+                message.Message = "Successfully Saved!!!";
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return RedirectToAction("../Home/Menu");
         }
         
         public ActionResult ServicesofCasa()

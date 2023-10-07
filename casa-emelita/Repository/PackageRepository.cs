@@ -11,7 +11,20 @@ namespace casa_emelita.Repository
         public List<TBL_PACKAGE> GetAllPackage()
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
-            List<TBL_PACKAGE> package = (List<TBL_PACKAGE>)(from tbl_package in entities.TBL_PACKAGE select tbl_package).ToList();
+            List<TBL_PACKAGE> package = (List<TBL_PACKAGE>)(from tbl_package in entities.TBL_PACKAGE
+                                                            .OrderBy(pack => pack.PACKAGENAME) select tbl_package).ToList();
+            if (package.Count() == 0)
+            {
+                package = new List<TBL_PACKAGE>() { };
+            }
+            return (List<TBL_PACKAGE>)package;
+        }
+        public List<TBL_PACKAGE> GetAllPackage(Guid? SelectedEvent)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            List<TBL_PACKAGE> package = (List<TBL_PACKAGE>)(from tbl_package in entities.TBL_PACKAGE
+                                                            .OrderBy(pack => pack.PACKAGENAME)
+                                                            .Where(pack => pack.EVENTTYPE == SelectedEvent) select tbl_package).ToList();
             if (package.Count() == 0)
             {
                 package = new List<TBL_PACKAGE>() { };

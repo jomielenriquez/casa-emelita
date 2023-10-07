@@ -14,7 +14,16 @@
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_PACKAGE" Width="1.5" PointX="6" PointY="1" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_PACKAGE" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_INCLUSION_TBL_MENU" />
-      </Diagram>
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDER_STATUS" Width="1.5" PointX="3.75" PointY="14.75" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDER_TYPE" Width="1.5" PointX="3.75" PointY="11.25" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDERS" Width="1.5" PointX="8.25" PointY="8.375" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDER" Width="1.5" PointX="6" PointY="12.125" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" />
+        <AssociationConnector Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -1,0 +1,209 @@
+﻿
+@{
+    ViewBag.Title = "ReportAdmin";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Reservations</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Reservations
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <label>Date | from:</label>
+                <input type="date" class="form-control" name="" id="date_from">
+            </div>
+            <div class="col-sm-3">
+                <label>to:</label>
+                <input type="date" class="form-control" name="" id="date_to">
+            </div>
+
+            <div class="col-sm-3">
+                <a onclick="fetchAppointments();" class="btn btn-success form-control"
+                   style="color: white;margin-top: 30px; min-width: 250px;" id="btn_generate">Generate</a>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered " id="tbl_reservations">
+                    <thead class="table-header">
+                        <tr>
+                            <th width="1%" class="text-center">
+                                Action
+                            </th>
+                            <th class="text-center">
+                                Package
+                            </th>
+                            <th class="text-center">
+                                Customer
+                            </th>
+                            <th class="text-center">
+                                Event date
+                            </th>
+                            <th class="text-center">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- order_area_end -->
+
+
+<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reservation details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <div class="single_order">
+                            <div class="order_info">
+                                <h3 id="package_code">Package code</h3>
+                                <h4 id="event_type">Event type</h4>
+                                <h5>Inclusions:</h5>
+                                <p id="inclusions"></p>
+                                <p id="pax">
+                                    Good for 100 pax
+                                </p>
+                                <p id="price">
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <img src="../img/logo.png" style="float:right;width:200px;margin-right:60px;">
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Menu included in the package</label>
+                        <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
+                            <thead class="table-header">
+                                <tr>
+                                    <th width="1%" class="text-center">
+                                        Image
+                                    </th>
+                                    <th class="text-center">
+                                        Menu code
+                                    </th>
+                                    <th class="text-center">
+                                        Name
+                                    </th>
+                                    <th class="text-center">
+                                        Description
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Event Date: </label>
+                        <h4 id="event_date"></h4>
+                    </div>
+
+                </div>
+
+                <!-- <iframe class="form-control" src="calendar.php" style="height:730px;"></iframe> -->
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Personal Information: </label>
+                    </div>
+                </div>
+
+
+                <div class="row m-3">
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <input class="form-control valid" name="name" id="c_name" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
+                                   placeholder="Enter your name" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="email" id="c_email" type="email"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'"
+                                   placeholder="Email" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_contact" id="c_contact" type="contact"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter contact number'"
+                                   placeholder="Enter contact number" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_address" id="c_address" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter address'"
+                                   placeholder="Enter address" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Deal price:</label>
+                            <input class="form-control valid" id="deal_price" type="number"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter deal price'"
+                                   placeholder="Enter deal price" disabled>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label>Note:</label>
+                            <textarea class="form-control valid" id="note" onfocus="this.placeholder = ''"
+                                      onblur="this.placeholder = 'Enter note (optional)'"
+                                      placeholder="Enter note (optional)"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-danger" type="button" id="btn_cancel">Cancel</button>
+                <button class="btn btn-success" type="button" id="btn_submit">Completed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
