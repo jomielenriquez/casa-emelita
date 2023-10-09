@@ -260,6 +260,39 @@ namespace casa_emelita.Controllers
             return RedirectToAction("../Home/PackageAdmin");
         }
         [System.Web.Http.HttpPost]
+        public JsonResult UpdateOrderStatus(Guid OrderID, string status)
+        {
+            var statusresult = new
+            {
+                success = true,
+                message = "Successfully Updated"
+            };
+
+            try
+            {
+                TBL_ORDER orders = new TBL_ORDER() {
+                    ORDERSTATUSID = status == "success" ?
+                        new Guid("F1C2CB81-43D6-471D-8703-A4C4C2DA2D68") // Completed status
+                        : new Guid("A115A95E-486E-4661-A427-C928DF130A64")
+                };
+                TBL_ORDER filter = new TBL_ORDER()
+                {
+                    ORDERID = OrderID
+                }; 
+                this.data.Update(orders, filter, model.AdminID);
+            }
+            catch (Exception ex)
+            {
+                statusresult = new
+                {
+                    success = false,
+                    message = ex.Message,
+                };
+            }
+
+            return Json(statusresult, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
         public JsonResult AddMenuInCategory(string PackageID, string MenuID)
         {
             TBL_INCLUSION inclusion = new TBL_INCLUSION()

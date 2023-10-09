@@ -94,7 +94,7 @@ namespace casa_emelita.Repository
         public string Update<T>(T Class, T FilterClass, Guid updatedBy)
         {
             string tableName = Class.GetType().Name;
-            string[] except = { "createddate", "createdby", "updateddate", "updatedby" };
+            string[] except = { "createddate", "createdby", "updateddate", "updatedby", "eventdate", "appointmentdate" };
             string[] filterexcept = except;
             var FilterProperties1 = FilterClass
                 .GetType()

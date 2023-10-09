@@ -19,11 +19,11 @@
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDERS" Width="1.5" PointX="8.25" PointY="8.375" />
         <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E" />
         <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" />
-        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDER" Width="1.5" PointX="6" PointY="12.125" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ORDER" Width="1.5" PointX="11.25" PointY="7.875" />
         <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" />
         <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" />
-        <AssociationConnector Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" />
+        <AssociationConnector Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

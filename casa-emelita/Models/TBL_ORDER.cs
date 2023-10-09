@@ -32,12 +32,12 @@ namespace casa_emelita.Models
         public System.DateTime CREATEDDATE { get; set; }
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
-        public string UDATEDBY { get; set; }
+        public string UPDATEDBY { get; set; }
         public string SLOT { get; set; }
     
         public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
         public virtual TBL_ORDER_TYPE TBL_ORDER_TYPE { get; set; }
-        public virtual TBL_ORDER_STATUS TBL_ORDER_STATUS { get; set; }
         public virtual TBL_PACKAGE TBL_PACKAGE { get; set; }
+        public virtual TBL_ORDER_STATUS TBL_ORDER_STATUS { get; set; }
     }
 }
