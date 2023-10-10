@@ -63,6 +63,50 @@ namespace casa_emelita.Repository
             return reservations;
 
         }
+        public List<Reservations> GetReservationWithDateRange(DateTime from, DateTime to)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            from = DateTime.ParseExact(from.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            to = DateTime.ParseExact(to.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            List<TBL_ORDER> result = entities.TBL_ORDER
+                .Where(ord => ord.EVENTDATE >= from && ord.EVENTDATE <= to)
+                .ToList();
+
+            List<Reservations> reservations = new List<Reservations>();
+            foreach (TBL_ORDER order in result)
+            {
+                reservations.Add(new Reservations()
+                {
+                    Package = order.TBL_PACKAGE.PACKAGECODE
+                        + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME
+                        + "<br>" + order.TBL_PACKAGE.INCLUSIONSDESCRIPTION
+                        + "<br> good for" + order.TBL_PACKAGE.ACCOMODATION
+                        + "<br> P " + order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    Packageid = order.TBL_PACKAGE.PACKAGEID,
+                    Customer = order.CUSTOMERNAME
+                        + "<br>" + order.CUSTOMEREMAIL
+                        + "<br>" + order.CUSTOMERCONTACTNUMVER
+                        + "<br>" + order.CUSTOMERADDRESS,
+                    EventDate = order.EVENTDATE.ToString()
+                        + "<br>" + order.SLOT,
+                    Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
+                    PackageCode = order.TBL_PACKAGE.PACKAGECODE,
+                    EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
+                    Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
+                    Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
+                    Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    CustomerName = order.CUSTOMERNAME,
+                    CustomerAddress = order.CUSTOMERADDRESS,
+                    CustomerNumber = order.CUSTOMERCONTACTNUMVER,
+                    CustormerEmail = order.CUSTOMEREMAIL,
+                    ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
+                    OrderID = order.ORDERID
+                });
+            }
+
+            return reservations;
+
+        }
     }
     public class Reservations
     {

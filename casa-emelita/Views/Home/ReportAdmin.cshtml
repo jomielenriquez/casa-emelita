@@ -1,4 +1,4 @@
-﻿
+﻿@model casa_emelita.Models.AppModel
 @{
     ViewBag.Title = "ReportAdmin";
     Layout = "~/Views/Shared/_Admin.cshtml";
@@ -26,21 +26,21 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+            <div class="row">
             <div class="col-sm-3">
-                <label>Date | from:</label>
+                    <label>Date | from:</label>
                 <input type="date" class="form-control" name="" id="date_from">
-            </div>
+                </div>
             <div class="col-sm-3">
-                <label>to:</label>
+                    <label>to:</label>
                 <input type="date" class="form-control" name="" id="date_to">
-            </div>
+                </div>
 
-            <div class="col-sm-3">
+                <div class="col-sm-3">
                 <a onclick="fetchAppointments();" class="btn btn-success form-control"
                    style="color: white;margin-top: 30px; min-width: 250px;" id="btn_generate">Generate</a>
+                </div>
             </div>
-        </div>
         <br>
         <div class="row">
 
@@ -74,9 +74,14 @@
 <script>
     var tbl_reservations;
     $(document).ready(function () {
-        fetchAllReseravations();
+        fetchAllReseravations(null, null);
     });
-    function fetchAllReseravations() {
+    $(document).on("click", "#btn_generate", function () {
+        var date_from = document.getElementById("date_from").value;
+        var date_to = document.getElementById("date_to").value;
+        fetchAllReseravations(date_from, date_to);
+    });
+    function fetchAllReseravations(from, to) {
         $('#tbl_reservations').DataTable().destroy();
 
         tbl_reservations = $('#tbl_reservations').DataTable({
@@ -92,7 +97,7 @@
             "ajax": {
                 url: "@Url.Action("GetReservations", "Home")",
                 type: "GET",
-                //data: { PackageID: packageCode },
+                data: { from : from, to : to },
                 "dataSrc": ""
             },
             "columns": [

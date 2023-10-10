@@ -395,8 +395,21 @@ namespace casa_emelita.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
-        public JsonResult GetReservations()
+        public JsonResult GetReservations(string from, string to)
         {
+            try
+            {
+                if(from != null && to != null)
+                {
+                    DateTime FromDate = DateTime.Parse(from);
+                    DateTime ToDate = DateTime.Parse(to);
+
+                    List<Reservations> reservationswithrange = this.dataApointmentRepository.GetReservationWithDateRange(FromDate, ToDate);
+                    return Json(reservationswithrange, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch { }
+
             List<Reservations> reservations = this.dataApointmentRepository.GetReservation();
             return Json(reservations, JsonRequestBehavior.AllowGet);
         }

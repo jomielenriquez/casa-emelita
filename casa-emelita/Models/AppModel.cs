@@ -168,6 +168,8 @@ namespace casa_emelita.Models
         }
         public int SelectedYear { get; set; }
         public List<TBL_ORDER> OrderList { get; set; }
+        public DateTime DateRangeFrom { get; set; }
+        public DateTime DateRangeTo { get; set; }
     }
     public class MenuNewRecord
     {
