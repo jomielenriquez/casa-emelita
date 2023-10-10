@@ -1,0 +1,121 @@
+﻿@model casa_emelita.Models.AppModel
+@using System.Globalization
+@{
+    ViewBag.Title = "Calendar";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+
+
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Calendar</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Calendar
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @using (Html.BeginForm("Calendar", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "PackageAddEditForm", @name = "PackageAddEditForm" }))
+            {
+                <div class="row">
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.SelectedMonth, new SelectList(Model.Months, "value", "text"), "Month", new { @class = "form-control", @id = "SelectedMonth"})
+                    </div>
+                    <div class="col-sm-3">
+                        @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "value", "text"), "Month", new { @class = "form-control", @id = "SelectedMonth" })
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" class="btn btn-success form-control" style="color: white; min-width: 250px; cursor:pointer;">Search</button>
+                        @*<a class="btn btn-success form-control" style="color: white; min-width: 250px; cursor:pointer;"
+                           id="search">Search</a>*@
+                    </div>
+                </div>
+            }
+            <div class="col-sm-12">
+                <link rel="stylesheet" href="~/Content/Casa/calendar.css"/>
+                <div class="calendar">
+                    <div class="header"><div class="month-year">October 2023</div></div>
+                    <div class="days">
+                        <div class="day_name">Sun</div>
+                        <div class="day_name">Mon</div>
+                        <div class="day_name">Tue</div>
+                        <div class="day_name">Wed</div>
+                        <div class="day_name">Thu</div>
+                        <div class="day_name">Fri</div>
+                        <div class="day_name">Sat</div>
+                        @{ 
+                            DateTime start_date = new DateTime(Model.SelectedYear, Model.SelectedMonth, 1);
+                            while (true){
+                                if (!string.Equals(start_date.DayOfWeek.ToString(), "sunday", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    start_date = start_date.AddDays(-1);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+
+                        @for (int i = 0; i < 42; i++)
+                        {
+                            <div class="day_num @(start_date.Month != Model.SelectedMonth ? "ignore" : "") @(start_date == new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0) ? "selected" : "" )">
+                                <span>
+                                    @start_date.Day
+                                </span>
+                                @{ 
+                                    DateTime ed = start_date.AddDays(1);
+                                    DateTime sd = DateTime.ParseExact(start_date.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+                                    ed = DateTime.ParseExact(ed.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+                                    var orders = Model.OrderList
+                                        .Where(ol => ol.EVENTDATE >= sd && ol.EVENTDATE < ed);
+
+                                    foreach(casa_emelita.Models.TBL_ORDER ords in orders)
+                                    {
+                                        <div class="event red" >
+                                            Customer: <strong>@ords.CUSTOMERNAME</strong>
+                                            <br />
+                                            Contact#: <strong>@ords.CUSTOMERCONTACTNUMVER</strong>
+                                            <br />
+                                            Date: <strong>@ords.EVENTDATE.ToString("yyyy-MM-dd") | @ords.SLOT</strong>
+                                            <br />
+                                            <strong>Good for @ords.TBL_PACKAGE.ACCOMODATION</strong>
+                                            <br />
+                                            @ords.TBL_ORDER_STATUS.ORDERSTATUSNAME
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            start_date = start_date.AddDays(1);
+                        }
+                        @{
+                            DateTime currentDate = DateTime.Now;
+
+                            // Get the first day of the current month
+                            DateTime firstDayOfMonth = new DateTime(currentDate.Year, currentDate.Month, 1);
+
+                            // Get the last day of the current month
+                            DateTime lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

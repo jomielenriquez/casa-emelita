@@ -13,8 +13,8 @@ namespace casa_emelita.Repository
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
             DateTime enddate = reservationDate.AddDays(1);
-            reservationDate = DateTime.ParseExact(reservationDate.ToString(), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
-            enddate = DateTime.ParseExact(enddate.ToString(), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            reservationDate = DateTime.ParseExact(reservationDate.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            enddate = DateTime.ParseExact(enddate.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
             var appointments = entities.TBL_ORDER
                 .Where(a => a.EVENTDATE >= reservationDate && a.EVENTDATE < enddate)

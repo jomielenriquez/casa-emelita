@@ -60,7 +60,7 @@ namespace casa_emelita.Repository
                     {
                         foreach (string prop in Properties)
                         {
-                            if (Class.GetType().GetProperty(prop).PropertyType == typeof(Nullable<System.DateTime>))
+                            if (Class.GetType().GetProperty(prop).PropertyType == typeof(Nullable<System.DateTime>) || Class.GetType().GetProperty(prop).PropertyType == typeof(System.DateTime))
                             {
                                 command.Parameters.AddWithValue("@" + prop, ((DateTime)getValue(prop, Class)).ToString("MM/dd/yyyy HH:mm:ss"));
                             }
@@ -151,7 +151,7 @@ namespace casa_emelita.Repository
                     {
                         foreach (string prop in Properties)
                         {
-                            if (Class.GetType().GetProperty(prop).PropertyType == typeof(Nullable<System.DateTime>))
+                            if (Class.GetType().GetProperty(prop).PropertyType == typeof(Nullable<System.DateTime>) || Class.GetType().GetProperty(prop).PropertyType == typeof(System.DateTime))
                             {
                                 command.Parameters.AddWithValue("@" + prop, ((DateTime)getValue(prop, Class)).ToString("MM/dd/yyyy HH:mm:ss"));
                             }

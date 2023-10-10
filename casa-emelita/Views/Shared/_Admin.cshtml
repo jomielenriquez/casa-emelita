@@ -30,7 +30,7 @@
                                             <li>
                                                 <a href="#">Report <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
-                                                    <li><a href="calendar">Calendar</a></li>
+                                                    <li>@Html.ActionLink("Calendar", "Calendar", "Home", new { @style = "color: " + (ViewBag.Title == "Calendar" ? "#78b454 !important" : "") })</li>
                                                     <li>@Html.ActionLink("Reservations", "ReportAdmin", "Home", new { @style = "color: " + (ViewBag.Title == "ReportAdmin" ? "#78b454 !important" : "") })</li>
                                                 </ul>
 
