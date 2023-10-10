@@ -26,6 +26,7 @@ namespace casa_emelita.Controllers
         InclusionRepository inclusionRepository;
         Data data;
         ApointmentRepository dataApointmentRepository;
+        OrderRepository orderRepository;
         static PageMessage message = new PageMessage();
         public HomeController() { 
             this.model = new AppModel();
@@ -37,6 +38,7 @@ namespace casa_emelita.Controllers
             this.adminRepository = new AdminRepository(this.model.AdminID);
             this.inclusionRepository = new InclusionRepository();
             this.dataApointmentRepository = new ApointmentRepository();
+            this.orderRepository = new OrderRepository();
         }
         public ActionResult Index()
         {
@@ -130,6 +132,33 @@ namespace casa_emelita.Controllers
             this.model.Category = this.categoryRepository.GetAllCategories();
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
             ViewBag.Message = "ReportAdmin";
+
+            return View(this.model);
+        }
+
+        public ActionResult Calendar(int SelectedMonth = 0, int SelectedYear = 0)
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            this.model.SelectedMonth = SelectedMonth == 0 ? DateTime.Now.Month : SelectedMonth;
+            this.model.SelectedYear = SelectedYear == 0 ? DateTime.Now.Year : SelectedYear;
+            DateTime startDate = new DateTime(this.model.SelectedYear, this.model.SelectedMonth, 1);
+            DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+            this.model.OrderList = this.orderRepository.GetOrdersWithDateRange(startDate,endDate);
+            ViewBag.Message = "Calendar";
 
             return View(this.model);
         }
