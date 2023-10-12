@@ -1,0 +1,121 @@
+﻿@model casa_emelita.Models.AppModel
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Dashboard</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Dashboard
+                    </h3>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("Calendar", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "PackageAddEditForm", @name = "PackageAddEditForm" }))
+        {
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "value", "text"), "Year", new { @class = "form-control", @id = "SelectedYear", @style = "width: 100% !important" })
+                </div>
+            </div>
+        }
+    <div class="row">
+        <div id="monthlyReservations" style="height: 370px; width: 100%;"></div>
+        <div id="packageReservations" style="height: 370px; width: 100%;"></div>
+        <script>
+            window.onload = function () {
+
+                var monthlyReservations = new CanvasJS.Chart("monthlyReservations", {
+                    animationEnabled: true,
+
+                    title: {
+                        text: "Number of Reservations per Month"
+                    },
+                    axisX: {
+                        interval: 1
+                    },
+                    axisY2: {
+                        interlacedColor: "rgba(120,180,84,.2)",
+                        gridColor: "rgba(120,180,84,.1)",
+                        title: "Reservations"
+                    },
+                    data: [{
+                        type: "bar",
+                        name: "Reservations",
+                        axisYType: "secondary",
+                        color: "#40a557",
+                        dataPoints: [
+                            { y: 3, label: "January" },
+                            { y: 7, label: "February" },
+                            { y: 5, label: "March" },
+                            { y: 9, label: "April" },
+                            { y: 7, label: "May" },
+                            { y: 7, label: "June" },
+                            { y: 9, label: "July" },
+                            { y: 8, label: "August" },
+                            { y: 11, label: "September" },
+                            { y: 15, label: "October" },
+                            { y: 12, label: "November" },
+                            { y: 15, label: "December" }
+                        ]
+                    }]
+                });
+                monthlyReservations.render();
+
+                var packageReservations = new CanvasJS.Chart("packageReservations", {
+                    animationEnabled: true,
+
+                    title: {
+                        text: "Number of Reservations per Package"
+                    },
+                    axisX: {
+                        interval: 1
+                    },
+                    axisY2: {
+                        interlacedColor: "rgba(120,180,84,.2)",
+                        gridColor: "rgba(120,180,84,.1)",
+                        title: "Package Reservations"
+                    },
+                    data: [{
+                        type: "bar",
+                        name: "Reservations",
+                        axisYType: "secondary",
+                        color: "#40a557",
+                        dataPoints: [
+                            { y: 3, label: "January" },
+                            { y: 7, label: "February" },
+                            { y: 5, label: "March" },
+                            { y: 9, label: "April" },
+                            { y: 7, label: "May" },
+                            { y: 7, label: "June" },
+                            { y: 9, label: "July" },
+                            { y: 8, label: "August" },
+                            { y: 11, label: "September" },
+                            { y: 15, label: "October" },
+                            { y: 12, label: "November" },
+                            { y: 15, label: "December" }
+                        ]
+                    }]
+                });
+                packageReservations.render();
+            }
+        </script>
+        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    </div>
+    </div>
+</div>

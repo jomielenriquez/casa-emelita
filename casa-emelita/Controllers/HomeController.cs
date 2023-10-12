@@ -115,6 +115,26 @@ namespace casa_emelita.Controllers
 
             return View(this.model);
         }
+        public ActionResult Dashboard()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            ViewBag.Message = "Dashboard";
+
+            return View(this.model);
+        }
         public ActionResult ReportAdmin()
         {
             if (this.model.AdminID == Guid.Empty)
