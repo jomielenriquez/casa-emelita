@@ -78,6 +78,8 @@
           <Property Name="CUSTOMEREMAIL" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CUSTOMERCONTACTNUMVER" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PACKAGEID" Type="uniqueidentifier" />
+          <Property Name="DEALPRICE" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="NOTE" Type="nvarchar(max)" />
           <Property Name="CUSTOMERADDRESS" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EVENTDATE" Type="datetime" Nullable="false" />
           <Property Name="ORDERSTATUSID" Type="uniqueidentifier" Nullable="false" />
@@ -568,6 +570,8 @@
           <NavigationProperty Name="TBL_ORDER_TYPE" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" FromRole="TBL_ORDER" ToRole="TBL_ORDER_TYPE" />
           <NavigationProperty Name="TBL_PACKAGE" Relationship="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" FromRole="TBL_ORDER" ToRole="TBL_PACKAGE" />
           <NavigationProperty Name="TBL_ORDER_STATUS" Relationship="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" FromRole="TBL_ORDER" ToRole="TBL_ORDER_STATUS" />
+          <Property Name="DEALPRICE" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="NOTE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
           <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="1" />
@@ -754,6 +758,8 @@
           <EntitySetMapping Name="TBL_ORDER">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER">
               <MappingFragment StoreEntitySet="TBL_ORDER">
+                <ScalarProperty Name="NOTE" ColumnName="NOTE" />
+                <ScalarProperty Name="DEALPRICE" ColumnName="DEALPRICE" />
                 <ScalarProperty Name="SLOT" ColumnName="SLOT" />
                 <ScalarProperty Name="UPDATEDBY" ColumnName="UPDATEDBY" />
                 <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />

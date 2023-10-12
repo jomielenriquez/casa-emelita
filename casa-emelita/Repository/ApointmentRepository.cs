@@ -43,14 +43,16 @@ namespace casa_emelita.Repository
                         + "<br>" + order.CUSTOMEREMAIL
                         + "<br>" + order.CUSTOMERCONTACTNUMVER
                         + "<br>" + order.CUSTOMERADDRESS,
-                    EventDate = order.EVENTDATE.ToString()
+                    EventDate = order.EVENTDATE.ToString("MM/dd/yyyy")
                         + "<br>" + order.SLOT,
+                    AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
                     Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
                     PackageCode = order.TBL_PACKAGE.PACKAGECODE,
                     EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
                     Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
                     Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
                     Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    DealPrice = (int)(order.DEALPRICE == null ? 0 : order.DEALPRICE),
                     CustomerName = order.CUSTOMERNAME,
                     CustomerAddress = order.CUSTOMERADDRESS,
                     CustomerNumber = order.CUSTOMERCONTACTNUMVER,
@@ -89,12 +91,58 @@ namespace casa_emelita.Repository
                         + "<br>" + order.CUSTOMERADDRESS,
                     EventDate = order.EVENTDATE.ToString()
                         + "<br>" + order.SLOT,
+                    AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
                     Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
                     PackageCode = order.TBL_PACKAGE.PACKAGECODE,
                     EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
                     Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
                     Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
                     Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    DealPrice = (int)(order.DEALPRICE == null ? 0 : order.DEALPRICE),
+                    CustomerName = order.CUSTOMERNAME,
+                    CustomerAddress = order.CUSTOMERADDRESS,
+                    CustomerNumber = order.CUSTOMERCONTACTNUMVER,
+                    CustormerEmail = order.CUSTOMEREMAIL,
+                    ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
+                    OrderID = order.ORDERID
+                });
+            }
+
+            return reservations;
+
+        }
+        public List<Reservations> GetNotApprovedAppointments()
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            List<TBL_ORDER> result = entities.TBL_ORDER
+                .Where(Apmts => Apmts.DEALPRICE == null || Apmts.DEALPRICE == 0)
+                .ToList();
+
+            List<Reservations> reservations = new List<Reservations>();
+            foreach (TBL_ORDER order in result)
+            {
+                reservations.Add(new Reservations()
+                {
+                    Package = order.TBL_PACKAGE.PACKAGECODE
+                        + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME
+                        + "<br>" + order.TBL_PACKAGE.INCLUSIONSDESCRIPTION
+                        + "<br> good for" + order.TBL_PACKAGE.ACCOMODATION
+                        + "<br> P " + order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    Packageid = order.TBL_PACKAGE.PACKAGEID,
+                    Customer = order.CUSTOMERNAME
+                        + "<br>" + order.CUSTOMEREMAIL
+                        + "<br>" + order.CUSTOMERCONTACTNUMVER
+                        + "<br>" + order.CUSTOMERADDRESS,
+                    EventDate = order.EVENTDATE.ToString("MM/dd/yyyy")
+                        + "<br>" + order.SLOT,
+                    AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
+                    Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
+                    PackageCode = order.TBL_PACKAGE.PACKAGECODE,
+                    EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
+                    Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
+                    Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
+                    Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
+                    DealPrice = (int)(order.DEALPRICE == null ? 0 : order.DEALPRICE),
                     CustomerName = order.CUSTOMERNAME,
                     CustomerAddress = order.CUSTOMERADDRESS,
                     CustomerNumber = order.CUSTOMERCONTACTNUMVER,
@@ -114,12 +162,14 @@ namespace casa_emelita.Repository
         public Guid Packageid { get; set; }
         public string Customer { get; set; }
         public string EventDate { get; set; }
+        public string AppointmentDate { get; set; }
         public string Status { get; set; }
         public string PackageCode { get; set; }
         public string EventName { get; set; }
         public string Inclusions { get; set; }
         public string Accomodation { get; set; }
         public string Price { get; set; }
+        public int DealPrice { get; set; }
         public string CustomerName { get; set; }
         public string CustomerNumber { get; set; }
         public string CustormerEmail { get; set; }

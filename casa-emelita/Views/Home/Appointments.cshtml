@@ -1,6 +1,6 @@
 ﻿@model casa_emelita.Models.AppModel
 @{
-    ViewBag.Title = "ReportAdmin";
+    ViewBag.Title = "Appointments";
     Layout = "~/Views/Shared/_Admin.cshtml";
 }
 
@@ -8,7 +8,7 @@
 <div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
     <div class="breadcam_inner">
         <div class="breadcam_text">
-            <h3>Reservations</h3>
+            <h3>Appointments</h3>
 
         </div>
     </div>
@@ -21,26 +21,11 @@
             <div class="col-xl-12">
                 <div class="section_title mb-70">
                     <h3>
-                        Reservations
+                        Appointments
                     </h3>
                 </div>
             </div>
         </div>
-            <div class="row">
-            <div class="col-sm-3">
-                    <label>Date | from:</label>
-                <input type="date" class="form-control" name="" id="date_from">
-                </div>
-            <div class="col-sm-3">
-                    <label>to:</label>
-                <input type="date" class="form-control" name="" id="date_to">
-                </div>
-
-                <div class="col-sm-3">
-                <a onclick="fetchAppointments();" class="btn btn-success form-control"
-                   style="color: white;margin-top: 30px; min-width: 250px;" id="btn_generate">Generate</a>
-                </div>
-            </div>
         <br>
         <div class="row">
 
@@ -58,10 +43,10 @@
                                 Customer
                             </th>
                             <th class="text-center">
-                                Event date
+                                Appointment date
                             </th>
                             <th class="text-center">
-                                Status
+                                Event date
                             </th>
                         </tr>
                     </thead>
@@ -75,11 +60,6 @@
     var tbl_reservations;
     $(document).ready(function () {
         fetchAllReseravations(null, null);
-    });
-    $(document).on("click", "#btn_generate", function () {
-        var date_from = document.getElementById("date_from").value;
-        var date_to = document.getElementById("date_to").value;
-        fetchAllReseravations(date_from, date_to);
     });
     function fetchAllReseravations(from, to) {
         $('#tbl_reservations').DataTable().destroy();
@@ -95,17 +75,16 @@
                 //console.log(settings.json);
             },
             "ajax": {
-                url: "@Url.Action("GetReservations", "Home")",
+                url: "@Url.Action("GetNotApprovedAppointments", "Home")",
                 type: "GET",
-                data: { from : from, to : to },
                 "dataSrc": ""
             },
             "columns": [
                 { "data": "Packageid", "orderable": false },
                 { "data": "Package"},
                 { "data": "Customer"},
+                { "data": "AppointmentDate" },
                 { "data": "EventDate" },
-                { "data": "Status" }
             ],
             "columnDefs": [
                 {
@@ -135,24 +114,7 @@
                 {
                     "targets": 4,
                     "render": function (data, type, row, meta) {
-                        if (data == "NEW") {
-                            return '<center><span class="badge bg-primary" style="color:white">' + data + '</span></center>';
-                        }
-                        else if (data == "PREPARING") {
-                            return '<center><span class="badge bg-secondary" style="color:white">' + data + '</span></center>';
-                        }
-                        else if (data == "DONE") {
-                            return '<center><span class="badge bg-success" style="color:white">' + data + '</span></center>';
-                        }
-                        else if (data == "COMPLETED") {
-                            return '<center><span class="badge bg-success" style="color:white">' + data + '</span></center>';
-                        }
-                        else if (data == "CANCELLED") {
-                            return '<center><span class="badge bg-danger" style="color:white">' + data + '</span></center>';
-                        }
-                        else if (data == "RESERVED") {
-                            return '<center><span class="badge bg-info" style="color:white">' + data + '</span></center>';
-                        }
+                        return '<center>' + data + '</center>';
                     }
                 },
             ],
@@ -175,7 +137,7 @@
         document.getElementById("price").innerText = rowdata.Price;
         document.getElementById("pax").innerText = "Good for  " + rowdata.Accomodation + "pax";
         document.getElementById("event_date").innerText = rowdata.EventDate.replace("<br>", " | ");
-        
+
         document.getElementById("c_email").value = rowdata.CustormerEmail;
         document.getElementById("c_name").value = rowdata.CustomerName;
         document.getElementById("c_contact").value = rowdata.CustomerNumber;
@@ -336,7 +298,7 @@
                             <label>Deal price:</label>
                             <input class="form-control valid" id="deal_price" type="number"
                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter deal price'"
-                                   placeholder="Enter deal price" disabled>
+                                   placeholder="Enter deal price">
                         </div>
                     </div>
 
@@ -354,15 +316,78 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                 <button class="btn btn-danger" type="button" id="btn_cancel">Cancel</button>
-                <button class="btn btn-success" type="button" id="btn_submit">Completed</button>
+                <button class="btn btn-success" type="button" id="btn_reserve">Reserve</button>
             </div>
         </div>
     </div>
 </div>
 <script>
-    $(document).on("click", "#btn_submit", function () {
-        ChangeStatus("success");
+    $(document).on("click", "#btn_reserve", function () {
+        UpdateDeal();
     });
+    function UpdateDeal() {
+        var dealPrice = document.getElementById("deal_price").value;
+        var Note = document.getElementById("note").value;
+        var time = document.getElementById("event_date").innerText;
+
+        if (dealPrice == null || dealPrice == 0) {
+            swal({
+                title: "Warning!",
+                text: "Please input deal price!",
+                type: "error"
+            });
+            return;
+        }
+
+        swal({
+            title: "Continue?",
+            text: "Do you want to reserve this appointment?",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#5cb85c",
+            cancelButtonColor: "#d9534f",
+            confirmButtonText: 'Confirm',
+            confirmButtonClass: "btn"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "@Url.Action("UpdateOrderDeal", "Home")",
+                    type: "POST",
+                    data: { OrderID: selectedOrderID, DealPrice: dealPrice, Note: Note },
+                    "dataSrc": "",
+
+                    beforeSend: function () {
+
+                    },
+                    error: function (data) {
+
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success == true) {
+                            swal({
+                                title: "Success!",
+                                text: time + " is now reserved",
+                                type: "success"
+                            }).then(okay => {
+                                if (okay) {
+                                    window.location.reload();
+                                }
+                            });
+
+                        } else {
+                            swal({
+                                title: "Warning!",
+                                text: data,
+                                type: "error"
+                            });
+                        }
+                    }
+
+                }); //end ajax
+            }
+        }); // end swal
+    }
     $(document).on("click", "#btn_cancel", function () {
         ChangeStatus("cancel");
     });
