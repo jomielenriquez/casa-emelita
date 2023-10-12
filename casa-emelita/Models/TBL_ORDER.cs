@@ -34,6 +34,8 @@ namespace casa_emelita.Models
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
         public string UPDATEDBY { get; set; }
         public string SLOT { get; set; }
+        public Nullable<decimal> DEALPRICE { get; set; }
+        public string NOTE { get; set; }
     
         public virtual ICollection<TBL_ORDERS> TBL_ORDERS { get; set; }
         public virtual TBL_ORDER_TYPE TBL_ORDER_TYPE { get; set; }

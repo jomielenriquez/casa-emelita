@@ -135,6 +135,26 @@ namespace casa_emelita.Controllers
 
             return View(this.model);
         }
+        public ActionResult Appointments()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            ViewBag.Message = "Appointments";
+
+            return View(this.model);
+        }
 
         public ActionResult Calendar(int SelectedMonth = 0, int SelectedYear = 0)
         {
@@ -322,6 +342,40 @@ namespace casa_emelita.Controllers
             return Json(statusresult, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpPost]
+        public JsonResult UpdateOrderDeal(Guid OrderID, string DealPrice, string Note)
+        {
+            var statusresult = new
+            {
+                success = true,
+                message = "Successfully Updated"
+            };
+
+            try
+            {
+                TBL_ORDER orders = new TBL_ORDER()
+                {
+                    ORDERSTATUSID = new Guid("6AA446D1-4400-46AB-B0E4-B78312CD3610"),
+                    DEALPRICE = Int32.Parse(DealPrice),
+                    NOTE = Note
+                };
+                TBL_ORDER filter = new TBL_ORDER()
+                {
+                    ORDERID = OrderID
+                };
+                this.data.Update(orders, filter, model.AdminID);
+            }
+            catch (Exception ex)
+            {
+                statusresult = new
+                {
+                    success = false,
+                    message = ex.Message,
+                };
+            }
+
+            return Json(statusresult, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
         public JsonResult AddMenuInCategory(string PackageID, string MenuID)
         {
             TBL_INCLUSION inclusion = new TBL_INCLUSION()
@@ -411,6 +465,12 @@ namespace casa_emelita.Controllers
             catch { }
 
             List<Reservations> reservations = this.dataApointmentRepository.GetReservation();
+            return Json(reservations, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetNotApprovedAppointments()
+        {
+            List<Reservations> reservations = this.dataApointmentRepository.GetNotApprovedAppointments();
             return Json(reservations, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
