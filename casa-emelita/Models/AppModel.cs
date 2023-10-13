@@ -1,4 +1,5 @@
-﻿using System;
+﻿using casa_emelita.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -36,6 +37,8 @@ namespace casa_emelita.Models
         public Guid? SelectedCategory { get; set; }
         public Guid? SelectedEvent { get; set; }
         public TBL_ORDER Reservation { get; set; }
+        public List<GraphData> MonthlyReservations { get; set; }
+        public List<GraphData> MostOrderedPackage { get; set; }
         public List<AvailableMonths> Months 
         {
             get { 

@@ -302,6 +302,7 @@
     <Compile Include="Repository\AdminRepository.cs" />
     <Compile Include="Repository\ApointmentRepository.cs" />
     <Compile Include="Repository\CategoryRepository.cs" />
+    <Compile Include="Repository\DashboardRepository.cs" />
     <Compile Include="Repository\Data.cs" />
     <Compile Include="Repository\EventTypeRepository.cs" />
     <Compile Include="Repository\InclusionRepository.cs" />

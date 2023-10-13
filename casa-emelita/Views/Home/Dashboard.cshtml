@@ -1,4 +1,5 @@
 ﻿@model casa_emelita.Models.AppModel
+@using Newtonsoft.Json
 @{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Admin.cshtml";
@@ -26,20 +27,25 @@
                 </div>
             </div>
         </div>
-        @using (Html.BeginForm("Calendar", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "PackageAddEditForm", @name = "PackageAddEditForm" }))
+        @using (Html.BeginForm("Dashboard", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "PackageAddEditForm", @name = "PackageAddEditForm" }))
         {
             <div class="row">
                 <div class="col-sm-4">
-                    @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "value", "text"), "Year", new { @class = "form-control", @id = "SelectedYear", @style = "width: 100% !important" })
+                    @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "value", "text"), "Year", new { @class = "form-control", @id = "SelectedYear", @style = "width: 100% !important", @onchange = "submitForm()" })
                 </div>
             </div>
         }
-    <div class="row">
-        <div id="monthlyReservations" style="height: 370px; width: 100%;"></div>
-        <div id="packageReservations" style="height: 370px; width: 100%;"></div>
         <script>
+            function submitForm() {
+                document.getElementById("PackageAddEditForm").submit();
+            }
+        </script>
+        <div class="row">
+            <div id="monthlyReservations" style="height: 370px; width: 100%;"></div>
+            <div id="packageReservations" style="height: 370px; width: 100%;"></div>
+            <script>
             window.onload = function () {
-
+                var ReservationsEveryMonth = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyReservations));
                 var monthlyReservations = new CanvasJS.Chart("monthlyReservations", {
                     animationEnabled: true,
 
@@ -52,31 +58,20 @@
                     axisY2: {
                         interlacedColor: "rgba(120,180,84,.2)",
                         gridColor: "rgba(120,180,84,.1)",
-                        title: "Reservations"
+                        title: "Reservations",
+                        interval: 1
                     },
                     data: [{
                         type: "bar",
                         name: "Reservations",
                         axisYType: "secondary",
                         color: "#40a557",
-                        dataPoints: [
-                            { y: 3, label: "January" },
-                            { y: 7, label: "February" },
-                            { y: 5, label: "March" },
-                            { y: 9, label: "April" },
-                            { y: 7, label: "May" },
-                            { y: 7, label: "June" },
-                            { y: 9, label: "July" },
-                            { y: 8, label: "August" },
-                            { y: 11, label: "September" },
-                            { y: 15, label: "October" },
-                            { y: 12, label: "November" },
-                            { y: 15, label: "December" }
-                        ]
+                        dataPoints: ReservationsEveryMonth
                     }]
                 });
                 monthlyReservations.render();
 
+                var MostOrderedPackage = @Html.Raw(JsonConvert.SerializeObject(Model.MostOrderedPackage));
                 var packageReservations = new CanvasJS.Chart("packageReservations", {
                     animationEnabled: true,
 
@@ -89,33 +84,21 @@
                     axisY2: {
                         interlacedColor: "rgba(120,180,84,.2)",
                         gridColor: "rgba(120,180,84,.1)",
-                        title: "Package Reservations"
+                        title: "Package Reservations",
+                        interval: 1
                     },
                     data: [{
                         type: "bar",
                         name: "Reservations",
                         axisYType: "secondary",
                         color: "#40a557",
-                        dataPoints: [
-                            { y: 3, label: "January" },
-                            { y: 7, label: "February" },
-                            { y: 5, label: "March" },
-                            { y: 9, label: "April" },
-                            { y: 7, label: "May" },
-                            { y: 7, label: "June" },
-                            { y: 9, label: "July" },
-                            { y: 8, label: "August" },
-                            { y: 11, label: "September" },
-                            { y: 15, label: "October" },
-                            { y: 12, label: "November" },
-                            { y: 15, label: "December" }
-                        ]
+                        dataPoints: MostOrderedPackage
                     }]
                 });
                 packageReservations.render();
             }
-        </script>
-        <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
-    </div>
+            </script>
+            <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+        </div>
     </div>
 </div>
