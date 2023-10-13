@@ -40,6 +40,7 @@ namespace casa_emelita.Models
         public Guid? SelectedEvent { get; set; }
         public TBL_ORDER Reservation { get; set; }
         public TBL_ORDERS NewOrders { get; set; }
+        public decimal TotalPrice { get; set; }
         public OrderCustomerDetail NewOrderCustomerDetail { get; set; }
         public List<TBL_ORDERS> Orders {
             get

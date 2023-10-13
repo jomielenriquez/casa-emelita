@@ -199,6 +199,58 @@ namespace casa_emelita.Controllers
             }
             return Json(ordersInCarts, JsonRequestBehavior.AllowGet);
         }
+        [System.Web.Http.HttpPost]
+        public JsonResult SaveNewOrder(string customerName, string customerEmail, string customerContact, string custormerAddress)
+        {
+            var response = new
+            {
+                success = true,
+                message = ""
+            };
+
+            TBL_ORDER Reservation = new TBL_ORDER();
+            Reservation.CUSTOMERNAME = customerName;
+            Reservation.CUSTOMEREMAIL = customerEmail;
+            Reservation.CUSTOMERCONTACTNUMVER = customerContact;
+            Reservation.CUSTOMERADDRESS = custormerAddress;
+            Reservation.APPOINTMENTDATE = DateTime.Now;
+            Reservation.EVENTDATE = DateTime.Now;
+            Reservation.SLOT = "";
+            Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
+            Reservation.ORDERTYPEID = new Guid("1722CE08-59EF-4127-8683-AC0CD9CEC5BE"); // Type: Order
+            try
+            {
+                string OrderID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
+                List<TBL_ORDERS> hold = this.model.Orders;
+
+                foreach(var order in hold)
+                {
+                    if(order.QTY == 0)
+                    {
+                        continue;
+                    }
+                    TBL_ORDERS ords = new TBL_ORDERS() {
+                        ORDERID = new Guid(OrderID),
+                        MENUID = order.MENUID,
+                        QTY = order.QTY
+                    };
+                    this.data.Save(ords, new List<string> { "ORDERSID" }, "ORDERSID");
+                }
+                
+                this.model.Orders = new List<TBL_ORDERS>();
+
+                message.Message = "Your order has been set! Please wait for Casa-Emelita to contact you.";
+            }
+            catch (Exception ex)
+            {
+                response = new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
         [System.Web.Http.HttpGet]
         public JsonResult GetTotalOrders()
         {
@@ -716,7 +768,7 @@ namespace casa_emelita.Controllers
             try
             {
                 this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
-                message.Message = "Successfully Saved!!!";
+                message.Message = "Your appointment has been set! Please wait for Casa-Emelita to contact you.";
             }
             catch (Exception ex)
             {
