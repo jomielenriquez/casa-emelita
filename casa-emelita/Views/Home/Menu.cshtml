@@ -53,13 +53,18 @@
                             <p>
                                 @(menu.TBL_CATEGORY.CATEGORYNAME)
                             </p>
-
+                            <a id="btn_add_to_cart" style="cursor:pointer;" data-toggle="modal" data-target="#orderingModal"
+                               data-menu_code="@(menu.MENUCODE)"
+                               data-menu_id="@(menu.MENUID)"
+                               data-menu_image="../UploadedImage/@(menu.MENUIMAGE)"
+                               data-menu_price="₱ @(menu.PRICE.ToString("#,###.##"))"
+                               data-menu_description="@(menu.MENUDESCRIPTION)"
+                               data-menu_category="@(menu.TBL_CATEGORY.CATEGORYNAME)"
+                               class="boxed_btn">Add to cart</a>
                         </div>
                     </div>
                 </div>
             }
-
-
         </div>
 
         <div class="row">
@@ -170,9 +175,372 @@
             "autoWidth": false
         });
     }
-</script>
-<!-- order_area_end -->
+    $(document).on("click", "#btn_add_to_cart", function () {
+        document.getElementById("Modal_MENUID").value = $(this).data('menu_id');
+        document.getElementById("menu_code").innerText = $(this).data('menu_code');
+        document.getElementById("menu_type").innerText = $(this).data('menu_category');
+        document.getElementById("menu_description").innerText = $(this).data('menu_description');
+        document.getElementById("itemprice").innerText = $(this).data('menu_price');
+        document.getElementById("Order_Menu_Image").src = $(this).data('menu_image');
+    });
+    $(document).on("click", "#btn_submit_order", function () {
+        var OrderQTY = document.getElementById("order_qty").value.trim();
+        var OrderMenuID = document.getElementById("Modal_MENUID").value;
+        var OrderNote = document.getElementById("order_note").value;
 
+        if (OrderQTY == '') {
+            swal({
+                title: "Warning!",
+                text: "Please enter quantity",
+                type: "error"
+            });
+            return;
+        }
+
+        swal({
+            title: "Continue?",
+            text: "Do you want to continue adding to cart?",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#5cb85c",
+            cancelButtonColor: "#d9534f",
+            confirmButtonText: 'Confirm',
+            confirmButtonClass: "btn"
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    url: "@Url.Action("AddOrder", "Home")",
+                    type: "POST",
+                    data: { OrderQTY: OrderQTY, OrderMenuID: OrderMenuID, OrderNote: OrderNote },
+                    success: function (data) {
+                        console.log(data);
+                        if (!data.success) {
+                            alert("An error occurred while saving data.")
+                        }
+                        else {
+                            document.getElementById("NumberOfOrders").innerText = data.count;
+                            if (data.count > 0) {
+                                document.getElementById("NumberOfOrders").style.display = "block";
+                            }
+                            document.getElementById("Modal_MENUID").value = 0;
+                            document.getElementById("order_note").value = "";
+                            $('#orderingModal').modal('hide');
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while fetching data.");
+                    }
+                });
+
+            }
+        }); // end swal
+    });
+</script>
+<div class="modal fade" id="orderingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("NewOrder", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "NewOrder", @name = "NewOrder" }))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title" id="OrderingModalLabel">Order details</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row m-3">
+                        <div class="col-sm-6">
+                            <div class="single_order">
+                                <div class="order_info">
+                                    <h3 id="menu_code">Package code</h3>
+                                    <h4 id="menu_type">Event type</h4>
+                                    <h5>Description:</h5>
+                                    <p id="menu_description"></p>
+                                    <p id="itemprice">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <img id="Order_Menu_Image" src="~/Content/Casa/image/logo.png" style="float:right;width:200px;margin-right:60px;">
+                        </div>
+                    </div>
+
+                    <div class="row m-3">
+
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.NewOrders.MENUID, new { @class = "single-input", @id = "Modal_MENUID", @name = "Modal_MENUID", @style = "display:none", @type = "text" })
+                            <div class="form-group">
+                                @Html.TextBoxFor(model => model.NewOrders.QTY, new { @class = "form-control", @name = "order_qty", @id = "order_qty", @type = "number", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter qty'", @placeholder = "Enter QTY", @required = "", @min = 0 })
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                @Html.TextAreaFor(model => model.NewOrders.ORDERNOTE, new { @class = "form-control", @name = "order_note", @id = "order_note", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter note'", @placeholder = "Note"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="button" id="btn_submit_order">Add to cart</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- order_area_end -->
+<script>
+    $(document).on("click", "#OrderCart", function () {
+        var holdNumberOfOrders = parseInt(document.getElementById("NumberOfOrders").innerHTML.trim());
+        if (holdNumberOfOrders == 0) {
+            swal({
+                title: "No Orders!",
+                text: "Cart is empty",
+                type: "error"
+            });
+            return;
+        }
+        $('#OrdersModal').modal('show');
+        GetAllMenuInCart();
+    });
+    var tbl_Orders;
+    function GetAllMenuInCart() {
+        $('#tbl_Orders').DataTable().destroy();
+
+        tbl_Orders = $('#tbl_Orders').DataTable({
+
+            "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true, //stay on this page
+            "responsive": true,
+            "order": [],
+            "drawCallback": function (settings) {
+                //console.log(settings.json);
+            },
+            "ajax": {
+                url: "@Url.Action("OrdersInCart", "Home")",
+                type: "GET",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "MENUQTY"},
+                { "data": "MENUIMAGE", "orderable": false },
+                { "data": "MENUNAME"},
+                { "data": "MENUCATEGORY" },
+                { "data": "MENUDESCRIPTION" },
+                { "data": "TOTALPRICE" }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return '<center><a id="btn_Sub_Qty" style="color:white;" class="btn btn-danger" margin-bottom:5px;"="">-</a><div style="width:40px; display: inline-block"><b>' + data + '</b></div><a id="btn_Add_Qty" style="color:white;" class="btn btn-success" margin-bottom:5px;"="">+</a></center>';
+                    },
+                    "width": 100
+                },
+                {
+                    "targets": 1,
+                    "render": function (data, type, row, meta) {
+                        return '<center><img src="../UploadedImage/' + data + '" alt="Image" width="50" height="50"></center>';
+                    }
+                },
+                {
+                    "targets": 5,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
+                },
+            ],
+            "autoWidth": false
+        });
+        $.ajax({
+            url: "@Url.Action("GetTotalOrders", "Home")",
+            type: "POST",
+            success: function (data) {
+                if (!data.success) {
+                    alert("An error occurred while saving data.")
+                }
+                else {
+                    var options = {
+                        style: 'currency',
+                        currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                        minimumFractionDigits: 2, // Minimum decimal places
+                        maximumFractionDigits: 2 // Maximum decimal places
+                    };
+                    document.getElementById("TotalOrderPrice").value = data.total.toLocaleString('en-PH', options);
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+    }
+    $(document).on("click", "#btn_Add_Qty", function () {
+        var rowdata = tbl_Orders.row($(this).closest('tr')).data();
+        var newQTY = parseInt(rowdata.MENUQTY) + 1;
+        ModifyQTY(rowdata.MENUID, newQTY);
+
+    });
+    $(document).on("click", "#btn_Sub_Qty", function () {
+        var rowdata = tbl_Orders.row($(this).closest('tr')).data();
+        var newQTY = parseInt(rowdata.MENUQTY) - 1;
+        ModifyQTY(rowdata.MENUID, newQTY);
+    });
+    function ModifyQTY(Menuid, QTY) {
+        $.ajax({
+            url: "@Url.Action("ModifyQty", "Home")",
+            type: "POST",
+            data: { MenuId: Menuid, NewQty: QTY },
+            success: function (data) {
+                if (!data.success) {
+                    alert("An error occurred while saving data.")
+                }
+                else {
+                    GetAllMenuInCart();
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+    }
+    $(document).on("click", "#btn_submit_all_order", function () {
+        var customerName = document.getElementById("customerName").value;
+        var customerEmail = document.getElementById("customerEmail").value;
+        var customerContact = document.getElementById("customerContact").value;
+        var custormerAddress = document.getElementById("custormerAddress").value;
+
+        if (customerName.trim() == "" || customerEmail.trim() == "" || customerContact.trim() == "" || custormerAddress.trim() == "") {
+            swal({
+                title: "No Orders!",
+                text: "Please complete the required fields!",
+                type: "error"
+            });
+            return;
+        }
+        $.ajax({
+            url: "@Url.Action("SaveNewOrder", "Home")",
+            type: "POST",
+            data: {
+                customerName: customerName,
+                customerEmail: customerEmail,
+                customerContact: customerContact,
+                custormerAddress: custormerAddress
+            },
+            success: function (data) {
+                if (!data.success) {
+                    alert("An error occurred while saving data.")
+                }
+                else {
+                    window.location.reload();
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+    });
+</script>
+<div class="modal fade" id="OrdersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="OrdersModalLabel">Orders</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Personal Information: </label>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.NewOrderCustomerDetail.CUSTOMERNAME, new { @class = "form-control", @name = "customerName", @id = "customerName", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter your name'", @placeholder = "Enter your name", @required = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.NewOrderCustomerDetail.CUSTOMEREMAIL, new { @class = "form-control", @name = "customerEmail", @id = "customerEmail", @type = "email", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter your email address'", @placeholder = "Email", @required = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.NewOrderCustomerDetail.CUSTOMERCONTACTNUMVER, new { @class = "form-control", @name = "customerContact", @id = "customerContact", @type = "contact", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter contact numberd'", @placeholder = "Enter contact number", @required = "" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.NewOrderCustomerDetail.CUSTOMERADDRESS, new { @class = "form-control", @name = "custormerAddress", @id = "custormerAddress", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = 'Enter address'", @placeholder = "Enter address", @required = "" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <span>Total</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.TextBoxFor(model => model.TotalPrice, new { @class = "form-control", @name = "TotalOrderPrice", @id = "TotalOrderPrice", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = ''", @placeholder = "Total Order", @disabled="disabled"})
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Orders</label>
+                        <table class="table table-hover table-bordered table-striped" id="tbl_Orders">
+                            <thead class="table-header">
+                                <tr>
+                                    <th class="text-center">
+                                        QTY
+                                    </th>
+                                    <th width="1%" class="text-center">
+                                        Image
+                                    </th>
+                                    <th class="text-center">
+                                        Name
+                                    </th>
+                                    <th class="text-center">
+                                        Category
+                                    </th>
+                                    <th class="text-center">
+                                        Description
+                                    </th>
+                                    <th class="text-center">
+                                        Price
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" type="button" id="btn_submit_all_order">Submit Orders</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
@@ -434,13 +802,19 @@
         if (AppointmentMessage != "") {
             swal({
                 title: "Success!",
-                text: "Your appointment has been set! Please wait for Casa-Emelita to contact you.",
+                text: AppointmentMessage,
                 type: "success"
             }).then(okay => {
                 if (okay) {
                     
                 }
             });
+        }
+
+        var currentOrders = @Html.Raw(Model.Orders.Count());
+        document.getElementById("NumberOfOrders").innerHTML = currentOrders;
+        if (currentOrders > 0) {
+            document.getElementById("NumberOfOrders").style.display = "block";
         }
     });
 </script>

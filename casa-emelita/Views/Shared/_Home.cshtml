@@ -7,6 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <link rel="shortcut icon" type="image/x-icon" href="~/Content/casa/image/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>Casa Emelita</title>
     @Styles.Render("~/Content/casa")
     @*@Scripts.Render("~/bundles/modernizr")*@
@@ -43,11 +44,23 @@
                                     <a href="/Home/Menu" class="boxed_btn_white"><center>Book an appointment</center></a>
                                 </div>
                             </div>
+                            <div style="display : @(ViewBag.Title == "Menu" ? "block" : "none") ; position:fixed; right: 100px;" class="shopping-cart">
+                                <a id="OrderCart"><center><i style="font-size: 25px; color: #78b454;" class="fas fa-shopping-cart"></i></center></a>
+                                <span id="NumberOfOrders" class="badge rounded-pill bg-success" style="position: absolute; top: 17px; right: -8px; display:none; color: white;"> 0 </span>
+                            </div>
+                            <style>
+                                @@media screen and (max-width: 630px) {
+                                    /* Your CSS styles for a viewport width of 667 pixels go here */
+                                    .shopping-cart {
+                                        top: 15px !important
+                                    }
+                                }
+                            </style>
                             <div class="col-12">
                                 <div class="mobile_menu d-block d-lg-none"></div>
                             </div>
                             <div class="logo-img-small d-sm-block d-md-block d-lg-none">
-                                <a href="index">
+                                <a href="/Home/Home">
                                     <img src="~/Content/casa/image/logo.png" alt="">
                                 </a>
                             </div>

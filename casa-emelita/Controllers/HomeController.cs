@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Caching;
+using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -140,6 +142,149 @@ namespace casa_emelita.Controllers
             ViewBag.Message = "Dashboard";
 
             return View(this.model);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult AddOrder(int OrderQTY, Guid OrderMenuID, string OrderNote)
+        {
+            TBL_ORDERS order = new TBL_ORDERS()
+            {
+                MENUID = OrderMenuID,
+                QTY = OrderQTY,
+                ORDERNOTE = OrderNote
+            };
+            List<TBL_ORDERS> hold = this.model.Orders;
+            bool isSave = true;
+            foreach(var ord in hold)
+            {
+                if(ord.MENUID == OrderMenuID)
+                {
+                    ord.QTY += OrderQTY;
+                    isSave = false;
+                    break;
+                }
+            }
+
+            if(isSave) { 
+                hold.Add(order);
+            }
+
+            this.model.Orders = hold;
+            
+            var response = new
+            {
+                success = true,
+                count = this.model.Orders.Count,
+            };
+
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult OrdersInCart()
+        {
+            List<OrdersInCart> ordersInCarts = new List<OrdersInCart>();
+            List<TBL_ORDERS> hold = this.model.Orders;
+            foreach(var ord in hold)
+            {
+                TBL_MENU menu = this.menuRepository.GetMenuByID((Guid)ord.MENUID);
+                ordersInCarts.Add(new OrdersInCart()
+                {
+                    MENUQTY = (int)ord.QTY,
+                    MENUCATEGORY = menu.TBL_CATEGORY.CATEGORYNAME,
+                    MENUDESCRIPTION = menu.MENUDESCRIPTION,
+                    MENUIMAGE = menu.MENUIMAGE,
+                    MENUNAME = menu.MENUNAME,
+                    MENUID = (Guid)ord.MENUID,
+                    TOTALPRICE = (decimal)(ord.QTY * menu.PRICE)
+                });
+            }
+            return Json(ordersInCarts, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult SaveNewOrder(string customerName, string customerEmail, string customerContact, string custormerAddress)
+        {
+            var response = new
+            {
+                success = true,
+                message = ""
+            };
+
+            TBL_ORDER Reservation = new TBL_ORDER();
+            Reservation.CUSTOMERNAME = customerName;
+            Reservation.CUSTOMEREMAIL = customerEmail;
+            Reservation.CUSTOMERCONTACTNUMVER = customerContact;
+            Reservation.CUSTOMERADDRESS = custormerAddress;
+            Reservation.APPOINTMENTDATE = DateTime.Now;
+            Reservation.EVENTDATE = DateTime.Now;
+            Reservation.SLOT = "";
+            Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
+            Reservation.ORDERTYPEID = new Guid("1722CE08-59EF-4127-8683-AC0CD9CEC5BE"); // Type: Order
+            try
+            {
+                string OrderID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
+                List<TBL_ORDERS> hold = this.model.Orders;
+
+                foreach(var order in hold)
+                {
+                    if(order.QTY == 0)
+                    {
+                        continue;
+                    }
+                    TBL_ORDERS ords = new TBL_ORDERS() {
+                        ORDERID = new Guid(OrderID),
+                        MENUID = order.MENUID,
+                        QTY = order.QTY
+                    };
+                    this.data.Save(ords, new List<string> { "ORDERSID" }, "ORDERSID");
+                }
+                
+                this.model.Orders = new List<TBL_ORDERS>();
+
+                message.Message = "Your order has been set! Please wait for Casa-Emelita to contact you.";
+            }
+            catch (Exception ex)
+            {
+                response = new
+                {
+                    success = false,
+                    message = ex.Message
+                };
+            }
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetTotalOrders()
+        {
+            List<TBL_ORDERS> hold = this.model.Orders;
+            decimal total = 0;
+            foreach(var ord in hold)
+            {
+                TBL_MENU menu = this.menuRepository.GetMenuByID((Guid)ord.MENUID);
+                total += (decimal)(ord.QTY * menu.PRICE);
+            }
+            var response = new
+            {
+                success = true,
+                total = total
+            };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult ModifyQty(Guid MenuId, int NewQty)
+        {
+            List<TBL_ORDERS> hold = this.model.Orders;
+            foreach(var ord in hold)
+            {
+                if(ord.MENUID == MenuId)
+                {
+                    ord.QTY = NewQty;
+                }
+            }
+            this.model.Orders = hold;
+            var result = new
+            {
+                success = true
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         public ActionResult ReportAdmin()
         {
@@ -623,7 +768,7 @@ namespace casa_emelita.Controllers
             try
             {
                 this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
-                message.Message = "Successfully Saved!!!";
+                message.Message = "Your appointment has been set! Please wait for Casa-Emelita to contact you.";
             }
             catch (Exception ex)
             {

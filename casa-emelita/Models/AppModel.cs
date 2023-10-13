@@ -1,7 +1,9 @@
 ﻿using casa_emelita.Repository;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 
 namespace casa_emelita.Models
@@ -37,6 +39,28 @@ namespace casa_emelita.Models
         public Guid? SelectedCategory { get; set; }
         public Guid? SelectedEvent { get; set; }
         public TBL_ORDER Reservation { get; set; }
+        public TBL_ORDERS NewOrders { get; set; }
+        public decimal TotalPrice { get; set; }
+        public OrderCustomerDetail NewOrderCustomerDetail { get; set; }
+        public List<TBL_ORDERS> Orders {
+            get
+            {
+                try
+                {
+                    if (new List<TBL_ORDERS>((List<TBL_ORDERS>)HttpContext.Current.Session["cachecOrders"]) == null) { return new List<TBL_ORDERS>(); }
+                }
+                catch
+                {
+                    return new List<TBL_ORDERS>();
+                }
+                return new List<TBL_ORDERS>((List<TBL_ORDERS>)HttpContext.Current.Session["cachecOrders"]);
+            }
+            set
+            {
+                HttpContext.Current.Session["cachecOrders"] = value;
+            }
+        }
+        public decimal TotalOrder { get; set; }
         public List<GraphData> MonthlyReservations { get; set; }
         public List<GraphData> MostOrderedPackage { get; set; }
         public List<AvailableMonths> Months 
@@ -189,5 +213,22 @@ namespace casa_emelita.Models
         public string CurrentPassword { get; set; }
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
+    }
+    public class OrdersInCart
+    {
+        public int MENUQTY { get; set; }
+        public string MENUIMAGE { get; set; }
+        public string MENUNAME { get; set; }
+        public string MENUCATEGORY { get; set; }
+        public string MENUDESCRIPTION { get; set; }
+        public Guid MENUID { get; set; }
+        public decimal TOTALPRICE { get; set; }
+    }
+    public class OrderCustomerDetail
+    {
+        public string CUSTOMERNAME { get; set; }
+        public string CUSTOMEREMAIL { get; set; }
+        public string CUSTOMERCONTACTNUMVER { get; set; }
+        public string CUSTOMERADDRESS { get; set; }
     }
 }

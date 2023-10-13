@@ -22,6 +22,8 @@ namespace casa_emelita.Models
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
         public string UDATEDBY { get; set; }
+        public Nullable<int> QTY { get; set; }
+        public string ORDERNOTE { get; set; }
     
         public virtual TBL_MENU TBL_MENU { get; set; }
         public virtual TBL_PACKAGE TBL_PACKAGE { get; set; }
