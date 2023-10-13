@@ -27,6 +27,7 @@ namespace casa_emelita.Controllers
         Data data;
         ApointmentRepository dataApointmentRepository;
         OrderRepository orderRepository;
+        DashboardRepository dashboardRepository;
         static PageMessage message = new PageMessage();
         public HomeController() { 
             this.model = new AppModel();
@@ -39,6 +40,7 @@ namespace casa_emelita.Controllers
             this.inclusionRepository = new InclusionRepository();
             this.dataApointmentRepository = new ApointmentRepository();
             this.orderRepository = new OrderRepository();
+            this.dashboardRepository = new DashboardRepository();
         }
         public ActionResult Index()
         {
@@ -112,6 +114,30 @@ namespace casa_emelita.Controllers
             this.model.Category = this.categoryRepository.GetAllCategories();
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
             ViewBag.Message = "PackageAdmin";
+
+            return View(this.model);
+        }
+        [System.Web.Http.HttpPost]
+        public ActionResult Dashboard(int SelectedYear = 0)
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            this.model.SelectedYear = SelectedYear == 0 ? DateTime.Now.Year : SelectedYear;
+            this.model.MonthlyReservations = this.dashboardRepository.MontlyReservations(this.model.SelectedYear, this.model.Months);
+            this.model.MostOrderedPackage = this.dashboardRepository.MostOrderedPackage(this.model.Package_List, this.model.SelectedYear);
+            ViewBag.Message = "Dashboard";
 
             return View(this.model);
         }

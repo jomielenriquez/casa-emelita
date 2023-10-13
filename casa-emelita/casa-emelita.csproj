@@ -302,6 +302,7 @@
     <Compile Include="Repository\AdminRepository.cs" />
     <Compile Include="Repository\ApointmentRepository.cs" />
     <Compile Include="Repository\CategoryRepository.cs" />
+    <Compile Include="Repository\DashboardRepository.cs" />
     <Compile Include="Repository\Data.cs" />
     <Compile Include="Repository\EventTypeRepository.cs" />
     <Compile Include="Repository\InclusionRepository.cs" />
@@ -584,6 +585,7 @@
     <Content Include="Views\Home\ReportAdmin.cshtml" />
     <Content Include="Views\Home\Calendar.cshtml" />
     <Content Include="Views\Home\Appointments.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
