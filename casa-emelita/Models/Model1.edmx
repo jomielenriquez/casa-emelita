@@ -124,6 +124,8 @@
           <Property Name="ORDERID" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PACKAGEID" Type="uniqueidentifier" />
           <Property Name="MENUID" Type="uniqueidentifier" />
+          <Property Name="QTY" Type="int" />
+          <Property Name="ORDERNOTE" Type="nvarchar(max)" />
           <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
           <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
           <Property Name="UPDATEDDATE" Type="datetime" />
@@ -522,6 +524,8 @@
           <NavigationProperty Name="TBL_MENU" Relationship="CASAEMELITAModel.FK__TBL_ORDER__MENUI__339FAB6E" FromRole="TBL_ORDERS" ToRole="TBL_MENU" />
           <NavigationProperty Name="TBL_PACKAGE" Relationship="CASAEMELITAModel.FK__TBL_ORDER__PACKA__32AB8735" FromRole="TBL_ORDERS" ToRole="TBL_PACKAGE" />
           <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.FK__TBL_ORDER__ORDER__31B762FC" FromRole="TBL_ORDERS" ToRole="TBL_ORDER" />
+          <Property Name="QTY" Type="Int32" />
+          <Property Name="ORDERNOTE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__TBL_ORDER__MENUI__339FAB6E">
           <End Type="CASAEMELITAModel.TBL_MENU" Role="TBL_MENU" Multiplicity="0..1" />
@@ -744,6 +748,8 @@
           <EntitySetMapping Name="TBL_ORDERS">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDERS">
               <MappingFragment StoreEntitySet="TBL_ORDERS">
+                <ScalarProperty Name="ORDERNOTE" ColumnName="ORDERNOTE" />
+                <ScalarProperty Name="QTY" ColumnName="QTY" />
                 <ScalarProperty Name="UDATEDBY" ColumnName="UDATEDBY" />
                 <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
                 <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
