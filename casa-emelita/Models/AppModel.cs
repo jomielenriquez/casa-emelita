@@ -231,4 +231,10 @@ namespace casa_emelita.Models
         public string CUSTOMERCONTACTNUMVER { get; set; }
         public string CUSTOMERADDRESS { get; set; }
     }
+    public class Email
+    {
+        public string to_email { get; set; }
+        public string Reservation { get; set; }
+        public string to_name { get; set; }
+    }
 }

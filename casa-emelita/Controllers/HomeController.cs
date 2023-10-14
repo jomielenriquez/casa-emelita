@@ -31,6 +31,7 @@ namespace casa_emelita.Controllers
         OrderRepository orderRepository;
         DashboardRepository dashboardRepository;
         static PageMessage message = new PageMessage();
+        static Email SendEmail = new Email();
         public HomeController() { 
             this.model = new AppModel();
             this.menuRepository = new MenuRepository();
@@ -820,15 +821,25 @@ namespace casa_emelita.Controllers
             {
                 this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
                 message.Message = "Your appointment has been set! Please wait for Casa-Emelita to contact you.";
+                SendEmail.to_email = Reservation.CUSTOMEREMAIL;
+                SendEmail.to_name = Reservation.CUSTOMERNAME;
+                SendEmail.Reservation = Reservation.EVENTDATE.ToString("MMMM dd, yyyy") + " | " + Reservation.SLOT;
             }
             catch (Exception ex)
             {
 
             }
 
-            return RedirectToAction("../Home/Menu");
+            return RedirectToAction("../Home/Confirmation");
         }
-        
+
+        public ActionResult Confirmation()
+        {
+            Email hold = SendEmail;
+            SendEmail = new Email();
+            return View(hold);
+        }
+
         public ActionResult ServicesofCasa()
         {
             return View();
