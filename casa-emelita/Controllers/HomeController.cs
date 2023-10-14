@@ -306,6 +306,26 @@ namespace casa_emelita.Controllers
 
             return View(this.model);
         }
+        public ActionResult Orders()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Package_List = this.packageRepository.GetAllPackage();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
+            ViewBag.Message = "Orders";
+
+            return View(this.model);
+        }
         public ActionResult Appointments()
         {
             if (this.model.AdminID == Guid.Empty)
@@ -620,6 +640,31 @@ namespace casa_emelita.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
+        public JsonResult GetOrderMenu(string selectedOrderID)
+        {
+            Guid id = selectedOrderID == "" ? new Guid() : new Guid(selectedOrderID);
+            List<TBL_MENUJSON> data = this.menuRepository.GetOrderMenu(id);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpPost]
+        public JsonResult GetCustomerTotalOrders(string selectedOrderID)
+        {
+            Guid id = selectedOrderID == "" ? new Guid() : new Guid(selectedOrderID);
+            List<TBL_MENUJSON> data = this.menuRepository.GetOrderMenu(id);
+
+            decimal total = 0;
+            foreach (var ord in data)
+            {
+                total += (decimal)(ord.QTY * ord.PRICE);
+            }
+            var response = new
+            {
+                success = true,
+                total = total
+            };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
         public JsonResult GetReservations(string from, string to)
         {
             try
@@ -636,6 +681,12 @@ namespace casa_emelita.Controllers
             catch { }
 
             List<Reservations> reservations = this.dataApointmentRepository.GetReservation();
+            return Json(reservations, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetAllOrders()
+        {
+            List<Reservations> reservations = this.dataApointmentRepository.GetOrders();
             return Json(reservations, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]

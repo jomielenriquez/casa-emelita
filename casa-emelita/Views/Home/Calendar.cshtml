@@ -81,7 +81,7 @@
                                     DateTime sd = DateTime.ParseExact(start_date.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
                                     ed = DateTime.ParseExact(ed.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
                                     var orders = Model.OrderList
-                                        .Where(ol => ol.EVENTDATE >= sd && ol.EVENTDATE < ed);
+                                        .Where(ol => ol.EVENTDATE >= sd && ol.EVENTDATE < ed && ol.TBL_ORDER_TYPE.ORDERNAME.Equals("RESERVATION", StringComparison.OrdinalIgnoreCase));
 
                                     foreach(casa_emelita.Models.TBL_ORDER ords in orders)
                                     {

@@ -96,6 +96,37 @@ namespace casa_emelita.Repository
 
             return (List<TBL_MENUJSON>)menu;
         }
+        public List<TBL_MENUJSON> GetOrderMenu(Guid selectedOrderID)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            List<TBL_ORDERS> menus = entities.TBL_ORDERS
+                .Where(ord => ord.ORDERID == selectedOrderID)
+                .ToList();
+            List<TBL_MENUJSON> menu = new List<TBL_MENUJSON>();
+
+            foreach (var mn in menus)
+            {
+                var row = mn.TBL_MENU;
+                menu.Add(new TBL_MENUJSON()
+                {
+                    MENUID = row.MENUID,
+                    MENUNAME = row.MENUNAME,
+                    MENUCODE = row.MENUCODE,
+                    MENUIMAGE = row.MENUIMAGE,
+                    MENUCATEGORY = row.TBL_CATEGORY.CATEGORYNAME,
+                    MENUDESCRIPTION = row.MENUDESCRIPTION,
+                    PRICE = row.PRICE,
+                    CREATEDBY = row.CREATEDBY,
+                    CREATEDDATE = row.CREATEDDATE,
+                    UPDATEDBY = row.UPDATEDBY,
+                    UPDATEDDATE = row.UPDATEDDATE,
+                    MENUCATEGORYGUID = row.TBL_CATEGORY.CATEGORYID,
+                    QTY = (int)mn.QTY
+                });
+            }
+
+            return (List<TBL_MENUJSON>)menu;
+        }
         public List<TBL_MENUJSON> GetMenuJSONListWithoutIncludedPackage(Guid PackageInclusionID)
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
@@ -141,6 +172,7 @@ namespace casa_emelita.Repository
         public Guid MENUCATEGORYGUID { get; set; }
         public string MENUDESCRIPTION { get; set; }
         public decimal PRICE { get; set; }
+        public int QTY { get; set; }
         public System.DateTime CREATEDDATE { get; set; }
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
