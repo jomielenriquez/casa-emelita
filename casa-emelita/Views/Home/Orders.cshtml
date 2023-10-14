@@ -1,0 +1,383 @@
+﻿@model casa_emelita.Models.AppModel
+@{
+    ViewBag.Title = "Orders";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Orders</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Orders
+                    </h3>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="col-sm-3">
+                <label>Date | from:</label>
+                <input type="date" class="form-control" name="" id="date_from">
+            </div>
+            <div class="col-sm-3">
+                <label>to:</label>
+                <input type="date" class="form-control" name="" id="date_to">
+            </div>
+
+            <div class="col-sm-3">
+                <a onclick="fetchAppointments();" class="btn btn-success form-control"
+                   style="color: white;margin-top: 30px; min-width: 250px;" id="btn_generate">Generate</a>
+            </div>
+        </div>*@
+        <br>
+        <div class="row">
+
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered " id="tbl_reservations">
+                    <thead class="table-header">
+                        <tr>
+                            <th width="1%" class="text-center">
+                                Action
+                            </th>
+                            <th class="text-center">
+                                Customer
+                            </th>
+                            <th class="text-center">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- order_area_end -->
+<script>
+    var tbl_reservations;
+    $(document).ready(function () {
+        fetchAllReseravations(null, null);
+    });
+    $(document).on("click", "#btn_generate", function () {
+        fetchAllReseravations();
+    });
+    function fetchAllReseravations() {
+        $('#tbl_reservations').DataTable().destroy();
+
+        tbl_reservations = $('#tbl_reservations').DataTable({
+
+            "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true, //stay on this page
+            "responsive": true,
+            "order": [],
+            "drawCallback": function (settings) {
+                //console.log(settings.json);
+            },
+            "ajax": {
+                url: "@Url.Action("GetAllOrders", "Home")",
+                type: "GET",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "OrderID", "orderable": false },
+                { "data": "Customer"},
+                { "data": "Status" }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return '<a data-toggle="modal" data-target="#bookingModal" style="color:white;" class="btn btn-success" margin-bottom:5px;"="" id="btn_view">View</a>';
+                    }
+                },
+                {
+                    "targets": 1,
+                    "render": function (data, type, row, meta) {
+                        return '<center>' + data + '</center>';
+                    }
+                },
+                {
+                    "targets": 2,
+                    "render": function (data, type, row, meta) {
+                        if (data == "NEW") {
+                            return '<center><span class="badge bg-primary" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "PREPARING") {
+                            return '<center><span class="badge bg-secondary" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "DONE") {
+                            return '<center><span class="badge bg-success" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "COMPLETED") {
+                            return '<center><span class="badge bg-success" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "CANCELLED") {
+                            return '<center><span class="badge bg-danger" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "RESERVED") {
+                            return '<center><span class="badge bg-info" style="color:white">' + data + '</span></center>';
+                        }
+                    }
+                },
+            ],
+            "autoWidth": false
+        });
+
+    }
+    // this will be used to update the status of the order
+    var selectedOrderID;
+    $(document).on("click", "#btn_view", function () {
+        var rowdata = tbl_reservations.row($(this).closest('tr')).data();
+
+        document.getElementById("c_email").value = rowdata.CustormerEmail;
+        document.getElementById("c_name").value = rowdata.CustomerName;
+        document.getElementById("c_contact").value = rowdata.CustomerNumber;
+        document.getElementById("c_address").value = rowdata.CustomerAddress;
+        selectedOrderID = rowdata.OrderID
+        fetchPackageMenu(selectedOrderID);
+    });
+    function fetchPackageMenu(selectedOrderID) {
+        $('#tbl_menu_included').DataTable().destroy();
+
+        var dataTable1 = $('#tbl_menu_included').DataTable({
+
+            "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true, //stay on this page
+            "responsive": true,
+            "order": [],
+            "drawCallback": function (settings) {
+                //console.log(settings.json);
+            },
+            "ajax": {
+                url: "@Url.Action("GetOrderMenu", "Home")",
+                type: "GET",
+                data: { selectedOrderID: selectedOrderID },
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "MENUIMAGE", "orderable": false },
+                { "data": "QTY"},
+                { "data": "MENUNAME"},
+                { "data": "MENUCATEGORY" },
+                { "data": "MENUDESCRIPTION" },
+                { "data": "PRICE" }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return '<center><img src="../UploadedImage/' + data + '" alt="Image" width="50" height="50"></center>';
+                    }
+                },
+                {
+                    "targets": 5,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
+                },
+            ],
+            "autoWidth": false
+        });
+        $.ajax({
+            url: "@Url.Action("GetCustomerTotalOrders", "Home")",
+            type: "POST",
+            data: { selectedOrderID: selectedOrderID },
+            success: function (data) {
+                if (!data.success) {
+                    alert("An error occurred while saving data.")
+                }
+                else {
+                    var options = {
+                        style: 'currency',
+                        currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                        minimumFractionDigits: 2, // Minimum decimal places
+                        maximumFractionDigits: 2 // Maximum decimal places
+                    };
+                    document.getElementById("total_price").value = data.total.toLocaleString('en-PH', options);
+                }
+            },
+            error: function () {
+                alert("An error occurred while fetching data.");
+            }
+        });
+    }
+</script>
+
+<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reservation details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Personal Information: </label>
+                    </div>
+                </div>
+
+
+                <div class="row m-3">
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group">
+                            <input class="form-control valid" name="name" id="c_name" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'"
+                                   placeholder="Enter your name" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="email" id="c_email" type="email"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'"
+                                   placeholder="Email" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_contact" id="c_contact" type="contact"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter contact number'"
+                                   placeholder="Enter contact number" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control valid" name="c_address" id="c_address" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter address'"
+                                   placeholder="Enter address" disabled>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Total price:</label>
+                            <input class="form-control valid" id="total_price" type="text"
+                                   onfocus="this.placeholder = ''" onblur="this.placeholder = 'Total Price'"
+                                   placeholder="Total Price" disabled>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Menu included in the package</label>
+                        <table class="table table-hover table-bordered table-striped" id="tbl_menu_included">
+                            <thead class="table-header">
+                                <tr>
+                                    <th width="1%" class="text-center">
+                                        Image
+                                    </th>
+                                    <th class="text-center">
+                                        QTY
+                                    </th>
+                                    <th class="text-center">
+                                        Name
+                                    </th>
+                                    <th class="text-center">
+                                        Type
+                                    </th>
+                                    <th class="text-center">
+                                        Description
+                                    </th>
+                                    <th class="text-center">
+                                        Price
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-danger" type="button" id="btn_cancel">Cancel</button>
+                <button class="btn btn-success" type="button" id="btn_submit">Completed</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on("click", "#btn_submit", function () {
+        ChangeStatus("success");
+    });
+    $(document).on("click", "#btn_cancel", function () {
+        ChangeStatus("cancel");
+    });
+    function ChangeStatus(status) {
+        swal({
+            title: "Continue?",
+            text: "Do you want to continue changing the status to completed?",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#5cb85c",
+            cancelButtonColor: "#d9534f",
+            confirmButtonText: 'Confirm',
+            confirmButtonClass: "btn"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "@Url.Action("UpdateOrderStatus", "Home")",
+                    type: "GET",
+                    data: { OrderID: selectedOrderID, status: status },
+                    "dataSrc": "",
+
+                    beforeSend: function () {
+
+                    },
+                    error: function (data) {
+
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (data.success == true) {
+                            swal({
+                                title: "Success!",
+                                text: "Your appointment has been set! Please wait for Casa-Emelita to contact you.",
+                                type: "success"
+                            }).then(okay => {
+                                if (okay) {
+                                    window.location.reload();
+                                }
+                            });
+
+                        } else {
+                            swal({
+                                title: "Warning!",
+                                text: data,
+                                type: "error"
+                            });
+                        }
+                    }
+
+                }); //end ajax
+            }
+        }); // end swal
+    }
+</script>
