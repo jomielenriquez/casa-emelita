@@ -26,7 +26,9 @@ namespace casa_emelita.Repository
         public List<Reservations> GetReservation()
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
-            List<TBL_ORDER> result = entities.TBL_ORDER.ToList();
+            List<TBL_ORDER> result = entities.TBL_ORDER
+                .Where(ord => ord.TBL_ORDER_TYPE.ORDERNAME.Equals("RESERVATION", StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
             List<Reservations> reservations = new List<Reservations>();
             foreach (TBL_ORDER order in result)
@@ -115,7 +117,7 @@ namespace casa_emelita.Repository
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
             List<TBL_ORDER> result = entities.TBL_ORDER
-                .Where(Apmts => Apmts.DEALPRICE == null || Apmts.DEALPRICE == 0)
+                .Where(Apmts => (Apmts.DEALPRICE == null || Apmts.DEALPRICE == 0) && Apmts.TBL_ORDER_TYPE.ORDERNAME.Equals("RESERVATION", StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             List<Reservations> reservations = new List<Reservations>();

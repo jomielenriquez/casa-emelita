@@ -23,7 +23,7 @@ namespace casa_emelita.Repository
                 to = DateTime.ParseExact(to.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
 
                 int count = entities.TBL_ORDER
-                    .Where(ord => ord.EVENTDATE >= from && ord.EVENTDATE < to)
+                    .Where(ord => ord.EVENTDATE >= from && ord.EVENTDATE < to && ord.TBL_ORDER_TYPE.ORDERNAME.Equals("RESERVATION", StringComparison.OrdinalIgnoreCase))
                     .ToList().Count();
 
                 returnValue.Add(new GraphData()
