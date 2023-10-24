@@ -16,6 +16,10 @@
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- breadcam_area_end -->
 <!-- order_area_start -->
 <div class="order_area">
@@ -34,7 +38,7 @@
             {
                 <div class="row">
                     <div class="col-sm-4">
-                        @Html.DropDownListFor(model => model.SelectedMonth, new SelectList(Model.Months, "value", "text"), "Month", new { @class = "form-control", @id = "SelectedMonth"})
+                        @Html.DropDownListFor(model => model.SelectedMonth, new SelectList(Model.Months, "value", "text"), "Month", new { @class = "form-control", @id = "SelectedMonth" })
                     </div>
                     <div class="col-sm-3">
                         @Html.DropDownListFor(model => model.SelectedYear, new SelectList(Model.Years, "value", "text"), "Month", new { @class = "form-control", @id = "SelectedMonth" })
@@ -45,7 +49,7 @@
                 </div>
             }
             <div class="col-sm-12">
-                <link rel="stylesheet" href="~/Content/Casa/calendar.css"/>
+                <link rel="stylesheet" href="~/Content/Casa/calendar.css" />
                 <div class="calendar">
                     <div class="header"><div class="month-year">October 2023</div></div>
                     <div class="days">
@@ -56,9 +60,10 @@
                         <div class="day_name">Thu</div>
                         <div class="day_name">Fri</div>
                         <div class="day_name">Sat</div>
-                        @{ 
+                        @{
                             DateTime start_date = new DateTime(Model.SelectedYear, Model.SelectedMonth, 1);
-                            while (true){
+                            while (true)
+                            {
                                 if (!string.Equals(start_date.DayOfWeek.ToString(), "sunday", StringComparison.OrdinalIgnoreCase))
                                 {
                                     start_date = start_date.AddDays(-1);
@@ -76,25 +81,28 @@
                                 <span>
                                     @start_date.Day
                                 </span>
-                                @{ 
+                                @{
                                     DateTime ed = start_date.AddDays(1);
                                     DateTime sd = DateTime.ParseExact(start_date.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
                                     ed = DateTime.ParseExact(ed.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
                                     var orders = Model.OrderList
                                         .Where(ol => ol.EVENTDATE >= sd && ol.EVENTDATE < ed && ol.TBL_ORDER_TYPE.ORDERNAME.Equals("RESERVATION", StringComparison.OrdinalIgnoreCase));
 
-                                    foreach(casa_emelita.Models.TBL_ORDER ords in orders)
+                                    foreach (casa_emelita.Models.TBL_ORDER ords in orders)
                                     {
-                                        <div class="event red" >
-                                            Customer: <strong>@ords.CUSTOMERNAME</strong>
-                                            <br />
-                                            Contact#: <strong>@ords.CUSTOMERCONTACTNUMVER</strong>
-                                            <br />
-                                            Date: <strong>@ords.EVENTDATE.ToString("yyyy-MM-dd") | @ords.SLOT</strong>
-                                            <br />
-                                            <strong>Good for @ords.TBL_PACKAGE.ACCOMODATION</strong>
-                                            <br />
-                                            @ords.TBL_ORDER_STATUS.ORDERSTATUSNAME
+                                        <div class="event red">
+                                            <div data-toggle="collapse" data-target="#demo_@ords.ORDERID">
+                                                Customer: <strong>@ords.CUSTOMERNAME</strong>
+                                            </div>
+                                            <div id="demo_@ords.ORDERID" class="collapse">
+                                                Contact#: <strong>@ords.CUSTOMERCONTACTNUMVER</strong>
+                                                <br />
+                                                Date: <strong>@ords.EVENTDATE.ToString("yyyy-MM-dd") | @ords.SLOT</strong>
+                                                <br />
+                                                <strong>Good for @ords.TBL_PACKAGE.ACCOMODATION</strong>
+                                                <br />
+                                                @ords.TBL_ORDER_STATUS.ORDERSTATUSNAME
+                                            </div>
                                         </div>
                                     }
                                 }

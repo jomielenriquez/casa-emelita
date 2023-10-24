@@ -235,6 +235,7 @@ namespace casa_emelita.Models
     {
         public string to_email { get; set; }
         public string Reservation { get; set; }
+        public string Appointment { get; set; }
         public string to_name { get; set; }
     }
 }

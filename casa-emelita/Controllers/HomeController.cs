@@ -824,6 +824,7 @@ namespace casa_emelita.Controllers
                 SendEmail.to_email = Reservation.CUSTOMEREMAIL;
                 SendEmail.to_name = Reservation.CUSTOMERNAME;
                 SendEmail.Reservation = Reservation.EVENTDATE.ToString("MMMM dd, yyyy") + " | " + Reservation.SLOT;
+                SendEmail.Appointment = Reservation.APPOINTMENTDATE.ToString("MMMM dd, yyyy");
             }
             catch (Exception ex)
             {
