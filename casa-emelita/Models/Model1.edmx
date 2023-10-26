@@ -15,6 +15,8 @@
           <Property Name="LASTNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="USERNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PASSWORD" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GCASHNAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="GCASHNUMBER" Type="nvarchar" MaxLength="11" />
           <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
           <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
           <Property Name="UPDATEDDATE" Type="datetime" />
@@ -322,6 +324,8 @@
           <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GCASHNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GCASHNUMBER" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="CASAEMELITAEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="TBL_ADMIN" EntityType="Self.TBL_ADMIN" />
@@ -634,6 +638,8 @@
           <EntitySetMapping Name="TBL_ADMIN">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ADMIN">
               <MappingFragment StoreEntitySet="TBL_ADMIN">
+                <ScalarProperty Name="GCASHNUMBER" ColumnName="GCASHNUMBER" />
+                <ScalarProperty Name="GCASHNAME" ColumnName="GCASHNAME" />
                 <ScalarProperty Name="ADMINID" ColumnName="ADMINID" />
                 <ScalarProperty Name="FIRSTNAME" ColumnName="FIRSTNAME" />
                 <ScalarProperty Name="MIDDLENAME" ColumnName="MIDDLENAME" />

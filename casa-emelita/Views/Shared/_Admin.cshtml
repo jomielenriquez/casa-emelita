@@ -46,6 +46,7 @@
                                                 <a href="#" style="color:@(ViewBag.Title == "Settings" ? "#78b454 !important" : "")">Account <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
                                                     <li>@Html.ActionLink("Settings", "Settings", "Home", new { @style = "color: " + (ViewBag.Title == "Settings" ? "#78b454 !important" : "") })</li>
+                                                    <li>@Html.ActionLink("Gcash Details", "GcashDetails", "Home", new { @style = "color: " + (ViewBag.Title == "GcashDetails" ? "#78b454 !important" : "") })</li>
                                                 </ul>
                                             </li>
                                             <li><a href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>

@@ -498,7 +498,32 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            @Html.TextBoxFor(model => model.TotalPrice, new { @class = "form-control", @name = "TotalOrderPrice", @id = "TotalOrderPrice", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = ''", @placeholder = "Total Order", @disabled="disabled"})
+                            @Html.TextBoxFor(model => model.TotalPrice, new { @class = "form-control", @name = "TotalOrderPrice", @id = "TotalOrderPrice", @type = "text", @onfocus = "this.placeholder = ''", @onblur = "this.placeholder = ''", @placeholder = "Total Order", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <label> Payment Through Gcash </label>
+                    </div>
+                </div>
+
+                <div class="row m-3">
+                    <div class="col-sm-6">
+                        <span>Gcash Name</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <span>@Model.gcashDetails.GcashName</span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <span>Gcash Number</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <span>@Model.gcashDetails.GcashNumber</span>
                         </div>
                     </div>
                 </div>

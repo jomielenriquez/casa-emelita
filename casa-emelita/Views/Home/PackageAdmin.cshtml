@@ -189,19 +189,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label>Package code</label>
                     @Html.TextBoxFor(model => model.packageNewRecord.PACKAGEID, new { @class = "single-input", @id = "PACKAGEID", @name = "PACKAGEID", @style = "display:none", @type = "text" })
-                    @Html.TextBoxFor(model => model.packageNewRecord.PACKAGECODE, new { @class = "single-input", @id = "PACKAGECODE", @name = "PACKAGECODE", @style = "margin-bottom:20px;", @type = "text", @required = "" })
+                    @*<label>Package code</label>
+                    @Html.TextBoxFor(model => model.packageNewRecord.PACKAGECODE, new { @class = "single-input", @id = "PACKAGECODE", @name = "PACKAGECODE", @style = "margin-bottom:20px;", @type = "text", @required = "" })*@
                     <label>Package name</label>
                     @Html.TextBoxFor(model => model.packageNewRecord.PACKAGENAME, new { @class = "single-input", @id = "PACKAGENAME", @name = "PACKAGENAME", @style = "margin-bottom:20px;", @type = "text", @required = "" })
                     <label>Event type:</label>
                     @Html.DropDownListFor(model => model.packageNewRecord.EVENTTYPE, new SelectList(Model.EventType_List, "EVENTTYPEID", "EVENTNAME"), "Select Event Type..", new { @class = "form-control", @id = "EVENTTYPE", @required = "" })
                     <label>Inclusions</label>
                     @Html.TextAreaFor(model => model.packageNewRecord.INCLUSIONSDESCRIPTION, new { @class = "form-control", @id = "INCLUSIONSDESCRIPTION", @name = "INCLUSIONSDESCRIPTION", @style = "margin-bottom:20px;", @type = "text", @required = "" })
-                    <label>Accomodation (PAX)</label>
-                    @Html.TextBoxFor(model => model.packageNewRecord.ACCOMODATION, new { @class = "single-input", @id = "ACCOMODATION", @name = "ACCOMODATION", @style = "margin-bottom:20px;", @type = "number", @required = "" })
+                    <label>Accomodation (60) PAX</label>
+                    @Html.TextBoxFor(model => model.packageNewRecord.ACCOMODATION, new { @class = "single-input", @id = "ACCOMODATION", @name = "ACCOMODATION", @style = "margin-bottom:20px;", @type = "number", @required = "", @min = "0", @max = "60" })
                     <label>Price:</label>
-                    @Html.TextBoxFor(model => model.packageNewRecord.PRICE, new { @class = "single-input", @id = "PackagePrice", @name = "PackagePrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01" })
+                    @Html.TextBoxFor(model => model.packageNewRecord.PRICE, new { @class = "single-input", @id = "PackagePrice", @name = "PackagePrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01", @min = "0" })
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal"
@@ -284,10 +284,10 @@
     $(document).on("click", "#btn_edit", function () {
         var rowdata = tbl_package.row($(this).closest('tr')).data();
 
-        document.getElementById("PACKAGECODE").disabled = true;
+        //document.getElementById("PACKAGECODE").disabled = true;
 
         document.getElementById("PACKAGEID").value = rowdata.PACKAGEID;
-        document.getElementById("PACKAGECODE").value = rowdata.PACKAGECODE;
+        //document.getElementById("PACKAGECODE").value = rowdata.PACKAGECODE;
         document.getElementById("PACKAGENAME").value = rowdata.PACKAGENAME;
         document.getElementById("EVENTTYPE").value = rowdata.EVENTTYPEGUID;
         document.getElementById("INCLUSIONSDESCRIPTION").value = rowdata.INCLUSIONSDESCRIPTION;
@@ -487,6 +487,14 @@
         RenderMenu();
         RenderMenuSelection();
     });
+    function clearFields(){
+        document.getElementById("PACKAGEID").value = "";
+        document.getElementById("PACKAGENAME").value = "";
+        document.getElementById("EVENTTYPE").value = "";
+        document.getElementById("INCLUSIONSDESCRIPTION").value = "";
+        document.getElementById("ACCOMODATION").value = "";
+        document.getElementById("PackagePrice").value = "";
+    }
 </script>
 <style>
     table{

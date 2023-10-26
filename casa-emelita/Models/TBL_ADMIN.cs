@@ -24,5 +24,7 @@ namespace casa_emelita.Models
         public string CREATEDBY { get; set; }
         public Nullable<System.DateTime> UPDATEDDATE { get; set; }
         public string UPDATEDBY { get; set; }
+        public string GCASHNAME { get; set; }
+        public string GCASHNUMBER { get; set; }
     }
 }

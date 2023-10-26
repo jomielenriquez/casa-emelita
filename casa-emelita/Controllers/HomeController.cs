@@ -392,6 +392,24 @@ namespace casa_emelita.Controllers
             return View(this.model);
         }
 
+        public ActionResult GcashDetails()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.gcashDetails = this.adminRepository.GetAdminGcash(this.model.AdminID);
+            ViewBag.Message = "GcashDetails";
+
+            return View(this.model);
+        }
+
         [System.Web.Http.HttpPost]
         public ActionResult SaveUpdateMenu(MenuNewRecord menuNewRecord)
         {
@@ -407,7 +425,7 @@ namespace casa_emelita.Controllers
                 TBL_MENU menu = new TBL_MENU();
                 menu.MENUIMAGE = ImageStatus.fileName;
                 menu.PRICE = menuNewRecord.Price;
-                menu.MENUCODE = menuNewRecord.Code;
+                menu.MENUCODE = menuNewRecord.Name.Replace(" ","");
                 menu.MENUNAME = menuNewRecord.Name;
                 menu.MENUCATEGORY = menuNewRecord.Category;
                 menu.MENUDESCRIPTION = menuNewRecord.Description;
@@ -459,7 +477,7 @@ namespace casa_emelita.Controllers
             if (packageNewRecord.PACKAGEID == new Guid())
             {
                 TBL_PACKAGE package = new TBL_PACKAGE() { 
-                    PACKAGECODE = packageNewRecord.PACKAGECODE,
+                    PACKAGECODE = packageNewRecord.PACKAGENAME.Replace(" ", ""),
                     PACKAGENAME = packageNewRecord.PACKAGENAME,
                     EVENTTYPE = packageNewRecord.EVENTTYPE,
                     INCLUSIONSDESCRIPTION = packageNewRecord.INCLUSIONSDESCRIPTION,
@@ -621,6 +639,31 @@ namespace casa_emelita.Controllers
             this.data.Update(admin, filterAdmin, model.AdminID);
             message.Message = "Password successfully changed.";
             return RedirectToAction("../Home/Settings");
+        }
+        [System.Web.Http.HttpPost]
+        public ActionResult UpdateGcashNumber(GcashDetails gcashDetails)
+        {
+            TBL_ADMIN currentUser = adminRepository.currentUser;
+
+            if (currentUser == null)
+            {
+                return RedirectToAction("../Home/Home");
+            }
+
+            TBL_ADMIN admin = new TBL_ADMIN()
+            {
+                GCASHNAME = gcashDetails.GcashName,
+                GCASHNUMBER = gcashDetails.GcashNumber,
+            };
+
+            TBL_ADMIN filterAdmin = new TBL_ADMIN()
+            {
+                ADMINID = currentUser.ADMINID
+            };
+
+            this.data.Update(admin, filterAdmin, model.AdminID);
+            message.Message = "Successfully Updated Gcash Details.";
+            return RedirectToAction("../Home/GcashDetails");
         }
         public ActionResult Logout()
         {
@@ -803,6 +846,7 @@ namespace casa_emelita.Controllers
                 : this.packageRepository.GetAllPackage(SelectedEvent);
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
             this.model.Reservation = new TBL_ORDER();
+            this.model.gcashDetails = this.adminRepository.GetAdminGcashDetails();
 
             if (message.Message != null)
             {

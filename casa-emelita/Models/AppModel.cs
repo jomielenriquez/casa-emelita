@@ -36,6 +36,7 @@ namespace casa_emelita.Models
         public TBL_PACKAGE packageNewRecord { get; set; }
         public List<TBL_EVENTTYPE> EventType_List { get; set; }
         public ChangePassModel changePassModel { get; set; }
+        public GcashDetails gcashDetails { get; set; }
         public Guid? SelectedCategory { get; set; }
         public Guid? SelectedEvent { get; set; }
         public TBL_ORDER Reservation { get; set; }
@@ -213,6 +214,11 @@ namespace casa_emelita.Models
         public string CurrentPassword { get; set; }
         public string NewPassword { get; set; }
         public string ConfirmPassword { get; set; }
+    }
+    public class GcashDetails
+    {
+        public string GcashName { get; set; }
+        public string GcashNumber { get; set; }
     }
     public class OrdersInCart
     {

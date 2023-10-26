@@ -19,5 +19,25 @@ namespace casa_emelita.Repository
             TBL_ADMIN entity = (from tblAdmin in entities.TBL_ADMIN.Where(admin => admin.ADMINID == AdminID) select tblAdmin).FirstOrDefault();
             return entity;
         }
+        public GcashDetails GetAdminGcash(Guid AdminID)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            TBL_ADMIN entity = (from tblAdmin in entities.TBL_ADMIN.Where(admin => admin.ADMINID == AdminID) select tblAdmin).FirstOrDefault();
+            return new GcashDetails()
+            {
+                GcashName = entity.GCASHNAME,
+                GcashNumber = entity.GCASHNUMBER,
+            };
+        }
+        public GcashDetails GetAdminGcashDetails()
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            TBL_ADMIN entity = (from tblAdmin in entities.TBL_ADMIN select tblAdmin).FirstOrDefault();
+            return new GcashDetails()
+            {
+                GcashName = entity.GCASHNAME,
+                GcashNumber = entity.GCASHNUMBER,
+            };
+        }
     }
 }

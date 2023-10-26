@@ -121,8 +121,8 @@
                             </label>
                         </div>
                     </center>
-                    <label>Menu code</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text", @required = ""})
+                    @*<label>Menu code</label>
+                    @Html.TextBoxFor(model => model.menuNewRecord.Code, new { @class = "single-input", @id = "Code", @name = "Code", @style = "margin-bottom:20px;", @type = "text", @required = ""})*@
                     
                     <label>Menu name</label>
                     @Html.TextBoxFor(model => model.menuNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text", @required = "" })
@@ -134,7 +134,7 @@
                     @Html.TextBoxFor(model => model.menuNewRecord.Description, new { @class = "single-input", @id = "MenuDescription", @style = "margin-bottom:20px;", @type = "text", @required = "" })
 
                     <label>Price</label>
-                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01" })
+                    @Html.TextBoxFor(model => model.menuNewRecord.Price, new { @class = "single-input", @id = "MenuPrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01", @min = "0" })
 
                 </div>
                 <div class="modal-footer">
@@ -287,14 +287,14 @@
         var rowdata = tbl_menu.row($(this).closest('tr')).data();
         console.log(rowdata);
 
-        document.getElementById("Code").disabled = true;
+        //document.getElementById("Code").disabled = true;
         var imagename = "../Content/casa/image/logo.png";
         if (rowdata.MENUIMAGE != "empty") {
             var imagename = "../UploadedImage/" + rowdata.MENUIMAGE;
         }
         document.getElementById("MenuID").value = rowdata.MENUID;
         document.getElementById("image_add").src = imagename;
-        document.getElementById("Code").value = rowdata.MENUCODE;
+        //document.getElementById("Code").value = rowdata.MENUCODE;
         document.getElementById("Name").value = rowdata.MENUNAME;
         document.getElementById("MenuDescription").value = rowdata.MENUDESCRIPTION;
         document.getElementById("MenuPrice").value = rowdata.PRICE;
