@@ -35,7 +35,7 @@
                         <tr>
                             <th class="text-center">Action</th>
                             <th class="text-center">Code</th>
-                            <th class="text-center">Code</th>
+                            @*<th class="text-center">Code</th>*@
                             <th class="text-center">Name</th>
                             <th class="text-center">Event Type</th>
                             <th class="text-center">Accomodation</th>
@@ -234,7 +234,7 @@
             "columns": [
                 { "data": "PACKAGEID", "orderable": false },
                 { "data": "PACKAGECODE", "orderable": false },
-                { "data": "PACKAGECODE" },
+                //{ "data": "PACKAGECODE" },
                 { "data": "PACKAGENAME" },
                 { "data": "EVENTTYPE" },
                 { "data": "ACCOMODATION" },
@@ -259,7 +259,7 @@
                     "visible": false
                 },
                 {
-                    "targets": 7,
+                    "targets": 6,
                     "render": function (data, type, row, meta) {
                         var options = {
                             style: 'currency',
