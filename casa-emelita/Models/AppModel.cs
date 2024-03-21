@@ -29,14 +29,18 @@ namespace casa_emelita.Models
         public string ErrorMessage { get; set; }
         public List<TBL_MENU> Menu_List { get; set; }
         public string MenuIDToDelete { get; set; }
+        public string PackageInclusionIDToDelete { get; set; }
         public string PackageIDToDelete { get; set; }
         public MenuNewRecord menuNewRecord { get; set; }
+        public PackageInclusionNewRecord packageInclusionNewRecord { get; set; }
         public List<TBL_CATEGORY> Category { get; set; }
         public List<TBL_PACKAGE> Package_List { get; set; }
         public TBL_PACKAGE packageNewRecord { get; set; }
         public List<TBL_EVENTTYPE> EventType_List { get; set; }
         public ChangePassModel changePassModel { get; set; }
         public GcashDetails gcashDetails { get; set; }
+        public List<TBL_SERVICE> Services { get; set; }
+        public List<string> SelectedPackageInclusions { get; set; }
         public Guid? SelectedCategory { get; set; }
         public Guid? SelectedEvent { get; set; }
         public TBL_ORDER Reservation { get; set; }
@@ -206,6 +210,13 @@ namespace casa_emelita.Models
         public string Code { get; set; }
         public string Name { get; set; }
         public Guid Category { get; set; }
+        public string Description { get; set; }
+        public Decimal Price { get; set; }
+    }
+    public class PackageInclusionNewRecord
+    {
+        public string ServiceID { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
         public Decimal Price { get; set; }
     }

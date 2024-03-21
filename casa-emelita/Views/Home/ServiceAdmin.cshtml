@@ -1,0 +1,265 @@
+﻿@model casa_emelita.Models.AppModel
+@{
+    ViewBag.Title = "ServiceAdmin";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<!-- breadcam_area_start -->
+<div class="breadcam_area breadcam_bg_1 zigzag_bg_2">
+    <div class="breadcam_inner">
+        <div class="breadcam_text">
+            <h3>Our Package Inclusions</h3>
+
+        </div>
+    </div>
+</div>
+<!-- breadcam_area_end -->
+<!-- order_area_start -->
+<div class="order_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70">
+                    <h3>
+                        Package Inclusions <a style="color:white;cursor:pointer;" class="btn btn-success"
+                                data-toggle="modal" data-target="#packageInclusionModal">Add new inclusions</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-hover table-bordered table-striped" id="tbl_packageInclusions">
+                    <thead class="table-header">
+                        <tr>
+                            <th width="1%" class="text-center">Action</th>
+                            <th class="text-center">Name</th>
+                            <th width="1%" class="text-center">Description</th>
+                            <th class="text-center">Price</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeletePackgeInclusion", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "deleteForm", @name = "deleteForm" }))
+            {
+                @Html.TextBoxFor(model => model.PackageInclusionIDToDelete, new { @class = "single-input", @id = "PackageInclusionIDToDelete", @name = "PackageInclusionIDToDelete", @style = "display:none;", @type = "text" })
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Ready to Delete?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Select "Delete" below if you want to delete.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger" id="confirmdelete">Delete</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@* Info Modal *@
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Success</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @ViewBag.SaveUploadMessage
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="packageInclusionModal" tabindex="-1" role="dialog" aria-hidden="true"
+     style="z-index: 1100 !important;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Package Inclusion details</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("SaveUpdatePackageInclusion", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "uploadForm", @name = "uploadForm" }))
+            {
+                <div class="modal-body">
+                    @Html.TextBoxFor(model => model.packageInclusionNewRecord.ServiceID, new { @class = "single-input", @id = "PackageInclusionID", @name = "PackageInclusionID", @style = "display:none", @type = "text" })
+
+                    <label>Inclusion Name</label>
+                    @Html.TextBoxFor(model => model.packageInclusionNewRecord.Name, new { @class = "single-input", @id = "Name", @style = "margin-bottom:20px;", @type = "text", @required = "" })
+
+                    <label>Description</label>
+                    @Html.TextBoxFor(model => model.packageInclusionNewRecord.Description, new { @class = "single-input", @id = "InclusionDescription", @style = "margin-bottom:20px;", @type = "text", @required = "" })
+
+                    <label>Price</label>
+                    @Html.TextBoxFor(model => model.packageInclusionNewRecord.Price, new { @class = "single-input", @id = "InclusionPrice", @style = "margin-bottom:20px;", @type = "number", @required = "", @step = ".01", @min = "0" })
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal"
+                            onclick="window.location.reload();">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" type="submit" id="btn_save">Save</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    var tbl_packageInclusions;
+    $(document).ready(function () {
+        tbl_packageInclusions = $('#tbl_packageInclusions').DataTable({
+            //"sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l>f<"pull-right"><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>',
+            "processing": true,
+            "bStateSave": true,
+            "responsive": true,
+            "order": [],
+            "ajax": {
+                url: "@Url.Action("GetPackageInclusions", "Home")",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "SERVICEID", "orderable": false },
+                { "data": "SERVICENAME" },
+                { "data": "SERVICEDESCRIPTION" },
+                { "data": "SERVICEPRICE" },
+            ],
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "render": function (data, type, row, meta) {
+                        return `<center>
+                                <div class="btn-group">
+                                    <a data-toggle="modal" data-target="#packageInclusionModal" style="color:white;" class="btn btn-primary" margin-bottom:5px;"="" id="btn_edit" data-id="83" data-menu_code="asd" data-menu_name="asda" data-category="Drinks" data-description="asd" data-price="10" data-img="../img/menu/1695098336724.png">Edit</a>
+                                    <a style="color:white;" class="btn btn-danger" margin-bottom:5px;"="" data-id="`+ data +`" data-toggle="modal" data-target="#deleteModal" id="btn_delete">Delete</a>
+                                </div>
+                            </center>`;
+                    }
+                },
+                {
+                    "targets": 3,
+                    "render": function (data, type, row, meta) {
+                        var options = {
+                            style: 'currency',
+                            currency: 'PHP', // Specify currency as PHP for Philippine Peso
+                            minimumFractionDigits: 2, // Minimum decimal places
+                            maximumFractionDigits: 2 // Maximum decimal places
+                        };
+                        return data.toLocaleString('en-PH', options);
+                    }
+                },
+            ],
+        });
+
+        var SaveUploadMessage = "@ViewBag.SaveUploadMessage";
+        if (SaveUploadMessage != "") {
+            $('#infoModal').modal('show');
+        }
+    });
+
+    $(document).on("change", "#file", function () {
+        event.preventDefault();
+
+        //get file details
+        var property = this.files[0];
+        var image_name = property.name;
+        var image_extension = image_name.split('.').pop().toLowerCase();
+        var image_size = property.size;
+
+        //filter extension
+        if (jQuery.inArray(image_extension, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+
+            swal({
+                title: "Invalid File Type!",
+                text: "Image must be in 'gif','png','jpg','jpeg' format!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: "#5cb85c",
+                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
+                confirmButtonClass: "btn"
+            }).then((result) => {
+                if (result.value) {
+
+                    this.value = "";
+                    document.getElementById("image_add").src = "../img/logo.png";
+                    document.getElementById("image_add").className += " required-fields";
+
+                }
+            });
+
+        }
+
+        //filter size
+        else if (image_size > 2000000) {
+
+            swal({
+                title: "Invalid File Size!",
+                text: "Please select an image with size lower than 2MB!",
+                type: "error",
+                showCancelButton: false,
+                confirmButtonColor: "#5cb85c",
+                confirmButtonText: '<span class="glyphicon glyphicon-ok"></span>&nbspProceed',
+                confirmButtonClass: "btn"
+            }).then((result) => {
+                if (result.value) {
+
+                    this.value = "";
+                    document.getElementById("image_add").src = "../img/logo.png";
+                    document.getElementById("image_add").className += " required-fields";
+
+                }
+            });
+
+        }
+
+        else if (this.files && this.files[0]) {
+            document.getElementById("image_add").classList.remove("required-fields");
+            var obj = new FileReader();
+            obj.onload = function (data) { document.getElementById("image_add").src = data.target.result; }
+            obj.readAsDataURL(this.files[0]);
+        }
+
+    });
+
+    $(document).on("click", "#btn_edit", function () {
+        var rowdata = tbl_packageInclusions.row($(this).closest('tr')).data();
+        console.log(rowdata);
+
+        document.getElementById("PackageInclusionID").value = rowdata.SERVICEID;
+        document.getElementById("Name").value = rowdata.SERVICENAME;
+        document.getElementById("InclusionDescription").value = rowdata.SERVICEDESCRIPTION;
+        document.getElementById("InclusionPrice").value = rowdata.SERVICEPRICE;
+    });
+
+    function clearFields() {
+        document.getElementById("PackageInclusionID").value = '';
+        document.getElementById("Name").value = '';
+        document.getElementById("InclusionDescription").value = '';
+        document.getElementById("InclusionPrice").value = '';
+    }
+
+    $(document).on("click", "#btn_delete", function () {
+        var rowdata = tbl_packageInclusions.row($(this).closest('tr')).data();
+        document.getElementById("PackageInclusionIDToDelete").value = rowdata.SERVICEID;
+    });
+</script>

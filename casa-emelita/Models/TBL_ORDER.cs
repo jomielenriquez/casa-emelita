@@ -17,6 +17,7 @@ namespace casa_emelita.Models
         public TBL_ORDER()
         {
             this.TBL_ORDERS = new HashSet<TBL_ORDERS>();
+            this.TBL_SERVICESINCLUSIONS = new HashSet<TBL_SERVICESINCLUSIONS>();
         }
     
         public System.Guid ORDERID { get; set; }
@@ -41,5 +42,6 @@ namespace casa_emelita.Models
         public virtual TBL_ORDER_TYPE TBL_ORDER_TYPE { get; set; }
         public virtual TBL_PACKAGE TBL_PACKAGE { get; set; }
         public virtual TBL_ORDER_STATUS TBL_ORDER_STATUS { get; set; }
+        public virtual ICollection<TBL_SERVICESINCLUSIONS> TBL_SERVICESINCLUSIONS { get; set; }
     }
 }
