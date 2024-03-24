@@ -91,6 +91,7 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
           <Property Name="SLOT" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="COLOR" Type="nvarchar" MaxLength="25" />
         </EntityType>
         <EntityType Name="TBL_ORDER_STATUS">
           <Key>
@@ -646,6 +647,7 @@
           <Property Name="DEALPRICE" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="NOTE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TBL_SERVICESINCLUSIONS" Relationship="CASAEMELITAModel.FK__TBL_SERVI__PACKA__18EBB532" FromRole="TBL_ORDER" ToRole="TBL_SERVICESINCLUSIONS" />
+          <Property Name="COLOR" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
           <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="1" />
@@ -884,6 +886,7 @@
           <EntitySetMapping Name="TBL_ORDER">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER">
               <MappingFragment StoreEntitySet="TBL_ORDER">
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
                 <ScalarProperty Name="NOTE" ColumnName="NOTE" />
                 <ScalarProperty Name="DEALPRICE" ColumnName="DEALPRICE" />
                 <ScalarProperty Name="SLOT" ColumnName="SLOT" />

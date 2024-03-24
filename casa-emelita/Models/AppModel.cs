@@ -68,6 +68,7 @@ namespace casa_emelita.Models
         public decimal TotalOrder { get; set; }
         public List<GraphData> MonthlyReservations { get; set; }
         public List<GraphData> MostOrderedPackage { get; set; }
+        public List<GraphData> MostOrderedMenu { get; set; }
         public List<AvailableMonths> Months 
         {
             get { 

@@ -23,6 +23,46 @@ namespace casa_emelita.Repository
 
             return appointments;
         }
+
+        private Reservations ConvertToReservations(TBL_ORDER order)
+        {
+            var dealPrice = (int)order.TBL_SERVICESINCLUSIONS.Sum(x => x.TBL_SERVICE.SERVICEPRICE);
+            var reservation = new Reservations()
+            {
+                Package = order.TBL_PACKAGE.PACKAGECODE
+                        + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME
+                        + "<br>" + order.TBL_PACKAGE.INCLUSIONSDESCRIPTION
+                        + "<br> good for" + order.TBL_PACKAGE.ACCOMODATION
+                        + "<br> P " + order.TBL_PACKAGE.PRICE.ToString("N2"),
+                Packageid = order.TBL_PACKAGE.PACKAGEID,
+                Customer = order.CUSTOMERNAME
+                        + "<br>" + order.CUSTOMEREMAIL
+                        + "<br>" + order.CUSTOMERCONTACTNUMVER
+                        + "<br>" + order.CUSTOMERADDRESS,
+                EventDate = order.EVENTDATE.ToString("MM/dd/yyyy")
+                        + "<br>" + order.SLOT,
+                AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
+                Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
+                PackageCode = order.TBL_PACKAGE.PACKAGECODE,
+                EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
+                Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
+                Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
+                Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
+                DealPrice = (int)(order.DEALPRICE == null ? order.TBL_PACKAGE.PRICE : order.DEALPRICE) + dealPrice,
+                CustomerName = order.CUSTOMERNAME,
+                CustomerAddress = order.CUSTOMERADDRESS,
+                CustomerNumber = order.CUSTOMERCONTACTNUMVER,
+                CustormerEmail = order.CUSTOMEREMAIL,
+                ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
+                OrderID = order.ORDERID,
+                PackageInclusion = "<ul><li>- " + string.Join("</li><li>- ", order.TBL_SERVICESINCLUSIONS.Select
+                (
+                    x => x.TBL_SERVICE.SERVICENAME + " - " + x.TBL_SERVICE.SERVICEPRICE.ToString("N2")
+                ).ToArray()) + "</li></ul>"
+            };
+
+            return reservation;
+        } 
         public List<Reservations> GetReservation()
         {
             CASAEMELITAEntities entities = new CASAEMELITAEntities();
@@ -33,35 +73,7 @@ namespace casa_emelita.Repository
             List<Reservations> reservations = new List<Reservations>();
             foreach (TBL_ORDER order in result)
             {
-                reservations.Add(new Reservations()
-                {
-                    Package = order.TBL_PACKAGE.PACKAGECODE 
-                        + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME 
-                        + "<br>" + order.TBL_PACKAGE.INCLUSIONSDESCRIPTION
-                        + "<br> good for" + order.TBL_PACKAGE.ACCOMODATION
-                        + "<br> P " + order.TBL_PACKAGE.PRICE.ToString("N2"),
-                    Packageid = order.TBL_PACKAGE.PACKAGEID,
-                    Customer = order.CUSTOMERNAME
-                        + "<br>" + order.CUSTOMEREMAIL
-                        + "<br>" + order.CUSTOMERCONTACTNUMVER
-                        + "<br>" + order.CUSTOMERADDRESS,
-                    EventDate = order.EVENTDATE.ToString("MM/dd/yyyy")
-                        + "<br>" + order.SLOT,
-                    AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
-                    Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
-                    PackageCode = order.TBL_PACKAGE.PACKAGECODE,
-                    EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
-                    Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
-                    Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
-                    Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
-                    DealPrice = (int)(order.DEALPRICE == null ? 0 : order.DEALPRICE),
-                    CustomerName = order.CUSTOMERNAME,
-                    CustomerAddress = order.CUSTOMERADDRESS,
-                    CustomerNumber = order.CUSTOMERCONTACTNUMVER,
-                    CustormerEmail = order.CUSTOMEREMAIL,
-                    ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
-                    OrderID = order.ORDERID
-                });
+                reservations.Add(ConvertToReservations(order));
             }
 
             return reservations;
@@ -78,7 +90,7 @@ namespace casa_emelita.Repository
             List<Reservations> reservations = new List<Reservations>();
             foreach (TBL_ORDER order in result)
             {
-                reservations.Add(new Reservations()
+                var reservation = new Reservations()
                 {
                     Package = order.TBL_PACKAGE.PACKAGECODE
                         + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME
@@ -106,7 +118,9 @@ namespace casa_emelita.Repository
                     CustormerEmail = order.CUSTOMEREMAIL,
                     ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
                     OrderID = order.ORDERID
-                });
+                };
+
+                reservations.Add(reservation);
             }
 
             return reservations;
@@ -168,35 +182,7 @@ namespace casa_emelita.Repository
             List<Reservations> reservations = new List<Reservations>();
             foreach (TBL_ORDER order in result)
             {
-                reservations.Add(new Reservations()
-                {
-                    Package = order.TBL_PACKAGE.PACKAGECODE
-                        + "<br>" + order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME
-                        + "<br>" + order.TBL_PACKAGE.INCLUSIONSDESCRIPTION
-                        + "<br> good for" + order.TBL_PACKAGE.ACCOMODATION
-                        + "<br> P " + order.TBL_PACKAGE.PRICE.ToString("N2"),
-                    Packageid = order.TBL_PACKAGE.PACKAGEID,
-                    Customer = order.CUSTOMERNAME
-                        + "<br>" + order.CUSTOMEREMAIL
-                        + "<br>" + order.CUSTOMERCONTACTNUMVER
-                        + "<br>" + order.CUSTOMERADDRESS,
-                    EventDate = order.EVENTDATE.ToString("MM/dd/yyyy")
-                        + "<br>" + order.SLOT,
-                    AppointmentDate = order.APPOINTMENTDATE.ToString("MM/dd/yyyy"),
-                    Status = order.TBL_ORDER_STATUS.ORDERSTATUSNAME,
-                    PackageCode = order.TBL_PACKAGE.PACKAGECODE,
-                    EventName = order.TBL_PACKAGE.TBL_EVENTTYPE.EVENTNAME,
-                    Inclusions = order.TBL_PACKAGE.INCLUSIONSDESCRIPTION,
-                    Accomodation = order.TBL_PACKAGE.ACCOMODATION.ToString(),
-                    Price = order.TBL_PACKAGE.PRICE.ToString("N2"),
-                    DealPrice = (int)(order.DEALPRICE == null ? 0 : order.DEALPRICE),
-                    CustomerName = order.CUSTOMERNAME,
-                    CustomerAddress = order.CUSTOMERADDRESS,
-                    CustomerNumber = order.CUSTOMERCONTACTNUMVER,
-                    CustormerEmail = order.CUSTOMEREMAIL,
-                    ReservationPrice = (int)order.TBL_PACKAGE.PRICE,
-                    OrderID = order.ORDERID
-                });
+                reservations.Add(ConvertToReservations(order));
             }
 
             return reservations;
@@ -223,5 +209,6 @@ namespace casa_emelita.Repository
         public string CustomerAddress { get; set; }
         public int ReservationPrice { get; set; }
         public Guid OrderID { get; set; }
+        public string PackageInclusion { get; set; }
     }
 }

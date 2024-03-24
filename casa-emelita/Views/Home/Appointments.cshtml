@@ -48,6 +48,9 @@
                             <th class="text-center">
                                 Event date
                             </th>
+                            <th class="text-center">
+                                Inclusions
+                            </th>
                         </tr>
                     </thead>
                 </table>
@@ -85,6 +88,7 @@
                 { "data": "Customer"},
                 { "data": "AppointmentDate" },
                 { "data": "EventDate" },
+                { "data": "PackageInclusion" }
             ],
             "columnDefs": [
                 {
@@ -117,6 +121,12 @@
                         return '<center>' + data + '</center>';
                     }
                 },
+                {
+                    "targets": 5,
+                    "render": function (data, type, row, meta) {
+                        return '<center>' + data + '</center>';
+                    }
+                },
             ],
             "autoWidth": false
         });
@@ -143,6 +153,7 @@
         document.getElementById("c_contact").value = rowdata.CustomerNumber;
         document.getElementById("c_address").value = rowdata.CustomerAddress;
         document.getElementById("deal_price").value = rowdata.DealPrice;
+        document.getElementById("divInclusions").innerHTML = rowdata.PackageInclusion;
         selectedOrderID = rowdata.OrderID
         fetchPackageMenu(rowdata.Packageid);
     });
@@ -243,6 +254,14 @@
                                 </tr>
                             </thead>
                         </table>
+                    </div>
+                </div>
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Package Inclusions</label>
+                        <div id="divInclusions">
+
+                        </div>
                     </div>
                 </div>
 

@@ -161,6 +161,7 @@ namespace casa_emelita.Controllers
             this.model.SelectedYear = SelectedYear == 0 ? DateTime.Now.Year : SelectedYear;
             this.model.MonthlyReservations = this.dashboardRepository.MontlyReservations(this.model.SelectedYear, this.model.Months);
             this.model.MostOrderedPackage = this.dashboardRepository.MostOrderedPackage(this.model.Package_List, this.model.SelectedYear);
+            this.model.MostOrderedMenu = this.dashboardRepository.MostOrderedMenu(this.model.SelectedYear);
             ViewBag.Message = "Dashboard";
 
             return View(this.model);
@@ -240,6 +241,12 @@ namespace casa_emelita.Controllers
             Reservation.SLOT = "";
             Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
             Reservation.ORDERTYPEID = new Guid("1722CE08-59EF-4127-8683-AC0CD9CEC5BE"); // Type: Order
+
+            string[] colors = { "red", "green", "blue", "yellow" };
+
+            int randomIndex = new Random().Next(0, colors.Length);
+
+            Reservation.COLOR = colors[randomIndex];
             try
             {
                 string OrderID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
@@ -584,13 +591,32 @@ namespace casa_emelita.Controllers
                 success = true,
                 message = "Successfully Updated"
             };
+            Guid orderStatus = new Guid();
+            if (status == "success")
+            {
+                orderStatus = new Guid("F1C2CB81-43D6-471D-8703-A4C4C2DA2D68"); //Completed status
+            }
+            else if (status == "approve")
+            {
+                orderStatus = new Guid("60F16732-E9CD-4E39-A230-86C14C95F01A"); //Approved status
+            }
+            else if (status == "pending")
+            {
+                orderStatus = new Guid("0521BA1A-553A-448D-9EE1-5B1417455F5D"); //Pending status
+            }
+            else if (status == "declined")
+            {
+                orderStatus = new Guid("3C84CFFA-103E-4DB6-9675-AFF577CD6DBE"); //Declined status
+            }
+            else
+            {
+                orderStatus = new Guid("A115A95E-486E-4661-A427-C928DF130A64"); //Cancel status
+            }
 
             try
             {
                 TBL_ORDER orders = new TBL_ORDER() {
-                    ORDERSTATUSID = status == "success" ?
-                        new Guid("F1C2CB81-43D6-471D-8703-A4C4C2DA2D68") // Completed status
-                        : new Guid("A115A95E-486E-4661-A427-C928DF130A64")
+                    ORDERSTATUSID = orderStatus
                 };
                 TBL_ORDER filter = new TBL_ORDER()
                 {
@@ -934,6 +960,12 @@ namespace casa_emelita.Controllers
         {
             Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
             Reservation.ORDERTYPEID = new Guid("BA735176-6316-442A-8F4B-857B1F809697"); // Type: Reservation
+
+            string[] colors = { "red", "green", "blue", "yellow" };
+
+            int randomIndex = new Random().Next(0, colors.Length);
+
+            Reservation.COLOR = colors[randomIndex];
             try
             {
                 var outputID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");

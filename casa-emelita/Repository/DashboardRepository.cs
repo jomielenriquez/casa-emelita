@@ -60,6 +60,34 @@ namespace casa_emelita.Repository
 
             return returnValue;
         }
+        public List<GraphData> MostOrderedMenu(int year)
+        {
+            CASAEMELITAEntities entities = new CASAEMELITAEntities();
+            List<GraphData> returnValue = new List<GraphData>();
+
+            DateTime from = new DateTime(year, 1, 1, 0, 0, 0);
+            DateTime to = new DateTime(year + 1, 1, 1, 0, 0, 0);
+
+            from = DateTime.ParseExact(from.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+            to = DateTime.ParseExact(to.ToString("MM/dd/yyyy hh:mm:ss tt"), "MM/dd/yyyy hh:mm:ss tt", CultureInfo.InvariantCulture);
+
+            List<TBL_ORDERS> orders = (List<TBL_ORDERS>)(from tbl_orders in entities.TBL_ORDERS select tbl_orders).ToList();
+
+            foreach (var order in orders)
+            {
+                int? count = entities.TBL_ORDERS
+                    .Where(ord => ord.CREATEDDATE >= from && ord.CREATEDDATE < to && ord.MENUID == order.MENUID)
+                    .Sum(ord => ord.QTY);
+
+                returnValue.Add(new GraphData()
+                {
+                    y = count ?? 0,
+                    label = order.TBL_MENU.MENUNAME
+                });
+            }
+
+            return returnValue;
+        }
     }
     public class GraphData
     {

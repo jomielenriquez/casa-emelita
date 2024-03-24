@@ -131,6 +131,15 @@
                         else if (data == "RESERVED") {
                             return '<center><span class="badge bg-info" style="color:white">' + data + '</span></center>';
                         }
+                        else if (data == "APPROVED") {
+                            return '<center><span class="badge bg-success" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "PENDING") {
+                            return '<center><span class="badge bg-info" style="color:white">' + data + '</span></center>';
+                        }
+                        else if (data == "DECLINED") {
+                            return '<center><span class="badge bg-danger" style="color:white">' + data + '</span></center>';
+                        }
                     }
                 },
             ],
@@ -317,8 +326,11 @@
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
-                <button class="btn btn-danger" type="button" id="btn_cancel">Cancel</button>
-                <button class="btn btn-success" type="button" id="btn_submit">Completed</button>
+                <button class="btn btn-warning" type="button" id="btn_cancel">Cancel</button>
+                <button class="btn btn-primary" type="button" id="btn_submit">Completed</button>
+                <button class="btn btn-success" type="button" id="btn_approve">Approve</button>
+                <button class="btn btn-info" type="button" id="btn_pending">Pending</button>
+                <button class="btn btn-danger" type="button" id="btn_decline">Decline</button>
             </div>
         </div>
     </div>
@@ -326,6 +338,15 @@
 <script>
     $(document).on("click", "#btn_submit", function () {
         ChangeStatus("success");
+    });
+    $(document).on("click", "#btn_approve", function () {
+        ChangeStatus("approve");
+    });
+    $(document).on("click", "#btn_pending", function () {
+        ChangeStatus("pending");
+    });
+    $(document).on("click", "#btn_decline", function () {
+        ChangeStatus("declined");
     });
     $(document).on("click", "#btn_cancel", function () {
         ChangeStatus("cancel");

@@ -110,7 +110,7 @@
                                data-event_type="@package.TBL_EVENTTYPE.EVENTNAME"
                                data-inclusions="@package.INCLUSIONSDESCRIPTION"
                                data-pax="@package.ACCOMODATION"
-                               data-price="₱ @package.PRICE.ToString("#,###.##")"
+                               data-price="₱@package.PRICE.ToString("#,###.##")"
                                data-price_value="@package.PRICE">Book Now!</a>
                         </div>
                     </div>
@@ -129,12 +129,6 @@
         document.getElementById("inclusions").innerText = $(this).data('inclusions');
         document.getElementById("price").innerText = $(this).data('price');
         document.getElementById("pax").innerText = "Good for  " + $(this).data('pax') + "pax";
-
-        //packageCode = selectedPackageCode;
-        //eventType = $(this).data('event_type');
-        //inclusions = $(this).data('inclusions');
-        //pax = $(this).data('pax');
-        //price = $(this).data('price_value');
 
         fetchPackageMenu(selectedPackageCode);
     });
@@ -159,7 +153,6 @@
             },
             "columns": [
                 { "data": "MENUIMAGE", "orderable": false },
-                //{ "data": "MENUCODE"},
                 { "data": "MENUNAME"},
                 { "data": "MENUCATEGORY" },
                 { "data": "MENUDESCRIPTION" }
@@ -611,9 +604,6 @@
                                         <th width="1%" class="text-center">
                                             Image
                                         </th>
-                                        @*<th class="text-center">
-                                Menu code
-                            </th>*@
                                         <th class="text-center">
                                             Name
                                         </th>
@@ -632,27 +622,44 @@
                     <div class="row m-3">
                         <div class="col-sm-12">
                             <label>Package Inclusions</label>
-                            @*@for (int i = 0; i < Model.Services.Count(); i++)
-                            {
-                                <div class="checkbox">
-                                    <label>
-                                        @Html.CheckBoxFor(model => model.SelectedServices[i], new { value = Model.Services[i].SERVICEID })
-                                        @Model.Services[i].SERVICENAME
-                                    </label>
-                                </div>
-                            }*@
                             @for (var i = 0; i < Model.Services.Count(); i++)
                             {
                                 <div class="checkbox">
                                     <label>
-                                        <input name="SelectedPackageInclusions" type="checkbox" value="@Model.Services[i].SERVICEID" /> @Model.Services[i].SERVICENAME
-                                        
+                                        <input name="SelectedPackageInclusions" type="checkbox"
+                                               value="@Model.Services[i].SERVICEID"
+                                               onclick="OrderModal.togglePackage(this,@Model.Services[i].SERVICEPRICE)" />
+                                        @Model.Services[i].SERVICENAME - ₱ @Model.Services[i].SERVICEPRICE.ToString("#,###.##")
+
                                     </label>
                                 </div>
                             }
                         </div>
                     </div>
+                    <script>
+                        window.OrderModal = (function () {
+                            function togglePackage(sender, price) {
+                                var currentPrice = $("#price").text().replace(/[^0-9.-]+/g, "");
+                                console.log(parseInt(currentPrice));
+                                console.log($("#price").val());
+                                console.log(sender.checked);
+                                console.log(price);
 
+                                let Php = new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: 'PHP',
+                                });
+
+                                if (sender.checked) {
+                                    $("#price").text(Php.format(parseInt(currentPrice) + price));
+                                }
+                                else {
+                                    $("#price").text(Php.format(parseInt(currentPrice) - price));
+                                }
+                            }
+                            return { togglePackage }
+                        })()
+                    </script>
                     <div class="row m-3">
                         <div class="col-sm-6">
                             @Html.TextBoxFor(model => model.Reservation.PACKAGEID, new { @class = "single-input", @id = "Modal_PACKAGEID", @name = "PACKAGEID", @style = "display:none", @type = "text" })
