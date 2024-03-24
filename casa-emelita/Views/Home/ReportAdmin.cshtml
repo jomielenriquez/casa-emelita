@@ -63,6 +63,9 @@
                             <th class="text-center">
                                 Status
                             </th>
+                            <th class="text-center">
+                                Inclusions
+                            </th>
                         </tr>
                     </thead>
                 </table>
@@ -92,7 +95,7 @@
             "responsive": true,
             "order": [],
             "drawCallback": function (settings) {
-                //console.log(settings.json);
+                /*console.log(settings.json);*/
             },
             "ajax": {
                 url: "@Url.Action("GetReservations", "Home")",
@@ -105,7 +108,8 @@
                 { "data": "Package"},
                 { "data": "Customer"},
                 { "data": "EventDate" },
-                { "data": "Status" }
+                { "data": "Status" },
+                { "data": "PackageInclusion" }
             ],
             "columnDefs": [
                 {
@@ -155,6 +159,12 @@
                         }
                     }
                 },
+                {
+                    "targets": 5,
+                    "render": function (data, type, row, meta) {
+                        return '<center>' + data + '</center>';
+                    }
+                },
             ],
             "autoWidth": false
         });
@@ -165,7 +175,7 @@
     $(document).on("click", "#btn_view", function () {
         var rowdata = tbl_reservations.row($(this).closest('tr')).data();
 
-        console.log(rowdata.Package);
+        console.log(rowdata.PackageInclusion);
 
         //selectedPackageCode = $(this).data('package_id');
         //document.getElementById("Modal_PACKAGEID").value = selectedPackageCode;
@@ -181,6 +191,7 @@
         document.getElementById("c_contact").value = rowdata.CustomerNumber;
         document.getElementById("c_address").value = rowdata.CustomerAddress;
         document.getElementById("deal_price").value = rowdata.DealPrice;
+        document.getElementById("divInclusions").innerHTML = rowdata.PackageInclusion;
         selectedOrderID = rowdata.OrderID
         fetchPackageMenu(rowdata.Packageid);
     });
@@ -283,7 +294,14 @@
                         </table>
                     </div>
                 </div>
+                <div class="row m-3">
+                    <div class="col-sm-12">
+                        <label>Package Inclusions</label>
+                        <div id="divInclusions">
 
+                        </div>
+                    </div>
+                </div>
                 <div class="row m-3">
                     <div class="col-sm-6">
                         <label> Event Date: </label>

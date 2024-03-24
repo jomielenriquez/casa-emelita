@@ -90,7 +90,7 @@
 
                                     foreach (casa_emelita.Models.TBL_ORDER ords in orders)
                                     {
-                                        <div class="event red">
+                                        <div class="event @(ords.COLOR == null ? "green":ords.COLOR)">
                                             <div data-toggle="collapse" data-target="#demo_@ords.ORDERID">
                                                 Customer: <strong>@ords.CUSTOMERNAME</strong>
                                             </div>

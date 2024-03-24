@@ -297,6 +297,12 @@
     <Compile Include="Models\TBL_PACKAGE.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TBL_SERVICE.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TBL_SERVICESINCLUSIONS.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UploadStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AdminRepository.cs" />
@@ -309,6 +315,7 @@
     <Compile Include="Repository\LoginRepository.cs" />
     <Compile Include="Repository\MenuRepository.cs" />
     <Compile Include="Repository\OrderRepository.cs" />
+    <Compile Include="Repository\PackageInclusionRepository.cs" />
     <Compile Include="Repository\PackageRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -589,6 +596,7 @@
     <Content Include="Views\Home\Orders.cshtml" />
     <Content Include="Views\Home\Confirmation.cshtml" />
     <Content Include="Views\Home\GcashDetails.cshtml" />
+    <Content Include="Views\Home\ServiceAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

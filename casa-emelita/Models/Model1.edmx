@@ -91,6 +91,7 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
           <Property Name="SLOT" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="COLOR" Type="nvarchar" MaxLength="25" />
         </EntityType>
         <EntityType Name="TBL_ORDER_STATUS">
           <Key>
@@ -150,6 +151,27 @@
           <Property Name="UPDATEDDATE" Type="datetime" />
           <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="TBL_SERVICE">
+          <Key>
+            <PropertyRef Name="SERVICEID" />
+          </Key>
+          <Property Name="SERVICEID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SERVICENAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SERVICEDESCRIPTION" Type="nvarchar(max)" />
+          <Property Name="SERVICEPRICE" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="CREATEDDATE" Type="datetime" Nullable="false" />
+          <Property Name="CREATEDBY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATEDDATE" Type="datetime" />
+          <Property Name="UPDATEDBY" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="TBL_SERVICESINCLUSIONS">
+          <Key>
+            <PropertyRef Name="SERVICESINCLUSIONSID" />
+          </Key>
+          <Property Name="SERVICESINCLUSIONSID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PACKAGEID" Type="uniqueidentifier" />
+          <Property Name="SERVICEID" Type="uniqueidentifier" />
+        </EntityType>
         <Association Name="FK__TBL_ORDER__MENUI__339FAB6E">
           <End Role="TBL_MENU" Type="Self.TBL_MENU" Multiplicity="0..1" />
           <End Role="TBL_ORDERS" Type="Self.TBL_ORDERS" Multiplicity="*" />
@@ -195,6 +217,30 @@
             </Principal>
             <Dependent Role="TBL_ORDERS">
               <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_SERVI__PACKA__18EBB532">
+          <End Role="TBL_ORDER" Type="Self.TBL_ORDER" Multiplicity="0..1" />
+          <End Role="TBL_SERVICESINCLUSIONS" Type="Self.TBL_SERVICESINCLUSIONS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="TBL_SERVICESINCLUSIONS">
+              <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_SERVI__SERVI__19DFD96B">
+          <End Role="TBL_SERVICE" Type="Self.TBL_SERVICE" Multiplicity="0..1" />
+          <End Role="TBL_SERVICESINCLUSIONS" Type="Self.TBL_SERVICESINCLUSIONS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_SERVICE">
+              <PropertyRef Name="SERVICEID" />
+            </Principal>
+            <Dependent Role="TBL_SERVICESINCLUSIONS">
+              <PropertyRef Name="SERVICEID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -269,6 +315,8 @@
           <EntitySet Name="TBL_ORDER_TYPE" EntityType="Self.TBL_ORDER_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_ORDERS" EntityType="Self.TBL_ORDERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TBL_PACKAGE" EntityType="Self.TBL_PACKAGE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_SERVICE" EntityType="Self.TBL_SERVICE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TBL_SERVICESINCLUSIONS" EntityType="Self.TBL_SERVICESINCLUSIONS" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__TBL_ORDER__MENUI__339FAB6E" Association="Self.FK__TBL_ORDER__MENUI__339FAB6E">
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
             <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
@@ -284,6 +332,14 @@
           <AssociationSet Name="FK__TBL_ORDER__PACKA__32AB8735" Association="Self.FK__TBL_ORDER__PACKA__32AB8735">
             <End Role="TBL_PACKAGE" EntitySet="TBL_PACKAGE" />
             <End Role="TBL_ORDERS" EntitySet="TBL_ORDERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_SERVI__PACKA__18EBB532" Association="Self.FK__TBL_SERVI__PACKA__18EBB532">
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+            <End Role="TBL_SERVICESINCLUSIONS" EntitySet="TBL_SERVICESINCLUSIONS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_SERVI__SERVI__19DFD96B" Association="Self.FK__TBL_SERVI__SERVI__19DFD96B">
+            <End Role="TBL_SERVICE" EntitySet="TBL_SERVICE" />
+            <End Role="TBL_SERVICESINCLUSIONS" EntitySet="TBL_SERVICESINCLUSIONS" />
           </AssociationSet>
           <AssociationSet Name="FK_TBL_INCLUSION_TBL_MENU" Association="Self.FK_TBL_INCLUSION_TBL_MENU">
             <End Role="TBL_MENU" EntitySet="TBL_MENU" />
@@ -373,6 +429,16 @@
           <AssociationSet Name="TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID">
             <End Role="TBL_ORDER_STATUS" EntitySet="TBL_ORDER_STATUS" />
             <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+          </AssociationSet>
+          <EntitySet Name="TBL_SERVICE" EntityType="CASAEMELITAModel.TBL_SERVICE" />
+          <EntitySet Name="TBL_SERVICESINCLUSIONS" EntityType="CASAEMELITAModel.TBL_SERVICESINCLUSIONS" />
+          <AssociationSet Name="FK__TBL_SERVI__PACKA__18EBB532" Association="CASAEMELITAModel.FK__TBL_SERVI__PACKA__18EBB532">
+            <End Role="TBL_ORDER" EntitySet="TBL_ORDER" />
+            <End Role="TBL_SERVICESINCLUSIONS" EntitySet="TBL_SERVICESINCLUSIONS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TBL_SERVI__SERVI__19DFD96B" Association="CASAEMELITAModel.FK__TBL_SERVI__SERVI__19DFD96B">
+            <End Role="TBL_SERVICE" EntitySet="TBL_SERVICE" />
+            <End Role="TBL_SERVICESINCLUSIONS" EntitySet="TBL_SERVICESINCLUSIONS" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="TBL_CATEGORY">
@@ -580,6 +646,8 @@
           <NavigationProperty Name="TBL_ORDER_STATUS" Relationship="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" FromRole="TBL_ORDER" ToRole="TBL_ORDER_STATUS" />
           <Property Name="DEALPRICE" Type="Decimal" Precision="10" Scale="2" />
           <Property Name="NOTE" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_SERVICESINCLUSIONS" Relationship="CASAEMELITAModel.FK__TBL_SERVI__PACKA__18EBB532" FromRole="TBL_ORDER" ToRole="TBL_SERVICESINCLUSIONS" />
+          <Property Name="COLOR" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__TBL_ORDER__ORDER__31B762FC">
           <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="1" />
@@ -626,6 +694,54 @@
             </Principal>
             <Dependent Role="TBL_ORDER">
               <PropertyRef Name="ORDERSTATUSID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TBL_SERVICE">
+          <Key>
+            <PropertyRef Name="SERVICEID" />
+          </Key>
+          <Property Name="SERVICEID" Type="Guid" Nullable="false" />
+          <Property Name="SERVICENAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SERVICEDESCRIPTION" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SERVICEPRICE" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="CREATEDDATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CREATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATEDDATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATEDBY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TBL_SERVICESINCLUSIONS" Relationship="CASAEMELITAModel.FK__TBL_SERVI__SERVI__19DFD96B" FromRole="TBL_SERVICE" ToRole="TBL_SERVICESINCLUSIONS" />
+        </EntityType>
+        <EntityType Name="TBL_SERVICESINCLUSIONS">
+          <Key>
+            <PropertyRef Name="SERVICESINCLUSIONSID" />
+          </Key>
+          <Property Name="SERVICESINCLUSIONSID" Type="Guid" Nullable="false" />
+          <Property Name="PACKAGEID" Type="Guid" />
+          <Property Name="SERVICEID" Type="Guid" />
+          <NavigationProperty Name="TBL_ORDER" Relationship="CASAEMELITAModel.FK__TBL_SERVI__PACKA__18EBB532" FromRole="TBL_SERVICESINCLUSIONS" ToRole="TBL_ORDER" />
+          <NavigationProperty Name="TBL_SERVICE" Relationship="CASAEMELITAModel.FK__TBL_SERVI__SERVI__19DFD96B" FromRole="TBL_SERVICESINCLUSIONS" ToRole="TBL_SERVICE" />
+        </EntityType>
+        <Association Name="FK__TBL_SERVI__PACKA__18EBB532">
+          <End Type="CASAEMELITAModel.TBL_ORDER" Role="TBL_ORDER" Multiplicity="0..1" />
+          <End Type="CASAEMELITAModel.TBL_SERVICESINCLUSIONS" Role="TBL_SERVICESINCLUSIONS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_ORDER">
+              <PropertyRef Name="ORDERID" />
+            </Principal>
+            <Dependent Role="TBL_SERVICESINCLUSIONS">
+              <PropertyRef Name="PACKAGEID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TBL_SERVI__SERVI__19DFD96B">
+          <End Type="CASAEMELITAModel.TBL_SERVICE" Role="TBL_SERVICE" Multiplicity="0..1" />
+          <End Type="CASAEMELITAModel.TBL_SERVICESINCLUSIONS" Role="TBL_SERVICESINCLUSIONS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TBL_SERVICE">
+              <PropertyRef Name="SERVICEID" />
+            </Principal>
+            <Dependent Role="TBL_SERVICESINCLUSIONS">
+              <PropertyRef Name="SERVICEID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -770,6 +886,7 @@
           <EntitySetMapping Name="TBL_ORDER">
             <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_ORDER">
               <MappingFragment StoreEntitySet="TBL_ORDER">
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
                 <ScalarProperty Name="NOTE" ColumnName="NOTE" />
                 <ScalarProperty Name="DEALPRICE" ColumnName="DEALPRICE" />
                 <ScalarProperty Name="SLOT" ColumnName="SLOT" />
@@ -787,6 +904,29 @@
                 <ScalarProperty Name="CUSTOMERNAME" ColumnName="CUSTOMERNAME" />
                 <ScalarProperty Name="ORDERTYPEID" ColumnName="ORDERTYPEID" />
                 <ScalarProperty Name="ORDERID" ColumnName="ORDERID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_SERVICE">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_SERVICE">
+              <MappingFragment StoreEntitySet="TBL_SERVICE">
+                <ScalarProperty Name="UPDATEDBY" ColumnName="UPDATEDBY" />
+                <ScalarProperty Name="UPDATEDDATE" ColumnName="UPDATEDDATE" />
+                <ScalarProperty Name="CREATEDBY" ColumnName="CREATEDBY" />
+                <ScalarProperty Name="CREATEDDATE" ColumnName="CREATEDDATE" />
+                <ScalarProperty Name="SERVICEPRICE" ColumnName="SERVICEPRICE" />
+                <ScalarProperty Name="SERVICEDESCRIPTION" ColumnName="SERVICEDESCRIPTION" />
+                <ScalarProperty Name="SERVICENAME" ColumnName="SERVICENAME" />
+                <ScalarProperty Name="SERVICEID" ColumnName="SERVICEID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TBL_SERVICESINCLUSIONS">
+            <EntityTypeMapping TypeName="CASAEMELITAModel.TBL_SERVICESINCLUSIONS">
+              <MappingFragment StoreEntitySet="TBL_SERVICESINCLUSIONS">
+                <ScalarProperty Name="SERVICEID" ColumnName="SERVICEID" />
+                <ScalarProperty Name="PACKAGEID" ColumnName="PACKAGEID" />
+                <ScalarProperty Name="SERVICESINCLUSIONSID" ColumnName="SERVICESINCLUSIONSID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

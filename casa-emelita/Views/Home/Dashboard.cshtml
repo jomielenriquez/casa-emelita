@@ -43,6 +43,7 @@
         <div class="row">
             <div id="monthlyReservations" style="height: 370px; width: 100%;"></div>
             <div id="packageReservations" style="height: 370px; width: 100%;"></div>
+            <div id="mostOrderedMenu" style="height: 370px; width: 100%;"></div>
             <script>
             window.onload = function () {
                 var ReservationsEveryMonth = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyReservations));
@@ -96,6 +97,32 @@
                     }]
                 });
                 packageReservations.render();
+
+                var MostOrderedMenu = @Html.Raw(JsonConvert.SerializeObject(Model.MostOrderedMenu));
+                var mostOrderedMenu = new CanvasJS.Chart("mostOrderedMenu", {
+                    animationEnabled: true,
+
+                    title: {
+                        text: "Number of Orders per Menu"
+                    },
+                    axisX: {
+                        interval: 1
+                    },
+                    axisY2: {
+                        interlacedColor: "rgba(120,180,84,.2)",
+                        gridColor: "rgba(120,180,84,.1)",
+                        title: "Orders",
+                        interval: 1
+                    },
+                    data: [{
+                        type: "bar",
+                        name: "Orders",
+                        axisYType: "secondary",
+                        color: "#40a557",
+                        dataPoints: MostOrderedMenu
+                    }]
+                });
+                mostOrderedMenu.render();
             }
             </script>
             <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>

@@ -21,6 +21,7 @@ namespace casa_emelita.Controllers
     {
         AppModel model;
         MenuRepository menuRepository;
+        PackageInclusionRepository packageInclusionRepository;
         CategoryRepository categoryRepository;
         PackageRepository packageRepository;
         EventTypeRepository eventTypeRepository;
@@ -44,6 +45,7 @@ namespace casa_emelita.Controllers
             this.dataApointmentRepository = new ApointmentRepository();
             this.orderRepository = new OrderRepository();
             this.dashboardRepository = new DashboardRepository();
+            this.packageInclusionRepository = new PackageInclusionRepository();
         }
         public ActionResult Index()
         {
@@ -100,6 +102,25 @@ namespace casa_emelita.Controllers
             return View(this.model);
         }
 
+        public ActionResult ServiceAdmin()
+        {
+            if (this.model.AdminID == Guid.Empty)
+            {
+                this.model.ErrorMessage = "Session Timeout";
+                return RedirectToAction("../Home/Home");
+            }
+            if (message.Message != null)
+            {
+                ViewBag.SaveUploadMessage = message.Message;
+                message.Message = "";
+            }
+            this.model.Menu_List = this.menuRepository.GetMenuList();
+            this.model.Category = this.categoryRepository.GetAllCategories();
+            ViewBag.Message = "ServiceAdmin";
+
+            return View(this.model);
+        }
+
         public ActionResult PackageAdmin()
         {
             if (this.model.AdminID == Guid.Empty)
@@ -140,6 +161,7 @@ namespace casa_emelita.Controllers
             this.model.SelectedYear = SelectedYear == 0 ? DateTime.Now.Year : SelectedYear;
             this.model.MonthlyReservations = this.dashboardRepository.MontlyReservations(this.model.SelectedYear, this.model.Months);
             this.model.MostOrderedPackage = this.dashboardRepository.MostOrderedPackage(this.model.Package_List, this.model.SelectedYear);
+            this.model.MostOrderedMenu = this.dashboardRepository.MostOrderedMenu(this.model.SelectedYear);
             ViewBag.Message = "Dashboard";
 
             return View(this.model);
@@ -219,6 +241,12 @@ namespace casa_emelita.Controllers
             Reservation.SLOT = "";
             Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
             Reservation.ORDERTYPEID = new Guid("1722CE08-59EF-4127-8683-AC0CD9CEC5BE"); // Type: Order
+
+            string[] colors = { "red", "green", "blue", "yellow" };
+
+            int randomIndex = new Random().Next(0, colors.Length);
+
+            Reservation.COLOR = colors[randomIndex];
             try
             {
                 string OrderID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
@@ -472,6 +500,43 @@ namespace casa_emelita.Controllers
             return RedirectToAction("../Home/MenuAdmin");
         }
         [System.Web.Http.HttpPost]
+        public ActionResult SaveUpdatePackageInclusion(PackageInclusionNewRecord packageInclusionNewRecord)
+        {
+            if (packageInclusionNewRecord.ServiceID == null)
+            {
+                TBL_SERVICE service = new TBL_SERVICE()
+                {
+                    SERVICENAME = packageInclusionNewRecord.Name,
+                    SERVICEDESCRIPTION = packageInclusionNewRecord.Description,
+                    SERVICEPRICE = packageInclusionNewRecord.Price
+                };
+
+                this.data.Save(service, new List<string> { "SERVICEID" }, "SERVICEID");
+                message.Message = "Successfully Saved!!!";
+            }
+            else
+            {
+                TBL_SERVICE service = new TBL_SERVICE()
+                {
+                    SERVICEID = new Guid(),
+                    SERVICENAME = packageInclusionNewRecord.Name,
+                    SERVICEDESCRIPTION = packageInclusionNewRecord.Description,
+                    SERVICEPRICE = packageInclusionNewRecord.Price
+                };
+
+                TBL_SERVICE serviceFilter = new TBL_SERVICE()
+                {
+                    SERVICEID = new Guid(packageInclusionNewRecord.ServiceID)
+                };
+
+                this.data.Update(service, serviceFilter, model.AdminID);
+
+                message.Message = "Successfully Updated!!!";
+            }
+
+            return RedirectToAction("../Home/ServiceAdmin");
+        }
+        [System.Web.Http.HttpPost]
         public ActionResult SaveUpdatePackage(TBL_PACKAGE packageNewRecord)
         {
             if (packageNewRecord.PACKAGEID == new Guid())
@@ -526,13 +591,32 @@ namespace casa_emelita.Controllers
                 success = true,
                 message = "Successfully Updated"
             };
+            Guid orderStatus = new Guid();
+            if (status == "success")
+            {
+                orderStatus = new Guid("F1C2CB81-43D6-471D-8703-A4C4C2DA2D68"); //Completed status
+            }
+            else if (status == "approve")
+            {
+                orderStatus = new Guid("60F16732-E9CD-4E39-A230-86C14C95F01A"); //Approved status
+            }
+            else if (status == "pending")
+            {
+                orderStatus = new Guid("0521BA1A-553A-448D-9EE1-5B1417455F5D"); //Pending status
+            }
+            else if (status == "declined")
+            {
+                orderStatus = new Guid("3C84CFFA-103E-4DB6-9675-AFF577CD6DBE"); //Declined status
+            }
+            else
+            {
+                orderStatus = new Guid("A115A95E-486E-4661-A427-C928DF130A64"); //Cancel status
+            }
 
             try
             {
                 TBL_ORDER orders = new TBL_ORDER() {
-                    ORDERSTATUSID = status == "success" ?
-                        new Guid("F1C2CB81-43D6-471D-8703-A4C4C2DA2D68") // Completed status
-                        : new Guid("A115A95E-486E-4661-A427-C928DF130A64")
+                    ORDERSTATUSID = orderStatus
                 };
                 TBL_ORDER filter = new TBL_ORDER()
                 {
@@ -674,6 +758,12 @@ namespace casa_emelita.Controllers
         public JsonResult GetMenu(string PackageID, string MenuID)
         {
             List<TBL_MENUJSON> data = this.menuRepository.GetMenuJSONList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        [System.Web.Http.HttpGet]
+        public JsonResult GetPackageInclusions()
+        {
+            List<TBL_SERVICE> data = this.packageInclusionRepository.GetPackageInclusionsJSONList();
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
@@ -821,6 +911,14 @@ namespace casa_emelita.Controllers
             message.Message = "Successfully Deleted!!!";
             return RedirectToAction("../Home/MenuAdmin");
         }
+        public ActionResult DeletePackgeInclusion(string PackageInclusionIDToDelete)
+        {
+            TBL_SERVICE tableMenu = this.packageInclusionRepository.GetPackgeInclusionByID(new Guid(PackageInclusionIDToDelete));
+
+            this.data.Delete(new TBL_SERVICE(), new List<string>() { PackageInclusionIDToDelete }, "SERVICEID");
+            message.Message = "Successfully Deleted!!!";
+            return RedirectToAction("../Home/ServiceAdmin");
+        }
         public bool DeleteFile(string filename)
         {
             if (System.IO.File.Exists(Path.Combine(Server.MapPath("~/UploadedImage/"), filename)))
@@ -847,6 +945,7 @@ namespace casa_emelita.Controllers
             this.model.EventType_List = this.eventTypeRepository.GetAllEventType();
             this.model.Reservation = new TBL_ORDER();
             this.model.gcashDetails = this.adminRepository.GetAdminGcashDetails();
+            this.model.Services = this.packageInclusionRepository.GetPackageInclusionsJSONList();
 
             if (message.Message != null)
             {
@@ -857,13 +956,29 @@ namespace casa_emelita.Controllers
             return View(this.model);
         }
         [System.Web.Http.HttpPost]
-        public ActionResult NewAppointment(TBL_ORDER Reservation)
+        public ActionResult NewAppointment(TBL_ORDER Reservation, List<string> SelectedPackageInclusions)
         {
             Reservation.ORDERSTATUSID = new Guid("8DC3BB24-E877-4B52-BC92-56391D5A9922"); // Status: NEW
             Reservation.ORDERTYPEID = new Guid("BA735176-6316-442A-8F4B-857B1F809697"); // Type: Reservation
+
+            string[] colors = { "red", "green", "blue", "yellow" };
+
+            int randomIndex = new Random().Next(0, colors.Length);
+
+            Reservation.COLOR = colors[randomIndex];
             try
             {
-                this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
+                var outputID = this.data.Save(Reservation, new List<string> { "ORDERID" }, "ORDERID");
+                foreach(var inclusionid in SelectedPackageInclusions)
+                {
+                    var inclusions = new TBL_SERVICESINCLUSIONS() { 
+                        PACKAGEID = new Guid(outputID),
+                        SERVICEID = new Guid(inclusionid)
+                    };
+                    this.data.Save(inclusions, new List<string> { "SERVICESINCLUSIONSID" }, "SERVICESINCLUSIONSID");
+                }
+
+                //Sending of email
                 message.Message = "Your appointment has been set! Please wait for Casa-Emelita to contact you.";
                 SendEmail.to_email = Reservation.CUSTOMEREMAIL;
                 SendEmail.to_name = Reservation.CUSTOMERNAME;

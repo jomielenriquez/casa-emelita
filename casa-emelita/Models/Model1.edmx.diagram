@@ -24,6 +24,10 @@
         <AssociationConnector Association="CASAEMELITAModel.FK__TBL_ORDER__ORDER__ORDERTYPE" />
         <AssociationConnector Association="CASAEMELITAModel.FK_TBL_ORDER_PACKAGEID_TBL_PACKAGE" />
         <AssociationConnector Association="CASAEMELITAModel.TBL_ORDER_ORDERSTATUSID_ORDERSTATUSID" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_SERVICE" Width="1.5" PointX="8.375" PointY="1" />
+        <EntityTypeShape EntityType="CASAEMELITAModel.TBL_SERVICESINCLUSIONS" Width="1.5" PointX="13.5" PointY="6.125" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_SERVI__PACKA__18EBB532" />
+        <AssociationConnector Association="CASAEMELITAModel.FK__TBL_SERVI__SERVI__19DFD96B" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
