@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="10cd974343904837ade1046bc9928018" Name="Diagram1">
+      <Diagram DiagramId="10cd974343904837ade1046bc9928018" Name="Diagram1" ZoomLevel="98">
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_ADMIN" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_CATEGORY" Width="1.5" PointX="0.75" PointY="6.375" />
         <EntityTypeShape EntityType="CASAEMELITAModel.TBL_EVENTTYPE" Width="1.5" PointX="3.75" PointY="1.375" />

@@ -764,7 +764,22 @@ namespace casa_emelita.Controllers
         public JsonResult GetPackageInclusions()
         {
             List<TBL_SERVICE> data = this.packageInclusionRepository.GetPackageInclusionsJSONList();
-            return Json(data, JsonRequestBehavior.AllowGet);
+
+            List<Service> newData = data.Select(
+                x => new Service() { 
+                    SERVICEID = x.SERVICEID,
+                    SERVICENAME = x.SERVICENAME,
+                    SERVICEDESCRIPTION = x.SERVICEDESCRIPTION,
+                    SERVICEPRICE = x.SERVICEPRICE,
+                    CREATEDDATE = x.CREATEDDATE,
+                    CREATEDBY = x.CREATEDBY,
+                    UPDATEDBY = x.UPDATEDBY,
+                    UPDATEDDATE = x.UPDATEDDATE
+                }).ToList();
+
+
+
+            return Json(newData, JsonRequestBehavior.AllowGet);
         }
         [System.Web.Http.HttpGet]
         public JsonResult GetInludedMenu(string PackageID)
@@ -1013,5 +1028,16 @@ namespace casa_emelita.Controllers
         {
             return View();
         }
+    }
+    public partial class Service
+    {
+        public System.Guid SERVICEID { get; set; }
+        public string SERVICENAME { get; set; }
+        public string SERVICEDESCRIPTION { get; set; }
+        public decimal SERVICEPRICE { get; set; }
+        public System.DateTime CREATEDDATE { get; set; }
+        public string CREATEDBY { get; set; }
+        public Nullable<System.DateTime> UPDATEDDATE { get; set; }
+        public string UPDATEDBY { get; set; }
     }
 }
